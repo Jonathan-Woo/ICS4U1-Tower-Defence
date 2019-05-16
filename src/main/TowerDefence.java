@@ -20,7 +20,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 	/** Keeps track of the current game State */
 	private State currentState;
 	private AnimationPanel pnl;
-	private Timer timer;
+	//private Timer timer;
 	
 	public static void main(String[] args) {
 		new TowerDefence();
