@@ -1,6 +1,6 @@
 package towers;
 
-public class Towers {
+public class Tower {
 	
 	//properties
 	
