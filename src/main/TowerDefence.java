@@ -17,7 +17,7 @@ import states.State;
 //NEED A SEPARATE OBJECT FOR THAT
 public class TowerDefence extends JFrame implements ActionListener {
 	
-	//KEEPS TRACK OF CURRENT GAME STATE
+	/** Keeps track of the current game State */
 	private State currentState;
 	private AnimationPanel pnl;
 	private Timer timer;
