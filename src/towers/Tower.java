@@ -1,9 +1,11 @@
 package towers;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import enemies.Enemy;
 import main.Utils;
+import projectiles.Projectile;
 import states.Game;
 
 public abstract class Tower {
@@ -21,16 +23,21 @@ public abstract class Tower {
 	BufferedImage towerImage;
 	Enemy currentEnemy;
 	
+	int intProjectileRadius;
+	int intProjectileSpeed;
+	Color projectileColor;
+	
 	//methods
 	private boolean isInRange(Enemy enemy){
 		return true;
 	}
 	private void findEnemy(Enemy[] enemies) {
 	}
-	private void attackEnemy(){
+	private void attackEnemy(Game game){
 		long longCurrentTime = System.currentTimeMillis();
 		if(longCurrentTime - longLastAttack >=intAttackSpeed) {
-			//Take away health from enemy and create projectile animation
+			Projectile projectile = new Projectile(intAttackDamage, this, intProjectileRadius, intProjectileSpeed, projectileColor, currentEnemy);
+			game.projectiles.add(projectile);
 			longLastAttack = longCurrentTime;
 		}
 	}
@@ -39,12 +46,14 @@ public abstract class Tower {
 		if (currentEnemy == null) {
 			findEnemy(game.getEnemies());
 		}else {
-			attackEnemy();
+			attackEnemy(game);
 		}
 	}
 	
 	//constructor
-	public Tower(String strName, int intxLocation, int intyLocation, int intPrice, int intRange, int intAttackSpeed, int intAttackDamage, String strTowerImage) {
+	public Tower(String strName, int intxLocation, int intyLocation, int intPrice, int intRange,
+			int intAttackSpeed, int intAttackDamage, String strTowerImage, int intProjectileRadius,
+			int intProjectileSpeed, Color projectileColor) {
 		this.strName = strName;
 		this.intxLocation = intxLocation;
 		this.intyLocation = intyLocation;

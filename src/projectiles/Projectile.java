@@ -1,11 +1,13 @@
 package projectiles;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
 import enemies.Enemy;
+import states.Game;
 import towers.Tower;
 
-public abstract class Projectile {
+public class Projectile {
 	//properties
 	int intDamage;
 	int intxLocation;
@@ -16,24 +18,26 @@ public abstract class Projectile {
 	Enemy currentEnemy;
 	
 	//methods
-	public void update() {
-		if(currentEnemy.intxLocation > intxLocation) {
-			intxLocation += intProjectileSpeed;
-		}else if(currentEnemy.intxLocation < intxLocation) {
-			intxLocation -= intProjectileSpeed;
-		}
-		if(currentEnemy.intyLocation > intyLocation) {
-			intyLocation += intProjectileSpeed;
-		}else if(currentEnemy.intyLocation < intyLocation) {
-			intyLocation -= intProjectileSpeed;
-		}
-		
-		if(currentEnemy.intxLocation - intxLocation <=5 && currentEnemy.intyLocation - intyLocation<=5) {
-			
+	public void update(Game game) {
+		if(Math.abs(currentEnemy.intxLocation - intxLocation) <=5 && Math.abs(currentEnemy.intyLocation - intyLocation)<=5) {
+			//HIT THE ENEMY: DAMAGE ENEMY, REMOVE PROJECTILE
+			game.projectiles.remove(this);
+		}else{
+			if(currentEnemy.intxLocation > intxLocation) {
+				intxLocation += intProjectileSpeed;
+			}else if(currentEnemy.intxLocation < intxLocation) {
+				intxLocation -= intProjectileSpeed;
+			}
+			if(currentEnemy.intyLocation > intyLocation) {
+				intyLocation += intProjectileSpeed;
+			}else if(currentEnemy.intyLocation < intyLocation) {
+				intyLocation -= intProjectileSpeed;
+			}
 		}
 	}
 	
-	public void render() {
+	public void render(Graphics g){
+		//Draw projectile (ball)
 	}
 	
 	//constructor

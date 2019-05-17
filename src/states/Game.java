@@ -1,14 +1,18 @@
 package states;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 
 import enemies.Enemy;
+import projectiles.Projectile;
 import towers.Tower;
 
 public class Game extends State{
 
 	Tower[] towers;
 	Enemy[] enemies;
+	public ArrayList<Projectile> projectiles;
 	
 	@Override
 	public void update() {
@@ -16,8 +20,8 @@ public class Game extends State{
 			towers[i].update(this);
 		}
 		
-		for(Tower tower : towers) {
-			tower.update(this);
+		for(int i = 0; i < projectiles.size(); i++) {
+			projectiles.get(i).update(this);
 		}
 	}
 
