@@ -37,7 +37,7 @@ public class Projectile {
 	}
 	
 	public void render(Graphics g){
-		//Draw projectile (ball)
+		g.fillOval(intxLocation - (intRadius / 2), intyLocation - (intRadius / 2), intRadius, intRadius);
 	}
 	
 	//constructor

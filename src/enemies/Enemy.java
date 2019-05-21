@@ -1,5 +1,9 @@
 package enemies;
 
+import java.awt.Graphics;
+
+import states.Game;
+
 public abstract class Enemy {
 	//properties
 	public int intxLocation;
@@ -11,5 +15,11 @@ public abstract class Enemy {
 	public Enemy() {
 		
 	}
+	
+	public void update(Game game) {
+		
+	}
+	
+	public abstract void render(Graphics g);
 	
 }

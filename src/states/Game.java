@@ -10,14 +10,18 @@ import towers.Tower;
 
 public class Game extends State{
 
-	Tower[] towers;
-	Enemy[] enemies;
+	public ArrayList<Tower> towers;
+	public ArrayList<Enemy> enemies;
 	public ArrayList<Projectile> projectiles;
 	
 	@Override
 	public void update() {
-		for(int i = 0; i < towers.length; i++) {
-			towers[i].update(this);
+		for(int i = 0; i < towers.size(); i++) {
+			towers.get(i).update(this);
+		}
+		
+		for(int i = 0; i < enemies.size(); i++) {
+			enemies.get(i).update(this);
 		}
 		
 		for(int i = 0; i < projectiles.size(); i++) {
@@ -27,12 +31,17 @@ public class Game extends State{
 
 	@Override
 	public void render(Graphics g) {
-		// TODO Auto-generated method stub
+		for(int i = 0; i < towers.size(); i++) {
+			towers.get(i).render(g);
+		}
 		
-	}
-	
-	public Enemy[] getEnemies() {
-		return enemies;
+		for(int i = 0; i < enemies.size(); i++) {
+			enemies.get(i).render(g);
+		}
+		
+		for(int i = 0; i < projectiles.size(); i++) {
+			projectiles.get(i).render(g);
+		}
 	}
 
 }
