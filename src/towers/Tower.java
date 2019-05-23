@@ -14,23 +14,62 @@ import states.Game;
 public abstract class Tower {
 	
 	//properties
-	/***/
+	/**
+	 *Numerical representation of the basic tower.
+	 **/
 	public static final int BASIC = 0;
+	/**
+	 *Numerical representation of the fire tower.
+	 **/
+	public static final int FIRE = 1;
+	/**
+	 *Numerical representation of the ice tower.
+	 **/
+	public static final int ICE  = 2;
+	/**
+	 *Numerical representation of the snipe tower.
+	 **/
+	public static final int SNIPE = 3;
+	/**
+	 *Numerical representation of the bomb tower.
+	 **/
+	public static final int BOMB = 4;
 	
-	String strName;
+	/**
+	 * Name of the tower type.
+	 **/
+	public String strName;
+	/**
+	 * X coordinate of tower.
+	 **/
 	public int intxLocation;
+	/**
+	 * Y coordinate of tower.
+	 **/
 	public int intyLocation;
-	int intPrice;
-	int intRange;
-	int intAttackSpeed;
-	int intAttackDamage;
-	long longLastAttack = 0;
-	BufferedImage towerImage;
-	Enemy currentEnemy;
+	/**
+	 * Tower price.
+	 **/
+	public int intPrice;
+	/**
+	 * Radius range of tower.
+	 **/
+	public int intRange;
+	/**
+	 * Time it takes before the tower can fire again.
+	 **/
+	public int intAttackSpeed;
+	/**
+	 * Damage that each projectile deals to enemies.
+	 **/
+	public int intAttackDamage;
+	private long longLastAttack = 0;
+	private BufferedImage towerImage;
+	private Enemy currentEnemy;
 	
-	int intProjectileRadius;
-	int intProjectileSpeed;
-	Color projectileColor;
+	private int intProjectileRadius;
+	private int intProjectileSpeed;
+	private Color projectileColor;
 	
 	//methods
 	private boolean isInRange(Enemy enemy){
@@ -50,6 +89,10 @@ public abstract class Tower {
 		}
 	}
 	
+	/**
+	 * Update method gets called every game loop. Either finds new enemy or attacks currently targeted enemy
+	 * @param game
+	 */
 	public void update(Game game) {
 		if (currentEnemy == null) {
 			findEnemy(game.enemies);
@@ -58,11 +101,21 @@ public abstract class Tower {
 		}
 	}
 	
+	/**
+	 * Renders tower image to screen every game loop.
+	 * @param g
+	 */
 	public void render(Graphics g) {
 		g.drawImage(towerImage, intxLocation, intyLocation, null);
 	}
 	
 	//constructor
+	/**
+	 * Takes in the type of tower and the tower location. Loads the tower from a csv file based on type. Saves properties to local variables.
+	 * @param type
+	 * @param intxLocation
+	 * @param intyLocation
+	 */
 	public Tower(int type, int intxLocation, int intyLocation) {
 		Map<String, String> data = Utils.loadTower(type);
 		this.strName = data.get("name");
