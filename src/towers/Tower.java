@@ -91,7 +91,7 @@ public abstract class Tower {
 	
 	/**
 	 * Update method gets called every game loop. Either finds new enemy or attacks currently targeted enemy
-	 * @param game
+	 * @param game The Game State.
 	 */
 	public void update(Game game) {
 		if (currentEnemy == null) {
@@ -103,7 +103,7 @@ public abstract class Tower {
 	
 	/**
 	 * Renders tower image to screen every game loop.
-	 * @param g
+	 * @param g The Graphics object used for drawing to the screen.
 	 */
 	public void render(Graphics g) {
 		g.drawImage(towerImage, intxLocation, intyLocation, null);
@@ -112,9 +112,9 @@ public abstract class Tower {
 	//constructor
 	/**
 	 * Takes in the type of tower and the tower location. Loads the tower from a csv file based on type. Saves properties to local variables.
-	 * @param type
-	 * @param intxLocation
-	 * @param intyLocation
+	 * @param type The Tower type to load.
+	 * @param intxLocation The X coordinate of the Tower.
+	 * @param intyLocation The Y coordinate of the Tower.
 	 */
 	public Tower(int type, int intxLocation, int intyLocation) {
 		Map<String, String> data = Utils.loadTower(type);
@@ -131,17 +131,4 @@ public abstract class Tower {
 		this.intProjectileSpeed = Integer.parseInt(data.get("projectileSpeed"));
 		this.projectileColor = Color.decode(data.get("projectileColor"));
 	}
-	
-	/*public Tower(String strName, int intxLocation, int intyLocation, int intPrice, int intRange,
-			int intAttackSpeed, int intAttackDamage, String strTowerImage, int intProjectileRadius,
-			int intProjectileSpeed, Color projectileColor) {
-		this.strName = strName;
-		this.intxLocation = intxLocation;
-		this.intyLocation = intyLocation;
-		this.intPrice = intPrice;
-		this.intRange = intRange;
-		this.intAttackSpeed = intAttackSpeed;
-		this.intAttackDamage = intAttackDamage;
-		this.towerImage = Utils.loadImage(strTowerImage);		
-	}*/
 }
