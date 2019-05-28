@@ -77,8 +77,8 @@ public class TowerDefence extends JFrame implements ActionListener {
 		
 		private TowerDefence towerDefence;
 		
-		public AnimationPanel(Dimension size, TowerDefence towerDefence) {
-			this.setPreferredSize(size);
+		public AnimationPanel(TowerDefence towerDefence) {
+			this.setPreferredSize(new Dimension (1280, 720));
 			this.towerDefence = towerDefence;
 		}
 		

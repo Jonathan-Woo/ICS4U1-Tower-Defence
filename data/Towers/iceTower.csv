@@ -1,0 +1,8 @@
+price,350
+range,60
+attackSpeed,1500
+damage,25
+image,iceTower.png
+projectileRadius,10
+projectileSpeed,1
+projectileColor,#00FFFF

@@ -1,0 +1,8 @@
+price,100
+range,120
+attackSpeed,1500
+damage,25
+image,basicTower.png
+projectileRadius,10
+projectileSpeed,2
+projectileColor,#000000
