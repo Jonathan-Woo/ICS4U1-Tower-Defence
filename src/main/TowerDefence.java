@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import states.Game;
 import states.MainMenu;
 import states.State;
 
@@ -35,11 +36,11 @@ public class TowerDefence extends JFrame implements ActionListener {
 		this.setLocationRelativeTo(null);
 		
 		//INIT ANIMATION PANEL
-		pnl = new AnimationPanel(new Dimension(1280, 720), this);
+		pnl = new AnimationPanel(this);
 		this.add(pnl);
 		
 		//INIT DEFAULT STATE OF THE GAME
-		currentState = new MainMenu();
+		currentState = new Game(this);
 		
 		//SHOW FRAME
 		this.pack();
