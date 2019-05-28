@@ -1,0 +1,8 @@
+price,350
+range,160
+attackSpeed,800
+damage,10
+image,fireTower.png
+projectileRadius,10
+projectileSpeed,4
+projectileColor,#FF0000
