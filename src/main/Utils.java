@@ -24,7 +24,7 @@ public class Utils {
 	
 	public static Map<String, String> loadTower(int type) {
 		//GET CORRECT TOWER FILE
-		File file = new File("res/tower" + type + ".csv");
+		File file = new File("images/towers/tower" + type + ".csv");
 		
 		//CREATE MAP OBJECT WHERE WE WILL STORE OUR DATA
 		Map<String, String> tower = new HashMap<String, String>();

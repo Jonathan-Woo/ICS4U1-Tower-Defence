@@ -35,11 +35,11 @@ public class TowerDefence extends JFrame implements ActionListener {
 		this.setLocationRelativeTo(null);
 		
 		//INIT ANIMATION PANEL
-		pnl = new AnimationPanel(new Dimension(1280, 720), this);
+		pnl = new AnimationPanel(this);
 		this.add(pnl);
 		
 		//INIT DEFAULT STATE OF THE GAME
-		currentState = new MainMenu();
+		currentState = new Game(this);
 		
 		//SHOW FRAME
 		this.pack();
