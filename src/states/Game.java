@@ -16,6 +16,8 @@ import towers.BasicTower;
 import towers.Tower;
 
 public class Game extends State{
+	
+	public static final int TILE_SIZE = 40;
 
 	private TowerDefence towerDefence;
 	
@@ -28,7 +30,7 @@ public class Game extends State{
 	public Game(TowerDefence towerDefence) {
 		this.towerDefence = towerDefence;
 		
-		this.imgGrassTile = Utils.loadImage("images/GrassTile.jpg");
+		this.imgGrassTile = Utils.loadImage("GrassTile.jpg");
 		
 		towers = new ArrayList<>();
 		towers.add(new BasicTower(40 * 10, 40 * 5));
@@ -55,10 +57,10 @@ public class Game extends State{
 	@Override
 	public void render(Graphics g) {
 		//RENDER GRASS TILES
-		for(int y = 0; y < towerDefence.getHeight(); y += imgGrassTile.getHeight()) {
-			for(int x = 0; x < towerDefence.getWidth(); x += imgGrassTile.getWidth()) {
+		for(int y = 0; y < towerDefence.getHeight(); y += Game.TILE_SIZE) {
+			for(int x = 0; x < towerDefence.getWidth(); x += Game.TILE_SIZE) {
 				g.drawImage(imgGrassTile, x, y, null);
-				g.drawRect(x, y, imgGrassTile.getWidth(), imgGrassTile.getHeight());
+				g.drawRect(x, y, Game.TILE_SIZE, Game.TILE_SIZE);
 			}
 		}
 		

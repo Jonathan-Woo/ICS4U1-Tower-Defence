@@ -15,16 +15,16 @@ public class Utils {
 
 	public static BufferedImage loadImage(String fileName) {
 		try {
-			return ImageIO.read(new File(fileName));
+			return ImageIO.read(new File("images/" + fileName));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	public static Map<String, String> loadTower(int type) {
+	public static Map<String, String> loadTower(String towerFile) {
 		//GET CORRECT TOWER FILE
-		File file = new File("images/towers/tower" + type + ".csv");
+		File file = new File("data/towers/" + towerFile + ".csv");
 		
 		//CREATE MAP OBJECT WHERE WE WILL STORE OUR DATA
 		Map<String, String> tower = new HashMap<String, String>();

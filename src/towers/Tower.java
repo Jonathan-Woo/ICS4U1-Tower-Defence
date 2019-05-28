@@ -36,6 +36,10 @@ public abstract class Tower {
 	public static final int BOMB = 4;
 	
 	/**
+	 * Type of the tower.
+	 */
+	private int type;
+	/**
 	 * Name of the tower type.
 	 **/
 	public String strName;
@@ -72,12 +76,32 @@ public abstract class Tower {
 	private Color projectileColor;
 	
 	//methods
-	private boolean isInRange(Enemy enemy){
-		return true;
-	}
-	
 	private void findEnemy(ArrayList<Enemy> enemies) {
+		Enemy currentEnemy = null;
+		int bestXDistToTower = 200;
+		int bestYDistToTower = 200;
 		
+		for(int i = 0; i < enemies.size(); i++) {
+			Enemy enemy = enemies.get(i);
+			int xDistToTower = Math.abs(enemy.intxLocation + (Game.TILE_SIZE / 2) - this.intxLocation);
+			int yDistToTower = Math.abs(enemy.intxLocation + (Game.TILE_SIZE / 2) - this.intxLocation);
+			
+			if(xDistToTower <= this.intRange && yDistToTower <= this.intRange) {
+				if(currentEnemy != null) {
+					if(xDistToTower < bestXDistToTower && yDistToTower < bestYDistToTower) {
+						currentEnemy = enemy;
+						bestXDistToTower = xDistToTower;
+						bestYDistToTower = yDistToTower;
+					}
+				}else {
+					currentEnemy = enemy;
+					bestXDistToTower = xDistToTower;
+					bestYDistToTower = yDistToTower;
+				}			
+			}
+		}
+		
+		this.currentEnemy = currentEnemy;
 	}
 	
 	private void attackEnemy(Game game){
@@ -116,8 +140,9 @@ public abstract class Tower {
 	 * @param intxLocation The X coordinate of the Tower.
 	 * @param intyLocation The Y coordinate of the Tower.
 	 */
-	public Tower(int type, int intxLocation, int intyLocation) {
-		Map<String, String> data = Utils.loadTower(type);
+	public Tower(int intxLocation, int intyLocation, String towerFile, int type) {
+		this.type = type;
+		Map<String, String> data = Utils.loadTower(towerFile);
 		this.strName = data.get("name");
 		this.intxLocation = intxLocation;
 		this.intyLocation = intyLocation;
@@ -125,7 +150,7 @@ public abstract class Tower {
 		this.intRange = Integer.parseInt(data.get("range"));
 		this.intAttackSpeed = Integer.parseInt(data.get("attackSpeed"));
 		this.intAttackDamage = Integer.parseInt(data.get("damage"));
-		this.towerImage = Utils.loadImage(data.get("image"));
+		this.towerImage = Utils.loadImage("towers/" + data.get("image"));
 		
 		this.intProjectileRadius = Integer.parseInt(data.get("projectileRadius"));
 		this.intProjectileSpeed = Integer.parseInt(data.get("projectileSpeed"));
