@@ -144,8 +144,8 @@ public abstract class Tower {
 		this.type = type;
 		Map<String, String> data = Utils.loadTower(towerFile);
 		this.strName = data.get("name");
-		this.intxLocation = intxLocation;
-		this.intyLocation = intyLocation;
+		this.intxLocation = intxLocation * Game.TILE_SIZE;
+		this.intyLocation = intyLocation * Game.TILE_SIZE;
 		this.intPrice = Integer.parseInt(data.get("price"));
 		this.intRange = Integer.parseInt(data.get("range"));
 		this.intAttackSpeed = Integer.parseInt(data.get("attackSpeed"));
