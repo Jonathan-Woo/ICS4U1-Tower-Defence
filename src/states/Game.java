@@ -1,13 +1,8 @@
 package states;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
 
 import enemies.BasicEnemy;
 import enemies.Enemy;

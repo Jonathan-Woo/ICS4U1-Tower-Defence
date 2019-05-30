@@ -121,7 +121,11 @@ public abstract class Tower {
 		if (currentEnemy == null) {
 			findEnemy(game.enemies);
 		}else {
-			attackEnemy(game);
+			if(game.enemies.contains(currentEnemy)) {
+				attackEnemy(game);
+			}else {
+				currentEnemy = null;
+			}			
 		}
 	}
 	
