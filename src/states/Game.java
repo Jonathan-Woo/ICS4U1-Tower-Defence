@@ -29,6 +29,8 @@ public class Game extends State{
 	public ArrayList<Enemy> enemies;
 	public ArrayList<Projectile> projectiles;
 	
+	public static String strMessage;
+	
 	public Game(TowerDefence towerDefence) {
 		this.towerDefence = towerDefence;
 		
@@ -116,6 +118,11 @@ public class Game extends State{
 		for(int i = 0; i < projectiles.size(); i++) {
 			projectiles.get(i).render(g);
 		}
+		
+		//RENDER CHAT
+		if(strMessage!=null) {
+			g.drawString(strMessage, 0, 700);
+		}
 	}
 
 	public void dealDamage(int intDamage) {
@@ -124,5 +131,4 @@ public class Game extends State{
 			//GAME OVER
 		}
 	}
-
 }
