@@ -8,9 +8,9 @@ import states.Game;
 public class Connections implements ActionListener{
 	
 	//properties
-	SuperSocketMaster ssm;
+	static SuperSocketMaster ssm;
 	boolean blnIsServer;
-	public static final int CONNECT = 0, DISCONNECT = 1, SENDMESSAGE = 2;
+	public static final int CONNECT = 0, DISCONNECT = 1, CHATMESSAGE = 2;
 	
 	//methods
 	public void actionPerformed(ActionEvent e) {
@@ -20,11 +20,20 @@ public class Connections implements ActionListener{
 			int intMessageType = Integer.parseInt(strMessageParts[0]);
 			if(intMessageType == CONNECT) {
 			}else if(intMessageType == DISCONNECT) {
-			}else if(intMessageType == SENDMESSAGE) {
+			}else if(intMessageType == CHATMESSAGE) {
 				Game.strMessage = strMessageParts[1];
 			}
 		}
 	}
+	
+	public static void sendMessage(int intType, String... strMessages) {
+		String strFinalMsg = "" + intType;
+		for(int i = 0; i < strMessages.length; i++) {
+			strFinalMsg += "," + strMessages[i];
+		}
+		
+		ssm.sendText(strFinalMsg);
+	} 
 	
 	//constructor
 
