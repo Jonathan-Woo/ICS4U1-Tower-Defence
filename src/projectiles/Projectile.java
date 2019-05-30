@@ -19,33 +19,35 @@ public class Projectile {
 	
 	//methods
 	public void update(Game game) {
-		if(Math.abs(currentEnemy.intxLocation - intxLocation) <=5 && Math.abs(currentEnemy.intyLocation - intyLocation)<=5) {
+		if(Math.abs(currentEnemy.intxLocation + (Game.TILE_SIZE / 2) - intxLocation) <= 5
+				&& Math.abs(currentEnemy.intyLocation + (Game.TILE_SIZE / 2) - intyLocation) <= 5) {
 			//HIT THE ENEMY: DAMAGE ENEMY, REMOVE PROJECTILE
 			game.projectiles.remove(this);
 			currentEnemy.dealDamage(intDamage);
 		}else{
-			if(currentEnemy.intxLocation > intxLocation) {
+			if(currentEnemy.intxLocation + (Game.TILE_SIZE / 2) > intxLocation) {
 				intxLocation += intProjectileSpeed;
-			}else if(currentEnemy.intxLocation < intxLocation) {
+			}else if(currentEnemy.intxLocation + (Game.TILE_SIZE / 2) < intxLocation) {
 				intxLocation -= intProjectileSpeed;
 			}
-			if(currentEnemy.intyLocation > intyLocation) {
+			if(currentEnemy.intyLocation + (Game.TILE_SIZE / 2) > intyLocation) {
 				intyLocation += intProjectileSpeed;
-			}else if(currentEnemy.intyLocation < intyLocation) {
+			}else if(currentEnemy.intyLocation + (Game.TILE_SIZE / 2) < intyLocation) {
 				intyLocation -= intProjectileSpeed;
 			}
 		}
 	}
 	
 	public void render(Graphics g){
+		g.setColor(color);
 		g.fillOval(intxLocation - (intRadius / 2), intyLocation - (intRadius / 2), intRadius, intRadius);
 	}
 	
 	//constructor
 	public Projectile(int intDamage, Tower tower, int intRadius, int intProjectileSpeed, Color color, Enemy currentEnemy) {
 		this.intDamage = intDamage;
-		this.intxLocation = tower.intxLocation;
-		this.intyLocation = tower.intyLocation;
+		this.intxLocation = tower.intxLocation + (Game.TILE_SIZE / 2);
+		this.intyLocation = tower.intyLocation + (Game.TILE_SIZE / 2);
 		this.intRadius = intRadius;
 		this.intProjectileSpeed = intProjectileSpeed;
 		this.color = color;

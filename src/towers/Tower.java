@@ -14,6 +14,7 @@ import states.Game;
 public abstract class Tower {
 	
 	//properties
+	public static final String[] towerFiles = new String[] {"basicTower"};
 	/**
 	 *Numerical representation of the basic tower.
 	 **/
@@ -107,7 +108,8 @@ public abstract class Tower {
 	private void attackEnemy(Game game){
 		long longCurrentTime = System.currentTimeMillis();
 		if(longCurrentTime - longLastAttack >=intAttackSpeed) {
-			Projectile projectile = new Projectile(intAttackDamage, this, intProjectileRadius, intProjectileSpeed, projectileColor, currentEnemy);
+			Projectile projectile = new Projectile(intAttackDamage, this, intProjectileRadius,
+					intProjectileSpeed, projectileColor, currentEnemy);
 			game.projectiles.add(projectile);
 			longLastAttack = longCurrentTime;
 		}
@@ -144,9 +146,9 @@ public abstract class Tower {
 	 * @param intxLocation The X coordinate of the Tower.
 	 * @param intyLocation The Y coordinate of the Tower.
 	 */
-	public Tower(int intxLocation, int intyLocation, String towerFile, int type) {
+	public Tower(int intxLocation, int intyLocation, int type) {
 		this.type = type;
-		Map<String, String> data = Utils.loadTower(towerFile);
+		Map<String, String> data = Utils.loadTower(towerFiles[type]);
 		this.strName = data.get("name");
 		this.intxLocation = intxLocation * Game.TILE_SIZE;
 		this.intyLocation = intyLocation * Game.TILE_SIZE;

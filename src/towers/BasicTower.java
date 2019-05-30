@@ -9,7 +9,7 @@ public class BasicTower extends Tower{
 	 * @param intyLocation The Y coordinate of the Tower.
 	 */
 	public BasicTower(int intxLocation, int intyLocation) {
-		super(intxLocation, intyLocation, "basicTower", Tower.BASIC);
+		super(intxLocation, intyLocation, Tower.BASIC);
 	}
 
 }

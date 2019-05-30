@@ -1,19 +1,23 @@
 package states;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import enemies.BasicEnemy;
 import enemies.Enemy;
 import main.GameMap;
+import main.InputListener;
 import main.TowerDefence;
 import main.Utils;
 import projectiles.Projectile;
 import towers.BasicTower;
 import towers.Tower;
 
-public class Game extends State{
+public class Game extends State {
 	
 	public static final int TILE_SIZE = 40;
 
@@ -22,8 +26,10 @@ public class Game extends State{
 	private TowerDefence towerDefence;
 	public GameMap map;
 	private int intHealth = 100;
+	private int intPlacingTower = -1;
 	
 	private BufferedImage imgGrassTile, imgPathTile;
+	private BufferedImage imgPlacingTower;
 	
 	public ArrayList<Tower> towers;
 	public ArrayList<Enemy> enemies;
@@ -31,23 +37,7 @@ public class Game extends State{
 	
 	public static String strMessage;
 	
-	public Game(TowerDefence towerDefence) {
-		this.towerDefence = towerDefence;
-		
-		this.imgGrassTile = Utils.loadImage("GrassTile.jpg");
-		this.imgPathTile = Utils.loadImage("PathTile_Unfinished.jpg");
-		
-		map = new GameMap("map");
-		
-		towers = new ArrayList<>();
-		towers.add(new BasicTower(9, 15));
-		
-		enemies = new ArrayList<>();
-		enemies.add(new BasicEnemy());
-		
-		projectiles = new ArrayList<>();
-	}
-	
+	//methods	
 	@Override
 	public void update() {
 		//UPDATE TOWERS
@@ -70,15 +60,26 @@ public class Game extends State{
 			enemies.remove(enemy);
 		}
 		removeEnemies.clear();
+		
+		//CHECK FOR PRESSED KEYS
+		if(InputListener.keys[KeyEvent.VK_ESCAPE]) {
+			if(intPlacingTower != -1) {
+				intPlacingTower = -1;
+			}
+		}else if(InputListener.keys[KeyEvent.VK_1]) {
+			intPlacingTower = Tower.BASIC;
+		}
 	}
 
 	@Override
 	public void render(Graphics g) {
 		//RENDER GRASS TILES
 		for(int y = 0; y < towerDefence.getHeight(); y += Game.TILE_SIZE) {
-			for(int x = 0; x < towerDefence.getWidth(); x += Game.TILE_SIZE) {
+			for(int x = 0; x < towerDefence.getWidth() - Game.TILE_SIZE * 5; x += Game.TILE_SIZE) {
 				g.drawImage(imgGrassTile, x, y, null);
-				g.drawRect(x, y, Game.TILE_SIZE, Game.TILE_SIZE);
+				if(intPlacingTower != -1) {
+					g.drawRect(x, y, Game.TILE_SIZE, Game.TILE_SIZE);
+				}
 			}
 		}
 		
@@ -113,6 +114,16 @@ public class Game extends State{
 			currentCheckpointY = checkpointY;
 		}
 		
+		//RENDER TOWER WE WANT TO PLACE
+		if(intPlacingTower != -1) {
+			if(imgPlacingTower == null) {
+				imgPlacingTower = Utils.loadImage("towers/" + Utils.loadTower(Tower.towerFiles[intPlacingTower]).get("image"));
+			}
+			
+			g.drawImage(imgPlacingTower, (int) Math.round(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE,
+					 (int) Math.round(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE, null);
+		}
+		
 		//RENDER TOWERS
 		for(int i = 0; i < towers.size(); i++) {
 			towers.get(i).render(g);
@@ -128,10 +139,18 @@ public class Game extends State{
 			projectiles.get(i).render(g);
 		}
 		
+		/////UI/////
 		//RENDER CHAT
-		if(strMessage != null) {
-			g.drawString(strMessage, 0, 700);
+		if(Game.strMessage != null) {
+			g.drawString(Game.strMessage, 0, 700);
 		}
+		
+		//RENDER TOOL BAR
+		g.setColor(Color.ORANGE);
+		g.fillRect(Game.TILE_SIZE * 27, 0, Game.TILE_SIZE * 5, towerDefence.getHeight());
+		//RENDER HEALTh
+		g.setColor(Color.RED);
+		g.drawString("" + intHealth, Game.TILE_SIZE * 28, Game.TILE_SIZE * 2);
 	}
 
 	public void dealDamage(int intDamage) {
@@ -139,5 +158,25 @@ public class Game extends State{
 		if(intHealth <= 0) {
 			//GAME OVER
 		}
+	}
+	
+	//constructor
+	public Game(TowerDefence towerDefence) {
+		this.towerDefence = towerDefence;
+		
+		this.imgGrassTile = Utils.loadImage("GrassTile.jpg");
+		this.imgPathTile = Utils.loadImage("PathTile_Unfinished.jpg");
+		
+		map = new GameMap("map");
+		
+		towers = new ArrayList<>();
+		towers.add(new BasicTower(9, 15));
+		
+		enemies = new ArrayList<>();
+		enemies.add(new BasicEnemy());
+		enemies.add(new BasicEnemy());
+		enemies.add(new BasicEnemy());
+		
+		projectiles = new ArrayList<>();
 	}
 }

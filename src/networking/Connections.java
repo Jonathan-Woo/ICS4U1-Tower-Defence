@@ -9,7 +9,7 @@ public class Connections implements ActionListener{
 	
 	//properties
 	static SuperSocketMaster ssm;
-	boolean blnIsServer;
+	public static boolean blnIsServer;
 	public static final int CONNECT = 0, DISCONNECT = 1, CHATMESSAGE = 2;
 	
 	//methods

@@ -33,7 +33,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//SHOW FRAME IN THE MIDDLE OF THE SCREEN ON CREATION
-		this.setLocationRelativeTo(null);
+		//this.setLocationRelativeTo(null);
 		
 		//INIT ANIMATION PANEL
 		pnl = new AnimationPanel(this);
@@ -41,6 +41,12 @@ public class TowerDefence extends JFrame implements ActionListener {
 		
 		//INIT DEFAULT STATE OF THE GAME
 		currentState = new Game(this);
+		
+		//SET INPUT LISTENER
+		InputListener inputListener = new InputListener();
+		this.addKeyListener(inputListener);
+		this.addMouseListener(inputListener);
+		this.addMouseMotionListener(inputListener);
 		
 		//SHOW FRAME
 		this.pack();
