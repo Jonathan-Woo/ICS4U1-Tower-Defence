@@ -74,5 +74,12 @@ public abstract class Enemy {
 		this.intxLocation = GameMap.startX;
 		this.intyLocation = GameMap.startY;
 	}
+
+	public void dealDamage(int intDamage) {
+		this.intHealth -= intDamage;
+		if(this.intHealth <= 0) {
+			Game.removeEnemies.add(this);
+		}
+	}
 	
 }
