@@ -22,6 +22,7 @@ public class Projectile {
 		if(Math.abs(currentEnemy.intxLocation - intxLocation) <=5 && Math.abs(currentEnemy.intyLocation - intyLocation)<=5) {
 			//HIT THE ENEMY: DAMAGE ENEMY, REMOVE PROJECTILE
 			game.projectiles.remove(this);
+			currentEnemy.dealDamage(intDamage);
 		}else{
 			if(currentEnemy.intxLocation > intxLocation) {
 				intxLocation += intProjectileSpeed;

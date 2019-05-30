@@ -22,6 +22,8 @@ public class Game extends State{
 	
 	public static final int TILE_SIZE = 40;
 
+	public static ArrayList<Enemy> removeEnemies;
+
 	private TowerDefence towerDefence;
 	public GameMap map;
 	private int intHealth = 100;
@@ -36,7 +38,7 @@ public class Game extends State{
 		this.towerDefence = towerDefence;
 		
 		this.imgGrassTile = Utils.loadImage("GrassTile.jpg");
-		this.imgGrassTile = Utils.loadImage("PathTile_Unfinished.jpg");
+		this.imgPathTile = Utils.loadImage("PathTile_Unfinished.jpg");
 		
 		map = new GameMap("map");
 		
@@ -75,13 +77,34 @@ public class Game extends State{
 		}
 		
 		//RENDER PATH
-		for(int n = 0; n < map.getNumberOfCheckpoints(); n++) {
-			for(int y = n == 0 ? 0 : map.getCheckpointY(n - 1); y < map.getCheckpointY(n); y += Game.TILE_SIZE) {
-				for(int x = n == 0 ? 0 : map.getCheckpointX(n - 1); x < map.getCheckpointX(n); x += Game.TILE_SIZE) {
-					
+		int currentCheckpointX = map.getCheckpointX(0);
+		int currentCheckpointY = map.getCheckpointY(0);
+		for(int n = 1; n < map.getNumberOfCheckpoints(); n++) {
+			int checkpointX = map.getCheckpointX(n);
+			int checkpointY = map.getCheckpointY(n);
+			
+			if(checkpointX > currentCheckpointX) {
+				for(int x = currentCheckpointX; x <= checkpointX; x += Game.TILE_SIZE) {
+					g.drawImage(imgPathTile, x, checkpointY, null);
+				}
+			}else if(checkpointX < currentCheckpointX) {
+				for(int x = currentCheckpointX; x >= checkpointX; x -= Game.TILE_SIZE) {
+					g.drawImage(imgPathTile, x, checkpointY, null);
 				}
 			}
-			g.drawImage(imgPathTile, , map.getCheckpointY(n), null);
+			
+			if(checkpointY > currentCheckpointY) {
+				for(int y = currentCheckpointY; y <= checkpointY; y += Game.TILE_SIZE) {
+					g.drawImage(imgPathTile, checkpointX, y, null);
+				}
+			}else if(checkpointY < currentCheckpointY) {
+				for(int y = currentCheckpointY; y >= checkpointY; y -= Game.TILE_SIZE) {
+					g.drawImage(imgPathTile, checkpointX, y, null);
+				}
+			}
+			
+			currentCheckpointX = checkpointX;
+			currentCheckpointY = checkpointY;
 		}
 		
 		//RENDER TOWERS
