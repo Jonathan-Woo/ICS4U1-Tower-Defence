@@ -39,7 +39,7 @@ public abstract class Enemy {
 				checkpointY = game.map.getCheckpointY(currentCheckpoint);
 			}else {
 				//ENEMY HAS REACHED THE END OF THE MAP
-				game.enemies.remove(this);
+				Game.removeEnemies.add(this);
 				game.dealDamage(intDamage);
 			}
 		}else {

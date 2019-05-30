@@ -6,6 +6,5 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="src/SuperSocketMaster-master" sourcepath="src/SuperSocketMaster-master"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
