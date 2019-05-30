@@ -17,7 +17,7 @@ public class Game extends State{
 	
 	public static final int TILE_SIZE = 40;
 
-	public static ArrayList<Enemy> removeEnemies;
+	public static ArrayList<Enemy> removeEnemies = new ArrayList<>();
 
 	private TowerDefence towerDefence;
 	public GameMap map;
@@ -50,17 +50,26 @@ public class Game extends State{
 	
 	@Override
 	public void update() {
+		//UPDATE TOWERS
 		for(int i = 0; i < towers.size(); i++) {
 			towers.get(i).update(this);
 		}
 		
+		//UPDATE ENEMIES
 		for(int i = 0; i < enemies.size(); i++) {
 			enemies.get(i).update(this);
 		}
 		
+		//UDPATE PROJECTILES
 		for(int i = 0; i < projectiles.size(); i++) {
 			projectiles.get(i).update(this);
 		}
+		
+		//REMOVE DEAD ENEMIES
+		for(Enemy enemy : removeEnemies) {
+			enemies.remove(enemy);
+		}
+		removeEnemies.clear();
 	}
 
 	@Override
@@ -120,7 +129,7 @@ public class Game extends State{
 		}
 		
 		//RENDER CHAT
-		if(strMessage!=null) {
+		if(strMessage != null) {
 			g.drawString(strMessage, 0, 700);
 		}
 	}
