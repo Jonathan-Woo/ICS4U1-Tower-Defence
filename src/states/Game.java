@@ -148,8 +148,8 @@ public class Game extends State {
 		//RENDER TOOL BAR
 		g.setColor(Color.ORANGE);
 		g.fillRect(Game.TILE_SIZE * 27, 0, Game.TILE_SIZE * 5, towerDefence.getHeight());
-		//RENDER HEALTh
-		g.setColor(Color.RED);
+		//RENDER HEALTH
+		g.setColor(Color.BLACK);
 		g.drawString("" + intHealth, Game.TILE_SIZE * 28, Game.TILE_SIZE * 2);
 	}
 
