@@ -4,5 +4,5 @@ attackSpeed,1500
 damage,25
 image,castle.jpg
 projectileRadius,10
-projectileSpeed,2
+projectileSpeed,5
 projectileColor,#000000

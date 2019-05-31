@@ -164,7 +164,7 @@ public class Game extends State {
 	public Game(TowerDefence towerDefence) {
 		this.towerDefence = towerDefence;
 		
-		this.imgGrassTile = Utils.loadImage("GrassTile.jpg");
+		this.imgGrassTile = Utils.loadImage("tiles/GrassTile.jpg");
 		this.imgPathTile = Utils.loadImage("PathTile_Unfinished.jpg");
 		
 		map = new GameMap("map");
@@ -173,8 +173,6 @@ public class Game extends State {
 		towers.add(new BasicTower(9, 15));
 		
 		enemies = new ArrayList<>();
-		enemies.add(new BasicEnemy());
-		enemies.add(new BasicEnemy());
 		enemies.add(new BasicEnemy());
 		
 		projectiles = new ArrayList<>();
