@@ -29,7 +29,6 @@ public class Game extends State {
 	private int intPlacingTower = -1;
 	
 	private BufferedImage imgGrassTile, imgPathTile;
-	private BufferedImage imgPlacingTower;
 	
 	public ArrayList<Tower> towers;
 	public ArrayList<Enemy> enemies;
@@ -115,13 +114,9 @@ public class Game extends State {
 		}
 		
 		//RENDER TOWER WE WANT TO PLACE
-		if(intPlacingTower != -1) {
-			if(imgPlacingTower == null) {
-				imgPlacingTower = Utils.loadImage("towers/" + Utils.loadTower(Tower.towerFiles[intPlacingTower]).get("image"));
-			}
-			
-			g.drawImage(imgPlacingTower, (int) Math.round(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE,
-					 (int) Math.round(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE, null);
+		if(intPlacingTower != -1) {			
+			g.drawImage(Tower.getImage(intPlacingTower), (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE,
+					 (int) Math.floor((InputListener.mouseY - (Game.TILE_SIZE / 2)) / Game.TILE_SIZE) * Game.TILE_SIZE, null);
 		}
 		
 		//RENDER TOWERS
@@ -164,7 +159,9 @@ public class Game extends State {
 	public Game(TowerDefence towerDefence) {
 		this.towerDefence = towerDefence;
 		
-		this.imgGrassTile = Utils.loadImage("GrassTile.jpg");
+		Tower.loadTowerFiles();
+		
+		this.imgGrassTile = Utils.loadImage("tiles/GrassTile.jpg");
 		this.imgPathTile = Utils.loadImage("PathTile_Unfinished.jpg");
 		
 		map = new GameMap("map");

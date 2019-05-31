@@ -2,6 +2,7 @@ package main;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +23,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 	private State currentState;
 	private AnimationPanel pnl;
 	private Timer timer;
+	private Font font;
 	
 	public static void main(String[] args) {
 		new TowerDefence();
@@ -51,6 +53,9 @@ public class TowerDefence extends JFrame implements ActionListener {
 		//SHOW FRAME
 		this.pack();
 		this.setVisible(true);
+		
+		//INIT FONT
+		font = new Font("Arial", Font.PLAIN, 36);
 		
 		//START TIMER
 		timer = new Timer(1000 / 60, this);
@@ -94,6 +99,9 @@ public class TowerDefence extends JFrame implements ActionListener {
 			//CLEAR PANEL
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, this.getWidth(), this.getHeight());
+			
+			//SET FONT
+			g.setFont(font);
 			
 			//RENDER BASED ON STATE
 			towerDefence.getCurrentState().render(g);

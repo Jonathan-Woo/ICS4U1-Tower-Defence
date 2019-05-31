@@ -2,8 +2,10 @@ package towers;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import enemies.Enemy;
@@ -14,7 +16,8 @@ import states.Game;
 public abstract class Tower {
 	
 	//properties
-	public static final String[] towerFiles = new String[] {"basicTower"};
+	private static Map<String, String>[] towerFiles;
+	private static BufferedImage[] towerImages;
 	/**
 	 *Numerical representation of the basic tower.
 	 **/
@@ -69,7 +72,6 @@ public abstract class Tower {
 	 **/
 	public int intAttackDamage;
 	private long longLastAttack = 0;
-	private BufferedImage towerImage;
 	private Enemy currentEnemy;
 	
 	private int intProjectileRadius;
@@ -77,6 +79,22 @@ public abstract class Tower {
 	private Color projectileColor;
 	
 	//methods
+	@SuppressWarnings("unchecked")
+	public static void loadTowerFiles() {
+		towerFiles = (Map<String, String>[]) new Map[] {
+			Utils.loadTower("basicTower")
+		};
+		
+		towerImages = new BufferedImage[] {
+			Utils.loadImage(towerFiles[Tower.BASIC].get("image"))
+		};
+	}
+	
+
+	public static BufferedImage getImage(int type) {
+		return towerImages[type];
+	}
+	
 	private void findEnemy(ArrayList<Enemy> enemies) {
 		Enemy currentEnemy = null;
 		int bestXDistToTower = 200;
@@ -136,7 +154,7 @@ public abstract class Tower {
 	 * @param g The Graphics object used for drawing to the screen.
 	 */
 	public void render(Graphics g) {
-		g.drawImage(towerImage, intxLocation, intyLocation, null);
+		g.drawImage(towerImages[type], intxLocation, intyLocation, null);
 	}
 	
 	//constructor
@@ -148,7 +166,7 @@ public abstract class Tower {
 	 */
 	public Tower(int intxLocation, int intyLocation, int type) {
 		this.type = type;
-		Map<String, String> data = Utils.loadTower(towerFiles[type]);
+		Map<String, String> data = towerFiles[type];
 		this.strName = data.get("name");
 		this.intxLocation = intxLocation * Game.TILE_SIZE;
 		this.intyLocation = intyLocation * Game.TILE_SIZE;
@@ -156,7 +174,6 @@ public abstract class Tower {
 		this.intRange = Integer.parseInt(data.get("range"));
 		this.intAttackSpeed = Integer.parseInt(data.get("attackSpeed"));
 		this.intAttackDamage = Integer.parseInt(data.get("damage"));
-		this.towerImage = Utils.loadImage("towers/" + data.get("image"));
 		
 		this.intProjectileRadius = Integer.parseInt(data.get("projectileRadius"));
 		this.intProjectileSpeed = Integer.parseInt(data.get("projectileSpeed"));
