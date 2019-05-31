@@ -86,7 +86,7 @@ public abstract class Tower {
 		};
 		
 		towerImages = new BufferedImage[] {
-			Utils.loadImage(towerFiles[Tower.BASIC].get("image"))
+			Utils.loadImage("towers/" + towerFiles[Tower.BASIC].get("image"))
 		};
 	}
 	
