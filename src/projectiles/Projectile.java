@@ -25,16 +25,25 @@ public class Projectile {
 			game.projectiles.remove(this);
 			currentEnemy.dealDamage(intDamage);
 		}else{
-			if(currentEnemy.intxLocation + (Game.TILE_SIZE / 2) > intxLocation) {
+			//calculates the distance from the enemy
+			int intPythagA;
+			int intPythagB;
+			double dblPythagC;
+			intPythagA = (currentEnemy.intxLocation + (Game.TILE_SIZE / 2)) - this.intxLocation;
+			intPythagB = (currentEnemy.intyLocation + (Game.TILE_SIZE/2)) - this.intyLocation;
+			if(intPythagA == 0) {
+				dblPythagC = 1.0;
+			}else {
+				//dblPythagC = Math.pow((intPythagA * intPythagA) + (intPythagB * intPythagB), 0.5);
+				dblPythagC = (double) ((double) intPythagB / (double) Math.abs(intPythagA));
+			}
+			if(intPythagA > 0) {
 				intxLocation += intProjectileSpeed;
-			}else if(currentEnemy.intxLocation + (Game.TILE_SIZE / 2) < intxLocation) {
+			}else if(intPythagA < 0) {
 				intxLocation -= intProjectileSpeed;
 			}
-			if(currentEnemy.intyLocation + (Game.TILE_SIZE / 2) > intyLocation) {
-				intyLocation += intProjectileSpeed;
-			}else if(currentEnemy.intyLocation + (Game.TILE_SIZE / 2) < intyLocation) {
-				intyLocation -= intProjectileSpeed;
-			}
+			//intyLocation += (int)Math.pow(((dblPythagC * dblPythagC) - 1), 0.5);
+			intyLocation += (int) (dblPythagC * intProjectileSpeed);
 		}
 	}
 	
