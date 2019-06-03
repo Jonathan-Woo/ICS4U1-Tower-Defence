@@ -2,7 +2,7 @@ price,100
 range,120
 attackSpeed,1500
 damage,25
-image,castle.jpg
+image,Basic tower.jpg
 projectileRadius,10
 projectileSpeed,5
 projectileColor,#000000
