@@ -146,6 +146,9 @@ public class Game extends State {
 		//RENDER HEALTH
 		g.setColor(Color.BLACK);
 		g.drawString("" + intHealth, Game.TILE_SIZE * 28, Game.TILE_SIZE * 2);
+		//RENDER PURCHASABLE TOWERS
+		BufferedImage basicTowerImage = Utils.loadImage("basicTower");
+		g.drawImage(Tower.getImage(Tower.BASIC), 1* Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
 	}
 
 	public void dealDamage(int intDamage) {
