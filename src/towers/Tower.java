@@ -84,7 +84,9 @@ public abstract class Tower {
 		towerFiles = (Map<String, String>[]) new Map[] {
 			Utils.loadTower("basicTower"),
 			Utils.loadTower("fireTower"),
-			Utils.loadTower("iceTower")
+			Utils.loadTower("iceTower"),
+			Utils.loadTower("snipeTower"),
+			Utils.loadTower("bombTower")
 		};
 		
 		towerImages = new BufferedImage[] {
