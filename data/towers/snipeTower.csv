@@ -2,7 +2,7 @@ price,600
 range,1400
 attackSpeed,2500
 damage,100
-image,snipeTower.png
+image,SnipeTower.jpg
 projectileRadius,10
 projectileSpeed,10
 projectileColor,#39ff14

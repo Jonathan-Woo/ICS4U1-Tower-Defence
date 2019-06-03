@@ -92,7 +92,9 @@ public abstract class Tower {
 		towerImages = new BufferedImage[] {
 			Utils.loadImage("towers/" + towerFiles[Tower.BASIC].get("image")),
 			Utils.loadImage("towers/" + towerFiles[Tower.FIRE].get("image")),
-			Utils.loadImage("towers/" + towerFiles[Tower.ICE].get("image"))
+			Utils.loadImage("towers/" + towerFiles[Tower.ICE].get("image")),
+			Utils.loadImage("towers/" + towerFiles[Tower.SNIPE].get("image")),
+			Utils.loadImage("towers/" + towerFiles[Tower.BOMB].get("image"))
 		};
 	}
 	

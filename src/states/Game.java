@@ -143,6 +143,9 @@ public class Game extends State {
 		//RENDER TOOL BAR
 		g.setColor(Color.ORANGE);
 		g.fillRect(Game.TILE_SIZE * 27, 0, Game.TILE_SIZE * 5, towerDefence.getHeight());
+		//RENDER ROUND COUNTER
+		//waiting to set up round counter
+		//g.drawString("Round:"+, 28 * Game.TILE_SIZE, 1 * Game.TILE_SIZE);
 		//RENDER HEALTH
 		BufferedImage heart = Utils.loadImage("sidebar/" + "heart.png");
 		g.drawImage(heart, 28 * Game.TILE_SIZE, 3 * Game.TILE_SIZE, null);
@@ -152,8 +155,8 @@ public class Game extends State {
 		g.drawImage(Tower.towerImages[Tower.BASIC], 28* Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
 		g.drawImage(Tower.towerImages[Tower.FIRE], 28* Game.TILE_SIZE, 8 * Game.TILE_SIZE, null);
 		g.drawImage(Tower.towerImages[Tower.ICE], 28* Game.TILE_SIZE, 10 * Game.TILE_SIZE, null);
-		//g.drawImage(Tower.towerImages[Tower.SNIPE], 1* Game.TILE_SIZE, 15 * Game.TILE_SIZE, null);
-		//g.drawImage(Tower.getImage(Tower.BOMB), 1* Game.TILE_SIZE,18 * Game.TILE_SIZE, null);
+		g.drawImage(Tower.towerImages[Tower.SNIPE], 28* Game.TILE_SIZE, 12 * Game.TILE_SIZE, null);
+		g.drawImage(Tower.towerImages[Tower.BOMB], 28* Game.TILE_SIZE,14 * Game.TILE_SIZE, null);
 		//RENDER TOWER PRICES
 		g.drawString("$"+ Tower.towerFiles[Tower.BASIC].get("price"), 29 * Game.TILE_SIZE, 7 * Game.TILE_SIZE);
 		g.drawString("$"+ Tower.towerFiles[Tower.FIRE].get("price"), 29 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);

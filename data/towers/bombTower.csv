@@ -2,7 +2,7 @@ price,600
 range,120
 attackSpeed,2500
 damage,40
-image,bombTower.png
+image,BombTower.jpg
 projectileRadius,20
 projectileSpeed,0.5
 projectileColor,#FFA500

@@ -2,7 +2,7 @@ price,350
 range,60
 attackSpeed,1500
 damage,25
-image,Ice tower.jpg
+image,IceTower.jpg
 projectileRadius,10
 projectileSpeed,1
 projectileColor,#00FFFF
