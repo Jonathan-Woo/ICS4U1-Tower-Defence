@@ -16,8 +16,8 @@ import states.Game;
 public abstract class Tower {
 	
 	//properties
-	private static Map<String, String>[] towerFiles;
-	private static BufferedImage[] towerImages;
+	public static Map<String, String>[] towerFiles;
+	public static BufferedImage[] towerImages;
 	/**
 	 *Numerical representation of the basic tower.
 	 **/
@@ -92,11 +92,6 @@ public abstract class Tower {
 			Utils.loadImage("towers/" + towerFiles[Tower.FIRE].get("image")),
 			Utils.loadImage("towers/" + towerFiles[Tower.ICE].get("image"))
 		};
-	}
-	
-
-	public static BufferedImage getImage(int type) {
-		return towerImages[type];
 	}
 	
 	private void findEnemy(ArrayList<Enemy> enemies) {
