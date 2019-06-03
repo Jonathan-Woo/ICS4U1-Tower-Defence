@@ -82,11 +82,15 @@ public abstract class Tower {
 	@SuppressWarnings("unchecked")
 	public static void loadTowerFiles() {
 		towerFiles = (Map<String, String>[]) new Map[] {
-			Utils.loadTower("basicTower")
+			Utils.loadTower("basicTower"),
+			Utils.loadTower("fireTower"),
+			Utils.loadTower("iceTower")
 		};
 		
 		towerImages = new BufferedImage[] {
-			Utils.loadImage("towers/" + towerFiles[Tower.BASIC].get("image"))
+			Utils.loadImage("towers/" + towerFiles[Tower.BASIC].get("image")),
+			Utils.loadImage("towers/" + towerFiles[Tower.FIRE].get("image")),
+			Utils.loadImage("towers/" + towerFiles[Tower.ICE].get("image"))
 		};
 	}
 	
