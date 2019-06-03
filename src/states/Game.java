@@ -1,6 +1,7 @@
 package states;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -27,6 +28,7 @@ public class Game extends State {
 	public GameMap map;
 	private int intHealth = 100;
 	private int intPlacingTower = -1;
+	private Font font;
 	
 	private BufferedImage imgGrassTile, imgPathTile;
 	
@@ -163,6 +165,13 @@ public class Game extends State {
 		g.drawString("$"+ Tower.towerFiles[Tower.ICE].get("price"), 29 * Game.TILE_SIZE, 11 * Game.TILE_SIZE);
 		g.drawString("$"+ Tower.towerFiles[Tower.SNIPE].get("price"), 29 * Game.TILE_SIZE, 13 * Game.TILE_SIZE);
 		g.drawString("$"+ Tower.towerFiles[Tower.BOMB].get("price"), 29 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
+		//RENDER TOWER NAMES
+		g.setFont(font);
+		g.drawString("Basic", 28 * Game.TILE_SIZE, 6 * Game.TILE_SIZE);
+		g.drawString("Fire", 28 * Game.TILE_SIZE, 8 * Game.TILE_SIZE);
+		g.drawString("Ice", 28 * Game.TILE_SIZE, 10 * Game.TILE_SIZE);
+		g.drawString("Snipe", 28 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
+		g.drawString("Bomb", 28 * Game.TILE_SIZE, 14 * Game.TILE_SIZE);
 	}
 
 	public void dealDamage(int intDamage) {
@@ -190,5 +199,7 @@ public class Game extends State {
 		enemies.add(new BasicEnemy());
 		
 		projectiles = new ArrayList<>();
+		
+		font = new Font("Arial", Font.PLAIN, 18);
 	}
 }
