@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -62,6 +63,28 @@ public class Game extends State {
 		}
 		removeEnemies.clear();
 		
+		//CHECK IF TOWER IS PRESSED FROM TOWER BAR
+		if(InputListener.mouseButtons[MouseEvent.BUTTON1]) {
+			if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 29) {
+				if(InputListener.mouseY >= Game.TILE_SIZE * 6 && InputListener.mouseY <= Game.TILE_SIZE * 7) {
+					//PRESSED BASIC TOWER
+					this.intPlacingTower = Tower.BASIC;
+				}else if(InputListener.mouseY >= Game.TILE_SIZE * 8 && InputListener.mouseY <= Game.TILE_SIZE * 9) {
+					//PRESSED FIRE TOWER
+					this.intPlacingTower = Tower.FIRE;
+				}else if(InputListener.mouseY >= Game.TILE_SIZE * 10 && InputListener.mouseY <= Game.TILE_SIZE * 11) {
+					//PRESSED ICE TOWER
+					this.intPlacingTower = Tower.ICE;
+				}else if(InputListener.mouseY >= Game.TILE_SIZE * 12 && InputListener.mouseY <= Game.TILE_SIZE * 13) {
+					//PRESSED SNIPE TOWER
+					this.intPlacingTower = Tower.SNIPE;
+				}else if(InputListener.mouseY >= Game.TILE_SIZE * 14 && InputListener.mouseY <= Game.TILE_SIZE * 15) {
+					//PRESSED BOMB TOWER
+					this.intPlacingTower = Tower.BOMB;
+				}
+			}
+		}
+		
 		//CHECK FOR PRESSED KEYS
 		if(InputListener.keys[KeyEvent.VK_ESCAPE]) {
 			if(intPlacingTower != -1) {
@@ -69,6 +92,14 @@ public class Game extends State {
 			}
 		}else if(InputListener.keys[KeyEvent.VK_1]) {
 			intPlacingTower = Tower.BASIC;
+		}else if(InputListener.keys[KeyEvent.VK_2]) {
+			intPlacingTower = Tower.FIRE;
+		}else if(InputListener.keys[KeyEvent.VK_3]) {
+			intPlacingTower = Tower.ICE;
+		}else if(InputListener.keys[KeyEvent.VK_4]) {
+			intPlacingTower = Tower.SNIPE;
+		}else if(InputListener.keys[KeyEvent.VK_5]) {
+			intPlacingTower = Tower.BOMB;
 		}
 	}
 
@@ -115,12 +146,6 @@ public class Game extends State {
 			currentCheckpointY = checkpointY;
 		}
 		
-		//RENDER TOWER WE WANT TO PLACE
-		if(intPlacingTower != -1) {			
-			g.drawImage(Tower.towerImages[intPlacingTower], (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE,
-					 (int) Math.floor((InputListener.mouseY - (Game.TILE_SIZE / 2)) / Game.TILE_SIZE) * Game.TILE_SIZE, null);
-		}
-		
 		//RENDER TOWERS
 		for(int i = 0; i < towers.size(); i++) {
 			towers.get(i).render(g);
@@ -134,6 +159,18 @@ public class Game extends State {
 		//RENDER PROJECTILES
 		for(int i = 0; i < projectiles.size(); i++) {
 			projectiles.get(i).render(g);
+		}
+		
+		//RENDER TOWER WE WANT TO PLACE
+		if (intPlacingTower != -1) {
+			int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
+			int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
+			int towerRadius = Integer.parseInt(Tower.towerFiles[intPlacingTower].get("range"));
+
+			g.setColor(new Color(0.8f, 0f, 1f, 0.4f));
+			g.fillOval(towerX + (Game.TILE_SIZE / 2) - (towerRadius / 2),
+					towerY + (Game.TILE_SIZE / 2) - (towerRadius / 2), towerRadius, towerRadius);
+			g.drawImage(Tower.towerImages[intPlacingTower], towerX, towerY, null);
 		}
 		
 		/////UI/////
