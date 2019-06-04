@@ -19,7 +19,9 @@ public class Connections implements ActionListener{
 			String strMessageParts[] = strText.split(",");
 			int intMessageType = Integer.parseInt(strMessageParts[0]);
 			if(intMessageType == CONNECT) {
+				
 			}else if(intMessageType == DISCONNECT) {
+				
 			}else if(intMessageType == CHATMESSAGE) {
 				Game.strMessage = strMessageParts[1];
 			}

@@ -3,11 +3,15 @@ package states;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import javax.swing.Timer;
 
 import enemies.BasicEnemy;
 import enemies.Enemy;
@@ -30,6 +34,10 @@ public class Game extends State {
 	private int intHealth = 100;
 	private int intPlacingTower = -1;
 	private Font font;
+	private int waveNumber = 1;
+	private int[] enemyWave;
+	private int roundTime = 15;
+	private Timer roundTimer, waveTimer;
 	
 	private BufferedImage imgGrassTile, imgPathTile;
 	
@@ -100,6 +108,54 @@ public class Game extends State {
 			intPlacingTower = Tower.SNIPE;
 		}else if(InputListener.keys[KeyEvent.VK_5]) {
 			intPlacingTower = Tower.BOMB;
+		}
+		
+		//CREATE ENEMY WAVES AND HANDLE DOWNTIME
+		if(roundTime > 0 && roundTimer == null) {
+			enemyWave = null;
+			roundTimer = new Timer(1000, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					roundTime--;
+					if(roundTime <= 0) {
+						roundTimer.stop();
+						roundTimer = null;
+					}
+				}
+			});
+			roundTimer.start();
+		}else{
+			if(enemyWave == null) {
+				enemyWave = new int[] {
+						waveNumber,
+						(int) Math.floor(waveNumber % 2),
+						(int) Math.floor(waveNumber % 3),
+						(int) Math.floor(waveNumber % 4),
+						(int) Math.floor(waveNumber % 5)
+				};
+			}
+			
+			if(waveTimer == null) {
+				waveTimer = new Timer(0, new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						int random = (int) Math.floor(Math.random() * 1);
+						if(enemyWave[random] > 0) {
+							enemies.add(Enemy.newEnemy(random));
+							enemyWave[random]--;
+						}
+					}
+				});
+				waveTimer.start();
+				waveTimer.setDelay(1500);
+			}	
+			
+			if(enemies.size() == 0) {
+				roundTime = 15;
+				waveTimer = null;
+			}
 		}
 	}
 
@@ -209,6 +265,12 @@ public class Game extends State {
 		g.drawString("Ice", 28 * Game.TILE_SIZE, 10 * Game.TILE_SIZE);
 		g.drawString("Snipe", 28 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
 		g.drawString("Bomb", 28 * Game.TILE_SIZE, 14 * Game.TILE_SIZE);
+		
+		//DRAW ROUND TIMER
+		if(this.roundTime > 0) {
+			g.setFont(TowerDefence.font);
+			g.drawString("" + roundTime, towerDefence.getWidth() / 2, towerDefence.getHeight() - Game.TILE_SIZE);
+		}
 	}
 
 	public void dealDamage(int intDamage) {
@@ -233,7 +295,6 @@ public class Game extends State {
 		towers.add(new BasicTower(9, 15));
 		
 		enemies = new ArrayList<>();
-		enemies.add(new BasicEnemy());
 		
 		projectiles = new ArrayList<>();
 		

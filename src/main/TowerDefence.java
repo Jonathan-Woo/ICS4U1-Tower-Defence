@@ -23,7 +23,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 	private State currentState;
 	private AnimationPanel pnl;
 	private Timer timer;
-	private Font font;
+	public static Font font;
 	
 	public static void main(String[] args) {
 		new TowerDefence();
