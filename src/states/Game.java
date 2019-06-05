@@ -30,13 +30,19 @@ public class Game extends State {
 	private int intPlacingTower = -1;
 	private Font font;
 	
-	private BufferedImage imgGrassTile, imgPathTile;
+	//path tile image variables
+	//UD = up down
+	//LR = left right
+
+	private BufferedImage imgGrassTile, imgPathTileUD, imgPathTileLR, imgPathTileCorner;
 	
 	public ArrayList<Tower> towers;
 	public ArrayList<Enemy> enemies;
 	public ArrayList<Projectile> projectiles;
 	
 	public static String strMessage;
+	
+	int intNumMessages = 0;
 	
 	//methods	
 	@Override
@@ -91,23 +97,44 @@ public class Game extends State {
 			int checkpointX = map.getCheckpointX(n);
 			int checkpointY = map.getCheckpointY(n);
 			
+			int previouscheckpointX = map.getCheckpointX(n-1);
+			int previouscheckpointY = map.getCheckpointY(n-1);
+			if(previouscheckpointX >= currentCheckpointX) {
+				if(checkpointY > currentCheckpointY){
+					g.drawImage(imgPathTileCorner, currentCheckpointX, currentCheckpointY, null);
+				}
+				else{
+					g.drawImage(imgPathTileCorner, currentCheckpointX, currentCheckpointY, null);
+				}
+			}
+			else if(previouscheckpointX <= currentCheckpointX) {
+				if(checkpointY > currentCheckpointY) {
+					g.drawImage(imgPathTileCorner, currentCheckpointX, currentCheckpointY, null);
+				}
+				else {
+					g.drawImage(imgPathTileCorner, currentCheckpointX, currentCheckpointY, null);
+
+				}
+			}
+			
+			
 			if(checkpointX > currentCheckpointX) {
-				for(int x = currentCheckpointX; x <= checkpointX; x += Game.TILE_SIZE) {
-					g.drawImage(imgPathTile, x, checkpointY, null);
+				for(int x = currentCheckpointX + Game.TILE_SIZE; x <= checkpointX - Game.TILE_SIZE; x += Game.TILE_SIZE) {
+					g.drawImage(imgPathTileLR, x, checkpointY, null);
 				}
 			}else if(checkpointX < currentCheckpointX) {
-				for(int x = currentCheckpointX; x >= checkpointX; x -= Game.TILE_SIZE) {
-					g.drawImage(imgPathTile, x, checkpointY, null);
+				for(int x = currentCheckpointX - Game.TILE_SIZE; x >= checkpointX + Game.TILE_SIZE; x -= Game.TILE_SIZE) {
+					g.drawImage(imgPathTileLR, x, checkpointY, null);
 				}
 			}
 			
 			if(checkpointY > currentCheckpointY) {
-				for(int y = currentCheckpointY; y <= checkpointY; y += Game.TILE_SIZE) {
-					g.drawImage(imgPathTile, checkpointX, y, null);
+				for(int y = currentCheckpointY + Game.TILE_SIZE; y <= checkpointY - Game.TILE_SIZE; y += Game.TILE_SIZE) {
+					g.drawImage(imgPathTileUD, checkpointX, y, null);
 				}
 			}else if(checkpointY < currentCheckpointY) {
-				for(int y = currentCheckpointY; y >= checkpointY; y -= Game.TILE_SIZE) {
-					g.drawImage(imgPathTile, checkpointX, y, null);
+				for(int y = currentCheckpointY - Game.TILE_SIZE; y >= checkpointY + Game.TILE_SIZE; y -= Game.TILE_SIZE) {
+					g.drawImage(imgPathTileUD, checkpointX, y, null);
 				}
 			}
 			
@@ -139,7 +166,15 @@ public class Game extends State {
 		/////UI/////
 		//RENDER CHAT
 		if(Game.strMessage != null) {
-			g.drawString(Game.strMessage, 0, 700);
+			int intCount;
+			//creates an array to store old messages
+			String [] strOldMessage = new String [intNumMessages];
+			//loops through and draws 
+				for(intCount = 0; intCount<5; intCount++) {
+					g.drawString(strOldMessage[intNumMessages - intCount], 0, (18 - intCount) * Game.TILE_SIZE);
+				}
+			strOldMessage[intNumMessages] = Game.strMessage;
+			intNumMessages += 1;
 		}
 		
 		//RENDER TOOL BAR
@@ -188,7 +223,10 @@ public class Game extends State {
 		Tower.loadTowerFiles();
 		
 		this.imgGrassTile = Utils.loadImage("tiles/GrassTile.jpg");
-		this.imgPathTile = Utils.loadImage("PathTile_Unfinished.jpg");
+		this.imgPathTileUD = Utils.loadImage("tiles/" + "PathTileUD.jpg");
+		this.imgPathTileLR = Utils.loadImage("tiles/" + "PathTileLR.jpg");
+		this.imgPathTileCorner = Utils.loadImage("tiles/" + "PathTileDR.jpg");
+		
 		
 		map = new GameMap("map");
 		
