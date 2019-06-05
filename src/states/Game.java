@@ -43,7 +43,7 @@ public class Game extends State {
 	//UD = up down
 	//LR = left right
 
-	private BufferedImage imgGrassTile, imgPathTileUD, imgPathTileLR, imgPathTileCorner;
+	private BufferedImage imgGrassTile, imgPathTileUD, imgPathTileLR, imgPathTileUR, imgPathTileUL, imgPathTileDL, imgPathTileDR;
 	
 	public ArrayList<Tower> towers;
 	public ArrayList<Enemy> enemies;
@@ -178,56 +178,77 @@ public class Game extends State {
 		}
 		
 		//RENDER PATH
-		int currentCheckpointX = map.getCheckpointX(0);
-		int currentCheckpointY = map.getCheckpointY(0);
+		//draws the rest of the path tiles
+		int previousCheckpointX = map.getCheckpointX(0);
+		int previousCheckpointY = map.getCheckpointY(0);
+		for(int n = 1; n < map.getNumberOfCheckpoints(); n++) {
+			int checkpointX = map.getCheckpointX(n);
+			int checkpointY = map.getCheckpointY(n);
+			if(checkpointX > previousCheckpointX) {
+				for(int x = previousCheckpointX; x <= checkpointX; x += Game.TILE_SIZE) {
+					g.drawImage(imgPathTileLR, x, checkpointY, null);
+				}
+			}else if(checkpointX < previousCheckpointX) {
+				for(int x = previousCheckpointX; x >= checkpointX; x -= Game.TILE_SIZE) {
+					g.drawImage(imgPathTileLR, x, checkpointY, null);
+				}
+			}else if(checkpointY > previousCheckpointY) {
+				for(int y = previousCheckpointY; y <= checkpointY; y += Game.TILE_SIZE) {
+					g.drawImage(imgPathTileUD, checkpointX, y, null);
+				}
+			}else if(checkpointY < previousCheckpointY) {
+				for(int y = previousCheckpointY; y >= checkpointY; y -= Game.TILE_SIZE) {
+					g.drawImage(imgPathTileUD, checkpointX, y, null);
+				}
+			}
+			
+			previousCheckpointX = checkpointX;
+			previousCheckpointY = checkpointY;
+		}
+		
+		previousCheckpointX = map.getCheckpointX(0);
+		previousCheckpointY = map.getCheckpointY(0);
 		for(int n = 1; n < map.getNumberOfCheckpoints(); n++) {
 			int checkpointX = map.getCheckpointX(n);
 			int checkpointY = map.getCheckpointY(n);
 			
-			int previouscheckpointX = map.getCheckpointX(n-1);
-			int previouscheckpointY = map.getCheckpointY(n-1);
-			if(previouscheckpointX >= currentCheckpointX) {
-				if(checkpointY > currentCheckpointY){
-					g.drawImage(imgPathTileCorner, currentCheckpointX, currentCheckpointY, null);
+			if(n + 1 < map.getNumberOfCheckpoints()) {
+				int nextCheckpointX = map.getCheckpointX(n + 1);
+				int nextCheckpointY = map.getCheckpointY(n + 1);
+				
+				if(previousCheckpointX > checkpointX) {
+					if(nextCheckpointY > checkpointY){
+						g.drawImage(imgPathTileUR, checkpointX, checkpointY, null);
+					}
+					else{
+						g.drawImage(imgPathTileDR, checkpointX, checkpointY, null);
+					}
 				}
-				else{
-					g.drawImage(imgPathTileCorner, currentCheckpointX, currentCheckpointY, null);
-				}
-			}
-			else if(previouscheckpointX <= currentCheckpointX) {
-				if(checkpointY > currentCheckpointY) {
-					g.drawImage(imgPathTileCorner, currentCheckpointX, currentCheckpointY, null);
-				}
-				else {
-					g.drawImage(imgPathTileCorner, currentCheckpointX, currentCheckpointY, null);
-
-				}
-			}
-			
-			
-			if(checkpointX > currentCheckpointX) {
-				for(int x = currentCheckpointX + Game.TILE_SIZE; x <= checkpointX - Game.TILE_SIZE; x += Game.TILE_SIZE) {
-					g.drawImage(imgPathTileLR, x, checkpointY, null);
-				}
-			}else if(checkpointX < currentCheckpointX) {
-				for(int x = currentCheckpointX - Game.TILE_SIZE; x >= checkpointX + Game.TILE_SIZE; x -= Game.TILE_SIZE) {
-					g.drawImage(imgPathTileLR, x, checkpointY, null);
-				}
-			}
-			
-			if(checkpointY > currentCheckpointY) {
-				for(int y = currentCheckpointY + Game.TILE_SIZE; y <= checkpointY - Game.TILE_SIZE; y += Game.TILE_SIZE) {
-					g.drawImage(imgPathTileUD, checkpointX, y, null);
-				}
-			}else if(checkpointY < currentCheckpointY) {
-				for(int y = currentCheckpointY - Game.TILE_SIZE; y >= checkpointY + Game.TILE_SIZE; y -= Game.TILE_SIZE) {
-					g.drawImage(imgPathTileUD, checkpointX, y, null);
+				else if(previousCheckpointX < checkpointX) {
+					if(nextCheckpointY > checkpointY) {
+						g.drawImage(imgPathTileUL, checkpointX, checkpointY, null);
+					}
+					else {
+						g.drawImage(imgPathTileDL, checkpointX, checkpointY, null);
+					}
+				}else if(previousCheckpointY > checkpointY) {
+					if(nextCheckpointX > previousCheckpointX) {
+						g.drawImage(imgPathTileUR, checkpointX, checkpointY, null);
+					}else {
+						g.drawImage(imgPathTileUL, checkpointX, checkpointY, null);
+					}
+				}else if(previousCheckpointY < checkpointY) {
+					if(nextCheckpointX > previousCheckpointX) {
+						g.drawImage(imgPathTileDR, checkpointX, checkpointY, null);
+					}else {
+						g.drawImage(imgPathTileDL, checkpointX, checkpointY, null);
+					}
 				}
 			}
 			
-			currentCheckpointX = checkpointX;
-			currentCheckpointY = checkpointY;
-		}
+			previousCheckpointX = checkpointX;
+			previousCheckpointY = checkpointY;
+		}	
 		
 		//RENDER TOWERS
 		for(int i = 0; i < towers.size(); i++) {
@@ -324,7 +345,11 @@ public class Game extends State {
 		this.imgGrassTile = Utils.loadImage("tiles/GrassTile.jpg");
 		this.imgPathTileUD = Utils.loadImage("tiles/" + "PathTileUD.jpg");
 		this.imgPathTileLR = Utils.loadImage("tiles/" + "PathTileLR.jpg");
-		this.imgPathTileCorner = Utils.loadImage("tiles/" + "PathTileDR.jpg");
+		this.imgPathTileUR = Utils.loadImage("tiles/" + "PathTileUR.jpg");
+		this.imgPathTileUL = Utils.loadImage("tiles/" + "PathTileUL.jpg");
+		this.imgPathTileDR = Utils.loadImage("tiles/" + "PathTileDR.jpg");
+		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");
+
 		
 		
 		map = new GameMap("map");
