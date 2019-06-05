@@ -3,10 +3,15 @@ package states;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
+import javax.swing.Timer;
 
 import enemies.BasicEnemy;
 import enemies.Enemy;
@@ -29,6 +34,10 @@ public class Game extends State {
 	private int intHealth = 100;
 	private int intPlacingTower = -1;
 	private Font font;
+	private int waveNumber = 1;
+	private int[] enemyWave;
+	private int roundTime = 15;
+	private Timer roundTimer, waveTimer;
 	
 	//path tile image variables
 	//UD = up down
@@ -68,6 +77,28 @@ public class Game extends State {
 		}
 		removeEnemies.clear();
 		
+		//CHECK IF TOWER IS PRESSED FROM TOWER BAR
+		if(InputListener.mouseButtons[MouseEvent.BUTTON1]) {
+			if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 29) {
+				if(InputListener.mouseY >= Game.TILE_SIZE * 6 && InputListener.mouseY <= Game.TILE_SIZE * 7) {
+					//PRESSED BASIC TOWER
+					this.intPlacingTower = Tower.BASIC;
+				}else if(InputListener.mouseY >= Game.TILE_SIZE * 8 && InputListener.mouseY <= Game.TILE_SIZE * 9) {
+					//PRESSED FIRE TOWER
+					this.intPlacingTower = Tower.FIRE;
+				}else if(InputListener.mouseY >= Game.TILE_SIZE * 10 && InputListener.mouseY <= Game.TILE_SIZE * 11) {
+					//PRESSED ICE TOWER
+					this.intPlacingTower = Tower.ICE;
+				}else if(InputListener.mouseY >= Game.TILE_SIZE * 12 && InputListener.mouseY <= Game.TILE_SIZE * 13) {
+					//PRESSED SNIPE TOWER
+					this.intPlacingTower = Tower.SNIPE;
+				}else if(InputListener.mouseY >= Game.TILE_SIZE * 14 && InputListener.mouseY <= Game.TILE_SIZE * 15) {
+					//PRESSED BOMB TOWER
+					this.intPlacingTower = Tower.BOMB;
+				}
+			}
+		}
+		
 		//CHECK FOR PRESSED KEYS
 		if(InputListener.keys[KeyEvent.VK_ESCAPE]) {
 			if(intPlacingTower != -1) {
@@ -75,6 +106,62 @@ public class Game extends State {
 			}
 		}else if(InputListener.keys[KeyEvent.VK_1]) {
 			intPlacingTower = Tower.BASIC;
+		}else if(InputListener.keys[KeyEvent.VK_2]) {
+			intPlacingTower = Tower.FIRE;
+		}else if(InputListener.keys[KeyEvent.VK_3]) {
+			intPlacingTower = Tower.ICE;
+		}else if(InputListener.keys[KeyEvent.VK_4]) {
+			intPlacingTower = Tower.SNIPE;
+		}else if(InputListener.keys[KeyEvent.VK_5]) {
+			intPlacingTower = Tower.BOMB;
+		}
+		
+		//CREATE ENEMY WAVES AND HANDLE DOWNTIME
+		if(roundTime > 0 && roundTimer == null) {
+			enemyWave = null;
+			roundTimer = new Timer(1000, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					roundTime--;
+					if(roundTime <= 0) {
+						roundTimer.stop();
+						roundTimer = null;
+					}
+				}
+			});
+			roundTimer.start();
+		}else{
+			if(enemyWave == null) {
+				enemyWave = new int[] {
+						waveNumber,
+						(int) Math.floor(waveNumber % 2),
+						(int) Math.floor(waveNumber % 3),
+						(int) Math.floor(waveNumber % 4),
+						(int) Math.floor(waveNumber % 5)
+				};
+			}
+			
+			if(waveTimer == null) {
+				waveTimer = new Timer(0, new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						int random = (int) Math.floor(Math.random() * 1);
+						if(enemyWave[random] > 0) {
+							enemies.add(Enemy.newEnemy(random));
+							enemyWave[random]--;
+						}
+					}
+				});
+				waveTimer.start();
+				waveTimer.setDelay(1500);
+			}	
+			
+			if(enemies.size() == 0) {
+				roundTime = 15;
+				waveTimer = null;
+			}
 		}
 	}
 
@@ -142,12 +229,6 @@ public class Game extends State {
 			currentCheckpointY = checkpointY;
 		}
 		
-		//RENDER TOWER WE WANT TO PLACE
-		if(intPlacingTower != -1) {			
-			g.drawImage(Tower.towerImages[intPlacingTower], (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE,
-					 (int) Math.floor((InputListener.mouseY - (Game.TILE_SIZE / 2)) / Game.TILE_SIZE) * Game.TILE_SIZE, null);
-		}
-		
 		//RENDER TOWERS
 		for(int i = 0; i < towers.size(); i++) {
 			towers.get(i).render(g);
@@ -161,6 +242,18 @@ public class Game extends State {
 		//RENDER PROJECTILES
 		for(int i = 0; i < projectiles.size(); i++) {
 			projectiles.get(i).render(g);
+		}
+		
+		//RENDER TOWER WE WANT TO PLACE
+		if (intPlacingTower != -1) {
+			int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
+			int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
+			int towerRadius = Integer.parseInt(Tower.towerFiles[intPlacingTower].get("range"));
+
+			g.setColor(new Color(0.8f, 0f, 1f, 0.4f));
+			g.fillOval(towerX + (Game.TILE_SIZE / 2) - (towerRadius / 2),
+					towerY + (Game.TILE_SIZE / 2) - (towerRadius / 2), towerRadius, towerRadius);
+			g.drawImage(Tower.towerImages[intPlacingTower], towerX, towerY, null);
 		}
 		
 		/////UI/////
@@ -207,6 +300,12 @@ public class Game extends State {
 		g.drawString("Ice", 28 * Game.TILE_SIZE, 10 * Game.TILE_SIZE);
 		g.drawString("Snipe", 28 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
 		g.drawString("Bomb", 28 * Game.TILE_SIZE, 14 * Game.TILE_SIZE);
+		
+		//DRAW ROUND TIMER
+		if(this.roundTime > 0) {
+			g.setFont(TowerDefence.font);
+			g.drawString("" + roundTime, towerDefence.getWidth() / 2, towerDefence.getHeight() - Game.TILE_SIZE);
+		}
 	}
 
 	public void dealDamage(int intDamage) {
@@ -234,7 +333,6 @@ public class Game extends State {
 		towers.add(new BasicTower(9, 15));
 		
 		enemies = new ArrayList<>();
-		enemies.add(new BasicEnemy());
 		
 		projectiles = new ArrayList<>();
 		

@@ -23,6 +23,22 @@ public abstract class Enemy {
 	
 	private int checkpointX = -1, checkpointY = -1, currentCheckpoint = 0;
 	
+	public void dealDamage(int intDamage) {
+		this.intHealth -= intDamage;
+		if(this.intHealth <= 0) {
+			Game.removeEnemies.add(this);
+		}
+	}
+
+	public static Enemy newEnemy(final int type) {
+		switch(type) {
+			case Enemy.BASIC:
+				return new BasicEnemy();
+			default:
+				return null;
+		}
+	}
+	
 	//methods
 	public void update(Game game) {
 		if(checkpointX == -1 || checkpointY == -1) {
@@ -73,13 +89,6 @@ public abstract class Enemy {
 		
 		this.intxLocation = GameMap.startX;
 		this.intyLocation = GameMap.startY;
-	}
-
-	public void dealDamage(int intDamage) {
-		this.intHealth -= intDamage;
-		if(this.intHealth <= 0) {
-			Game.removeEnemies.add(this);
-		}
 	}
 	
 }

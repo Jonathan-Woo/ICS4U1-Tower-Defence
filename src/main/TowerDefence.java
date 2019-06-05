@@ -23,7 +23,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 	private State currentState;
 	private AnimationPanel pnl;
 	private Timer timer;
-	private Font font;
+	public static Font font;
 	
 	public static void main(String[] args) {
 		new TowerDefence();
@@ -39,20 +39,20 @@ public class TowerDefence extends JFrame implements ActionListener {
 		
 		//INIT ANIMATION PANEL
 		pnl = new AnimationPanel(this);
-		this.add(pnl);
+		this.setContentPane(pnl);
 		
 		//INIT DEFAULT STATE OF THE GAME
 		currentState = new Game(this);
 		
-		//SET INPUT LISTENER
-		InputListener inputListener = new InputListener();
-		this.addKeyListener(inputListener);
-		this.addMouseListener(inputListener);
-		this.addMouseMotionListener(inputListener);
-		
 		//SHOW FRAME
 		this.pack();
 		this.setVisible(true);
+		
+		//SET INPUT LISTENER
+		InputListener inputListener = new InputListener(this.getInsets().top);
+		this.addKeyListener(inputListener);
+		this.addMouseListener(inputListener);
+		this.addMouseMotionListener(inputListener);
 		
 		//INIT FONT
 		font = new Font("Arial", Font.PLAIN, 36);
