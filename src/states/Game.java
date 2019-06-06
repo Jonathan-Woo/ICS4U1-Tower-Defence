@@ -36,7 +36,7 @@ public class Game extends State {
 	private Font font;
 	private int waveNumber = 1;
 	private int[] enemyWave;
-	private int roundTime = 15;
+	private int roundTime = 3;
 	private Timer roundTimer, waveTimer;
 	
 	private BufferedImage imgGrassTile, imgPathTile;
@@ -47,7 +47,7 @@ public class Game extends State {
 	
 	public static String strMessage;
 	
-	//methods	
+	//methods
 	@Override
 	public void update() {
 		//UPDATE TOWERS
@@ -111,52 +111,72 @@ public class Game extends State {
 		}
 		
 		//CREATE ENEMY WAVES AND HANDLE DOWNTIME
-		if(roundTime > 0 && roundTimer == null) {
-			enemyWave = null;
-			roundTimer = new Timer(1000, new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					roundTime--;
-					if(roundTime <= 0) {
-						roundTimer.stop();
-						roundTimer = null;
-					}
-				}
-			});
-			roundTimer.start();
-		}else{
-			if(enemyWave == null) {
-				enemyWave = new int[] {
-						waveNumber,
-						(int) Math.floor(waveNumber % 2),
-						(int) Math.floor(waveNumber % 3),
-						(int) Math.floor(waveNumber % 4),
-						(int) Math.floor(waveNumber % 5)
-				};
-			}
-			
-			if(waveTimer == null) {
-				waveTimer = new Timer(0, new ActionListener() {
+		if(roundTime > 0) {
+			if(roundTimer == null) {
+				enemyWave = null;
+				roundTimer = new Timer(1000, new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
-						int random = (int) Math.floor(Math.random() * 1);
-						if(enemyWave[random] > 0) {
-							enemies.add(Enemy.newEnemy(random));
-							enemyWave[random]--;
+						roundTime--;
+						if(roundTime <= 0) {
+							roundTimer.stop();
+							roundTimer = null;
 						}
 					}
 				});
+				roundTimer.start();
+			}			
+		}else{
+			if(enemyWave == null) {						
+				enemyWave = new int[] {
+						waveNumber,
+						(int) Math.floor(waveNumber / 2),
+						(int) Math.floor(waveNumber / 3),
+						(int) Math.floor(waveNumber / 4),
+						(int) Math.floor(waveNumber / 5)
+				};
+				
+				spawnEnemies();
+			}
+			
+			if(waveTimer == null) {
+				waveTimer = new Timer(1500, new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						spawnEnemies();
+					}
+				});
 				waveTimer.start();
-				waveTimer.setDelay(1500);
 			}	
 			
 			if(enemies.size() == 0) {
-				roundTime = 15;
+				waveNumber++;
+				roundTime = 3;
+				waveTimer.stop();
 				waveTimer = null;
+				enemyWave = null;
 			}
 		}
+	}
+	
+	private void spawnEnemies() {
+		if(enemyWave != null) {
+			int enemiesInWave = 0;
+			for(int enemyNum : enemyWave) {
+				enemiesInWave += enemyNum;
+			}
+			
+			boolean enemySpawned = false;
+			while(!enemySpawned && enemiesInWave > 0) {
+				int random = (int) Math.round(Math.random() * 4);
+				if(enemyWave[random] > 0) {
+					enemies.add(Enemy.newEnemy(random));
+					enemyWave[random]--;
+					enemySpawned = true;
+				}
+			}
+		}		
 	}
 
 	@Override
@@ -224,8 +244,8 @@ public class Game extends State {
 			int towerRadius = Integer.parseInt(Tower.towerFiles[intPlacingTower].get("range"));
 
 			g.setColor(new Color(0.8f, 0f, 1f, 0.4f));
-			g.fillOval(towerX + (Game.TILE_SIZE / 2) - (towerRadius / 2),
-					towerY + (Game.TILE_SIZE / 2) - (towerRadius / 2), towerRadius, towerRadius);
+			g.fillOval(towerX - towerRadius, towerY - towerRadius,
+					(towerRadius * 2) + Game.TILE_SIZE, (towerRadius * 2) + Game.TILE_SIZE);
 			g.drawImage(Tower.towerImages[intPlacingTower], towerX, towerY, null);
 		}
 		

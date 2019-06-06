@@ -32,10 +32,8 @@ public abstract class Enemy {
 
 	public static Enemy newEnemy(final int type) {
 		switch(type) {
-			case Enemy.BASIC:
-				return new BasicEnemy();
 			default:
-				return null;
+				return new BasicEnemy();
 		}
 	}
 	
