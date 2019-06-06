@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -13,6 +14,7 @@ import javax.swing.Timer;
 
 import states.Game;
 import states.MainMenu;
+import states.Settings;
 import states.State;
 
 //MAKE THIS MAIN CLASS THE JFRAME SO WE DON'T
@@ -38,6 +40,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 		//this.setLocationRelativeTo(null);
 		
 		//INIT ANIMATION PANEL
+		this.setLayout(null);
 		pnl = new AnimationPanel(this);
 		this.setContentPane(pnl);
 		
@@ -61,6 +64,22 @@ public class TowerDefence extends JFrame implements ActionListener {
 		timer = new Timer(1000 / 60, this);
 		timer.start();
 	}
+	
+	@Override
+	public Component add(Component component) {
+		Component comp = pnl.add(component);
+		this.pack();
+		return comp;
+	}
+	
+	/**
+	 * Returns the current State of the game.
+	 * 
+	 * @return The current State object the game is using.
+	 */
+	public State getCurrentState() {
+		return currentState;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -73,15 +92,6 @@ public class TowerDefence extends JFrame implements ActionListener {
 		}
 	}
 	
-	/**
-	 * Returns the current State of the game.
-	 * 
-	 * @return The current State object the game is using.
-	 */
-	public State getCurrentState() {
-		return currentState;
-	}
-	
 	//WE'LL MAKE THE ANIMATION PANEL CLASS IN HERE
 	//SINCE IT'S SO SMALL AND WE ONLY USE IT HERE
 	//WE DON'T NEED TO CREATE A WHOLE NEW FILE FOR IT
@@ -90,6 +100,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 		private TowerDefence towerDefence;
 		
 		public AnimationPanel(TowerDefence towerDefence) {
+			this.setLayout(null);
 			this.setPreferredSize(new Dimension (1280, 720));
 			this.towerDefence = towerDefence;
 		}
