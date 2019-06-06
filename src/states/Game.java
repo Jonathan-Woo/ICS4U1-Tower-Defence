@@ -101,6 +101,49 @@ public class Game extends State {
 					//PRESSED BOMB TOWER
 					this.intPlacingTower = Tower.BOMB;
 				}
+			}else if(InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower != -1) {
+				int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
+				int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
+				
+				//CHECK IF TOWER IS GETTING PLACED IN PATH
+				boolean canBePlaced = true;
+				int previousCheckpointX = map.getCheckpointX(0);
+				int previousCheckpointY = map.getCheckpointY(0);
+				for(int n = 1; n < map.getNumberOfCheckpoints(); n++) {
+					int checkpointX = map.getCheckpointX(n);
+					int checkpointY = map.getCheckpointY(n);
+					
+					Line line = new Line(previousCheckpointX + (Game.TILE_SIZE / 2), previousCheckpointY + (Game.TILE_SIZE / 2),
+							checkpointX + (Game.TILE_SIZE / 2), checkpointY + (Game.TILE_SIZE / 2));
+					if(line.intersects(towerX, towerY, Game.TILE_SIZE, Game.TILE_SIZE)) {
+						canBePlaced = false;
+						break;
+					}
+					
+					previousCheckpointX = checkpointX;
+					previousCheckpointY = checkpointY;
+				}
+				
+				if(canBePlaced) {
+					//CHECK IF TOWER IS GOING TO COLLIDE WITH OTHER TOWERS
+					for(Tower tower : towers) {
+						if(tower.intxLocation == towerX && tower.intyLocation == towerY) {
+							canBePlaced = false;
+							break;
+						}
+					}
+				}
+				
+				if(canBePlaced) {
+					int towerPrice = Integer.parseInt(Tower.towerFiles[intPlacingTower].get("price"));
+					if(intBalance >= towerPrice) {				
+						Tower tower = Tower.newTower(intPlacingTower, towerX, towerY);
+						towers.add(tower);
+						
+						intBalance -= towerPrice;
+						intPlacingTower = -1;
+					}
+				}
 			}
 		}
 		
@@ -119,52 +162,6 @@ public class Game extends State {
 			intPlacingTower = Tower.SNIPE;
 		}else if(InputListener.keys[KeyEvent.VK_5]) {
 			intPlacingTower = Tower.BOMB;
-		}
-		
-		//PLACE SELECTED TOWER
-		if(InputListener.mouseButtons[MouseEvent.BUTTON1] && intPlacingTower != -1) {
-			int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
-			int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
-			
-			//CHECK IF TOWER IS GETTING PLACED IN PATH
-			boolean canBePlaced = true;
-			int previousCheckpointX = map.getCheckpointX(0);
-			int previousCheckpointY = map.getCheckpointY(0);
-			for(int n = 1; n < map.getNumberOfCheckpoints(); n++) {
-				int checkpointX = map.getCheckpointX(n);
-				int checkpointY = map.getCheckpointY(n);
-				
-				Line line = new Line(previousCheckpointX + (Game.TILE_SIZE / 2), previousCheckpointY + (Game.TILE_SIZE / 2),
-						checkpointX + (Game.TILE_SIZE / 2), checkpointY + (Game.TILE_SIZE / 2));
-				if(line.intersects(towerX, towerY, Game.TILE_SIZE, Game.TILE_SIZE)) {
-					canBePlaced = false;
-					break;
-				}
-				
-				previousCheckpointX = checkpointX;
-				previousCheckpointY = checkpointY;
-			}
-			
-			if(canBePlaced) {
-				//CHECK IF TOWER IS GOING TO COLLIDE WITH OTHER TOWERS
-				for(Tower tower : towers) {
-					if(tower.intxLocation == towerX && tower.intyLocation == towerY) {
-						canBePlaced = false;
-						break;
-					}
-				}
-			}
-			
-			if(canBePlaced) {
-				int towerPrice = Integer.parseInt(Tower.towerFiles[intPlacingTower].get("price"));
-				if(intBalance >= towerPrice) {				
-					Tower tower = Tower.newTower(intPlacingTower, towerX, towerY);
-					towers.add(tower);
-					
-					intBalance -= towerPrice;
-					intPlacingTower = -1;
-				}
-			}
 		}
 		
 		//CREATE ENEMY WAVES AND HANDLE DOWNTIME

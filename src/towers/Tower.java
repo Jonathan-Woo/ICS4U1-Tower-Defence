@@ -111,8 +111,8 @@ public abstract class Tower {
 	
 	private void findEnemy(ArrayList<Enemy> enemies) {
 		Enemy currentEnemy = null;
-		int bestXDistToTower = 20000;
-		int bestYDistToTower = 20000;
+		int bestXDistToTower = this.intRange;
+		int bestYDistToTower = this.intRange;
 		
 		for(int i = 0; i < enemies.size(); i++) {
 			Enemy enemy = enemies.get(i);
