@@ -147,6 +147,10 @@ public abstract class Tower {
 		}
 	}
 	
+	public int getPrice() {
+		return this.intPrice;
+	}
+	
 	/**
 	 * Update method gets called every game loop. Either finds new enemy or attacks currently targeted enemy
 	 * @param game The Game State.
@@ -174,6 +178,13 @@ public abstract class Tower {
 		g.drawImage(towerImages[type], intxLocation, intyLocation, null);
 	}
 	
+	public static Tower newTower(final int type, int towerX, int towerY) {
+		switch(type) {
+			default:
+				return new BasicTower(towerX, towerY);
+		}
+	}
+	
 	//constructor
 	/**
 	 * Takes in the type of tower and the tower location. Loads the tower from a csv file based on type. Saves properties to local variables.
@@ -185,8 +196,8 @@ public abstract class Tower {
 		this.type = type;
 		Map<String, String> data = towerFiles[type];
 		this.strName = data.get("name");
-		this.intxLocation = intxLocation * Game.TILE_SIZE;
-		this.intyLocation = intyLocation * Game.TILE_SIZE;
+		this.intxLocation = intxLocation;
+		this.intyLocation = intyLocation;
 		this.intPrice = Integer.parseInt(data.get("price"));
 		this.intRange = Integer.parseInt(data.get("range"));
 		this.intAttackSpeed = Integer.parseInt(data.get("attackSpeed"));

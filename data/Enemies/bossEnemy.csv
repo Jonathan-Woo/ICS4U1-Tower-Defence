@@ -1,4 +1,5 @@
 speed,0.35
 damage,50
 health,1000
+reward,100
 image,bossEnemy.png

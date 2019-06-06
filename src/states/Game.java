@@ -15,6 +15,8 @@ import javax.swing.Timer;
 
 import enemies.BasicEnemy;
 import enemies.Enemy;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import main.GameMap;
 import main.InputListener;
 import main.TowerDefence;
@@ -32,9 +34,11 @@ public class Game extends State {
 	private TowerDefence towerDefence;
 	public GameMap map;
 	private int intHealth = 100;
+	private int waveNumber = 1;
+	private int intBalance = 10000000;
+	
 	private int intPlacingTower = -1;
 	private Font font;
-	private int waveNumber = 1;
 	private int[] enemyWave;
 	private int roundTime = 3;
 	private Timer roundTimer, waveTimer;
@@ -75,6 +79,7 @@ public class Game extends State {
 		//REMOVE DEAD ENEMIES
 		for(Enemy enemy : removeEnemies) {
 			enemies.remove(enemy);
+			intBalance += enemy.getReward();
 		}
 		removeEnemies.clear();
 		
@@ -115,6 +120,52 @@ public class Game extends State {
 			intPlacingTower = Tower.SNIPE;
 		}else if(InputListener.keys[KeyEvent.VK_5]) {
 			intPlacingTower = Tower.BOMB;
+		}
+		
+		//PLACE SELECTED TOWER
+		if(InputListener.mouseButtons[MouseEvent.BUTTON1] && intPlacingTower != -1) {
+			int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
+			int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
+			
+			//CHECK IF TOWER IS GETTING PLACED IN PATH
+			boolean canBePlaced = true;
+			int previousCheckpointX = map.getCheckpointX(0);
+			int previousCheckpointY = map.getCheckpointY(0);
+			for(int n = 1; n < map.getNumberOfCheckpoints(); n++) {
+				int checkpointX = map.getCheckpointX(n);
+				int checkpointY = map.getCheckpointY(n);
+				
+				Line line = new Line(previousCheckpointX + (Game.TILE_SIZE / 2), previousCheckpointY + (Game.TILE_SIZE / 2),
+						checkpointX + (Game.TILE_SIZE / 2), checkpointY + (Game.TILE_SIZE / 2));
+				if(line.intersects(towerX, towerY, Game.TILE_SIZE, Game.TILE_SIZE)) {
+					canBePlaced = false;
+					break;
+				}
+				
+				previousCheckpointX = checkpointX;
+				previousCheckpointY = checkpointY;
+			}
+			
+			if(canBePlaced) {
+				//CHECK IF TOWER IS GOING TO COLLIDE WITH OTHER TOWERS
+				for(Tower tower : towers) {
+					if(tower.intxLocation == towerX && tower.intyLocation == towerY) {
+						canBePlaced = false;
+						break;
+					}
+				}
+			}
+			
+			if(canBePlaced) {
+				int towerPrice = Integer.parseInt(Tower.towerFiles[intPlacingTower].get("price"));
+				if(intBalance >= towerPrice) {				
+					Tower tower = Tower.newTower(intPlacingTower, towerX, towerY);
+					towers.add(tower);
+					
+					intBalance -= towerPrice;
+					intPlacingTower = -1;
+				}
+			}
 		}
 		
 		//CREATE ENEMY WAVES AND HANDLE DOWNTIME
@@ -222,6 +273,9 @@ public class Game extends State {
 					g.drawImage(imgPathTileUD, checkpointX, y, null);
 				}
 			}
+			
+			g.drawLine(previousCheckpointX + (Game.TILE_SIZE / 2), previousCheckpointY + (Game.TILE_SIZE / 2),
+					checkpointX + (Game.TILE_SIZE / 2), checkpointY + (Game.TILE_SIZE / 2));
 			
 			previousCheckpointX = checkpointX;
 			previousCheckpointY = checkpointY;
@@ -370,16 +424,11 @@ public class Game extends State {
 		this.imgPathTileUL = Utils.loadImage("tiles/" + "PathTileUL.jpg");
 		this.imgPathTileDR = Utils.loadImage("tiles/" + "PathTileDR.jpg");
 		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");
-
-		
 		
 		map = new GameMap("map");
 		
-		towers = new ArrayList<>();
-		towers.add(new BasicTower(9, 15));
-		
+		towers = new ArrayList<>();		
 		enemies = new ArrayList<>();
-		
 		projectiles = new ArrayList<>();
 		
 		font = new Font("Arial", Font.PLAIN, 18);
