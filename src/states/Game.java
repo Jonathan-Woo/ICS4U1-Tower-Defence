@@ -32,6 +32,7 @@ public class Game extends State {
 	private TowerDefence towerDefence;
 	public GameMap map;
 	private int intHealth = 100;
+	private int intBalance = 100;
 	private int intPlacingTower = -1;
 	private Font font;
 	private int waveNumber = 1;
@@ -316,13 +317,16 @@ public class Game extends State {
 		g.setColor(Color.ORANGE);
 		g.fillRect(Game.TILE_SIZE * 27, 0, Game.TILE_SIZE * 5, towerDefence.getHeight());
 		//RENDER ROUND COUNTER
-		//waiting to set up round counter
-		//g.drawString("Round:"+, 28 * Game.TILE_SIZE, 1 * Game.TILE_SIZE);
+		g.setColor(Color.BLACK);
+		g.drawString("Round: "+ waveNumber, 28 * Game.TILE_SIZE, 1 * Game.TILE_SIZE);
+		//RENDER BALANCE
+		BufferedImage cashSign = Utils.loadImage("sidebar/" + "cashsign.png");
+		g.drawImage(cashSign, 28 * Game.TILE_SIZE, 2 * Game.TILE_SIZE,null);
+		g.drawString("" +intBalance, 29* Game.TILE_SIZE, 3 * Game.TILE_SIZE);
 		//RENDER HEALTH
 		BufferedImage heart = Utils.loadImage("sidebar/" + "heart.png");
-		g.drawImage(heart, 28 * Game.TILE_SIZE, 3 * Game.TILE_SIZE, null);
-		g.setColor(Color.BLACK);
-		g.drawString("" + intHealth, Game.TILE_SIZE * 29, Game.TILE_SIZE * 4);
+		g.drawImage(heart, 28 * Game.TILE_SIZE, 4 * Game.TILE_SIZE, null);
+		g.drawString("" + intHealth, Game.TILE_SIZE * 29, 5*Game.TILE_SIZE);
 		//RENDER PURCHASABLE TOWERS
 		g.drawImage(Tower.towerImages[Tower.BASIC], 28* Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
 		g.drawImage(Tower.towerImages[Tower.FIRE], 28* Game.TILE_SIZE, 8 * Game.TILE_SIZE, null);
@@ -369,9 +373,7 @@ public class Game extends State {
 		this.imgPathTileUR = Utils.loadImage("tiles/" + "PathTileUR.jpg");
 		this.imgPathTileUL = Utils.loadImage("tiles/" + "PathTileUL.jpg");
 		this.imgPathTileDR = Utils.loadImage("tiles/" + "PathTileDR.jpg");
-		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");
-
-		
+		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");		
 		
 		map = new GameMap("map");
 		
