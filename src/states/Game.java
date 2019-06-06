@@ -397,7 +397,7 @@ public class Game extends State {
 		//DRAW ROUND TIMER
 		if(this.roundTime > 0) {
 			g.setFont(TowerDefence.font);
-			g.drawString("" + roundTime, towerDefence.getWidth() / 2, towerDefence.getHeight() - Game.TILE_SIZE);
+			g.drawString("Next Round: " + roundTime, (towerDefence.getWidth() / 2) - 3 * Game.TILE_SIZE, towerDefence.getHeight() - Game.TILE_SIZE);
 		}
 	}
 
