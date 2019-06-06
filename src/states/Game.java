@@ -273,9 +273,6 @@ public class Game extends State {
 				}
 			}
 			
-			g.drawLine(previousCheckpointX + (Game.TILE_SIZE / 2), previousCheckpointY + (Game.TILE_SIZE / 2),
-					checkpointX + (Game.TILE_SIZE / 2), checkpointY + (Game.TILE_SIZE / 2));
-			
 			previousCheckpointX = checkpointX;
 			previousCheckpointY = checkpointY;
 		}
