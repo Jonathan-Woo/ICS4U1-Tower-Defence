@@ -41,6 +41,7 @@ public class Game extends State {
 	private int[] enemyWave;
 	private int roundTime = 3;
 	private Timer roundTimer, waveTimer;
+	private int enemiesInWave = 0;
 	
 	//path tile image variables
 	//UD = up down
@@ -204,7 +205,7 @@ public class Game extends State {
 				waveTimer.start();
 			}	
 			
-			if(enemies.size() == 0) {
+			if(enemies.size() == 0 && enemiesInWave == 0) {
 				waveNumber++;
 				roundTime = 3;
 				waveTimer.stop();
@@ -216,7 +217,7 @@ public class Game extends State {
 	
 	private void spawnEnemies() {
 		if(enemyWave != null) {
-			int enemiesInWave = 0;
+			enemiesInWave = 0;
 			for(int enemyNum : enemyWave) {
 				enemiesInWave += enemyNum;
 			}
