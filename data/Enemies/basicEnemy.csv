@@ -1,4 +1,5 @@
 speed,1.5
 damage,2
-health,300
+health,100
+reward,25
 image,basicEnemy.png

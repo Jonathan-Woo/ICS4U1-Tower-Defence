@@ -98,15 +98,26 @@ public abstract class Tower {
 		};
 	}
 	
+	private boolean isInRange(Enemy enemy){
+		int xDistToTower = Math.abs(enemy.intxLocation - this.intxLocation) - (Game.TILE_SIZE / 2);
+		int yDistToTower = Math.abs(enemy.intyLocation - this.intyLocation) - (Game.TILE_SIZE / 2);
+		
+		if(xDistToTower <= this.intRange && yDistToTower <= this.intRange) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
 	private void findEnemy(ArrayList<Enemy> enemies) {
 		Enemy currentEnemy = null;
-		int bestXDistToTower = 200;
-		int bestYDistToTower = 200;
+		int bestXDistToTower = this.intRange;
+		int bestYDistToTower = this.intRange;
 		
 		for(int i = 0; i < enemies.size(); i++) {
 			Enemy enemy = enemies.get(i);
-			int xDistToTower = Math.abs(enemy.intxLocation + (Game.TILE_SIZE / 2) - this.intxLocation);
-			int yDistToTower = Math.abs(enemy.intxLocation + (Game.TILE_SIZE / 2) - this.intxLocation);
+			int xDistToTower = Math.abs(enemy.intxLocation - this.intxLocation) - (Game.TILE_SIZE / 2);
+			int yDistToTower = Math.abs(enemy.intyLocation - this.intyLocation) - (Game.TILE_SIZE / 2);
 			
 			if(xDistToTower <= this.intRange && yDistToTower <= this.intRange) {
 				if(currentEnemy != null) {
@@ -136,6 +147,10 @@ public abstract class Tower {
 		}
 	}
 	
+	public int getPrice() {
+		return this.intPrice;
+	}
+	
 	/**
 	 * Update method gets called every game loop. Either finds new enemy or attacks currently targeted enemy
 	 * @param game The Game State.
@@ -144,7 +159,7 @@ public abstract class Tower {
 		if (currentEnemy == null) {
 			findEnemy(game.enemies);
 		}else {
-			if(game.enemies.contains(currentEnemy)) {
+			if(game.enemies.contains(currentEnemy) && isInRange(currentEnemy)) {
 				attackEnemy(game);
 			}else {
 				currentEnemy = null;
@@ -157,7 +172,17 @@ public abstract class Tower {
 	 * @param g The Graphics object used for drawing to the screen.
 	 */
 	public void render(Graphics g) {
+		/*g.setColor(new Color(0.8f, 0f, 1f, 0.4f));
+		g.fillOval(this.intxLocation - (intRange / 2),
+				this.intyLocation - (intRange / 2), intRange + Game.TILE_SIZE, intRange + Game.TILE_SIZE);*/
 		g.drawImage(towerImages[type], intxLocation, intyLocation, null);
+	}
+	
+	public static Tower newTower(final int type, int towerX, int towerY) {
+		switch(type) {
+			default:
+				return new BasicTower(towerX, towerY);
+		}
 	}
 	
 	//constructor
@@ -171,8 +196,8 @@ public abstract class Tower {
 		this.type = type;
 		Map<String, String> data = towerFiles[type];
 		this.strName = data.get("name");
-		this.intxLocation = intxLocation * Game.TILE_SIZE;
-		this.intyLocation = intyLocation * Game.TILE_SIZE;
+		this.intxLocation = intxLocation;
+		this.intyLocation = intyLocation;
 		this.intPrice = Integer.parseInt(data.get("price"));
 		this.intRange = Integer.parseInt(data.get("range"));
 		this.intAttackSpeed = Integer.parseInt(data.get("attackSpeed"));

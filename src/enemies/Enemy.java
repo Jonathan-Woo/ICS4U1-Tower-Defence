@@ -20,6 +20,7 @@ public abstract class Enemy {
 	private double intSpeed;
 	private int intHealth;
 	private BufferedImage enemyImage;
+	private int reward;
 	
 	private int checkpointX = -1, checkpointY = -1, currentCheckpoint = 0;
 	
@@ -28,15 +29,10 @@ public abstract class Enemy {
 		if(this.intHealth <= 0) {
 			Game.removeEnemies.add(this);
 		}
-	}
+	}	
 
-	public static Enemy newEnemy(final int type) {
-		switch(type) {
-			case Enemy.BASIC:
-				return new BasicEnemy();
-			default:
-				return null;
-		}
+	public int getReward() {
+		return this.reward;
 	}
 	
 	//methods
@@ -78,6 +74,13 @@ public abstract class Enemy {
 		g.drawImage(enemyImage, intxLocation, intyLocation, null);
 	}
 	
+	public static Enemy newEnemy(final int type) {
+		switch(type) {
+			default:
+				return new BasicEnemy();
+		}
+	}
+	
 	//constructor
 	public Enemy(String enemyFile, int type) {
 		this.type = type;
@@ -86,6 +89,7 @@ public abstract class Enemy {
 		this.intSpeed = Double.parseDouble(data.get("speed"));
 		this.intHealth = Integer.parseInt(data.get("health"));
 		this.enemyImage = Utils.loadImage("enemies/" + data.get("image"));
+		this.reward = Integer.parseInt(data.get("reward"));
 		
 		this.intxLocation = GameMap.startX;
 		this.intyLocation = GameMap.startY;

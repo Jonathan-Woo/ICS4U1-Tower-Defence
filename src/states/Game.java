@@ -15,6 +15,8 @@ import javax.swing.Timer;
 
 import enemies.BasicEnemy;
 import enemies.Enemy;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import main.GameMap;
 import main.InputListener;
 import main.TowerDefence;
@@ -32,12 +34,14 @@ public class Game extends State {
 	private TowerDefence towerDefence;
 	public GameMap map;
 	private int intHealth = 100;
+	private int waveNumber = 1;
+	private int intBalance = 100;
 	private int intPlacingTower = -1;
 	private Font font;
-	private int waveNumber = 1;
 	private int[] enemyWave;
-	private int roundTime = 15;
+	private int roundTime = 3;
 	private Timer roundTimer, waveTimer;
+	private int enemiesInWave = 0;
 	
 	//path tile image variables
 	//UD = up down
@@ -51,9 +55,10 @@ public class Game extends State {
 	
 	public static String strMessage;
 	
+	//methods
 	int intNumMessages = 0;
 	
-	//methods	
+	//methods
 	@Override
 	public void update() {
 		//UPDATE TOWERS
@@ -73,7 +78,10 @@ public class Game extends State {
 		
 		//REMOVE DEAD ENEMIES
 		for(Enemy enemy : removeEnemies) {
-			enemies.remove(enemy);
+			if(enemies.contains(enemy)) {
+				enemies.remove(enemy);
+				intBalance += enemy.getReward();
+			}
 		}
 		removeEnemies.clear();
 		
@@ -96,6 +104,49 @@ public class Game extends State {
 					//PRESSED BOMB TOWER
 					this.intPlacingTower = Tower.BOMB;
 				}
+			}else if(InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower != -1) {
+				int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
+				int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
+				
+				//CHECK IF TOWER IS GETTING PLACED IN PATH
+				boolean canBePlaced = true;
+				int previousCheckpointX = map.getCheckpointX(0);
+				int previousCheckpointY = map.getCheckpointY(0);
+				for(int n = 1; n < map.getNumberOfCheckpoints(); n++) {
+					int checkpointX = map.getCheckpointX(n);
+					int checkpointY = map.getCheckpointY(n);
+					
+					Line line = new Line(previousCheckpointX + (Game.TILE_SIZE / 2), previousCheckpointY + (Game.TILE_SIZE / 2),
+							checkpointX + (Game.TILE_SIZE / 2), checkpointY + (Game.TILE_SIZE / 2));
+					if(line.intersects(towerX, towerY, Game.TILE_SIZE, Game.TILE_SIZE)) {
+						canBePlaced = false;
+						break;
+					}
+					
+					previousCheckpointX = checkpointX;
+					previousCheckpointY = checkpointY;
+				}
+				
+				if(canBePlaced) {
+					//CHECK IF TOWER IS GOING TO COLLIDE WITH OTHER TOWERS
+					for(Tower tower : towers) {
+						if(tower.intxLocation == towerX && tower.intyLocation == towerY) {
+							canBePlaced = false;
+							break;
+						}
+					}
+				}
+				
+				if(canBePlaced) {
+					int towerPrice = Integer.parseInt(Tower.towerFiles[intPlacingTower].get("price"));
+					if(intBalance >= towerPrice) {				
+						Tower tower = Tower.newTower(intPlacingTower, towerX, towerY);
+						towers.add(tower);
+						
+						intBalance -= towerPrice;
+						intPlacingTower = -1;
+					}
+				}
 			}
 		}
 		
@@ -117,52 +168,72 @@ public class Game extends State {
 		}
 		
 		//CREATE ENEMY WAVES AND HANDLE DOWNTIME
-		if(roundTime > 0 && roundTimer == null) {
-			enemyWave = null;
-			roundTimer = new Timer(1000, new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					roundTime--;
-					if(roundTime <= 0) {
-						roundTimer.stop();
-						roundTimer = null;
-					}
-				}
-			});
-			roundTimer.start();
-		}else{
-			if(enemyWave == null) {
-				enemyWave = new int[] {
-						waveNumber,
-						(int) Math.floor(waveNumber % 2),
-						(int) Math.floor(waveNumber % 3),
-						(int) Math.floor(waveNumber % 4),
-						(int) Math.floor(waveNumber % 5)
-				};
-			}
-			
-			if(waveTimer == null) {
-				waveTimer = new Timer(0, new ActionListener() {
+		if(roundTime > 0) {
+			if(roundTimer == null) {
+				enemyWave = null;
+				roundTimer = new Timer(1000, new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
-						int random = (int) Math.floor(Math.random() * 1);
-						if(enemyWave[random] > 0) {
-							enemies.add(Enemy.newEnemy(random));
-							enemyWave[random]--;
+						roundTime--;
+						if(roundTime <= 0) {
+							roundTimer.stop();
+							roundTimer = null;
 						}
 					}
 				});
+				roundTimer.start();
+			}			
+		}else{
+			if(enemyWave == null) {						
+				enemyWave = new int[] {
+						waveNumber,
+						(int) Math.floor(waveNumber / 2),
+						(int) Math.floor(waveNumber / 3),
+						(int) Math.floor(waveNumber / 4),
+						(int) Math.floor(waveNumber / 5)
+				};
+				
+				spawnEnemies();
+			}
+			
+			if(waveTimer == null) {
+				waveTimer = new Timer(1500, new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						spawnEnemies();
+					}
+				});
 				waveTimer.start();
-				waveTimer.setDelay(1500);
 			}	
 			
-			if(enemies.size() == 0) {
-				roundTime = 15;
+			if(enemies.size() == 0 && enemiesInWave == 0) {
+				waveNumber++;
+				roundTime = 3;
+				waveTimer.stop();
 				waveTimer = null;
+				enemyWave = null;
 			}
 		}
+	}
+	
+	private void spawnEnemies() {
+		if(enemyWave != null) {
+			enemiesInWave = 0;
+			for(int enemyNum : enemyWave) {
+				enemiesInWave += enemyNum;
+			}
+			
+			boolean enemySpawned = false;
+			while(!enemySpawned && enemiesInWave > 0) {
+				int random = (int) Math.round(Math.random() * 4);
+				if(enemyWave[random] > 0) {
+					enemies.add(Enemy.newEnemy(random));
+					enemyWave[random]--;
+					enemySpawned = true;
+				}
+			}
+		}		
 	}
 
 	@Override
@@ -272,8 +343,8 @@ public class Game extends State {
 			int towerRadius = Integer.parseInt(Tower.towerFiles[intPlacingTower].get("range"));
 
 			g.setColor(new Color(0.8f, 0f, 1f, 0.4f));
-			g.fillOval(towerX + (Game.TILE_SIZE / 2) - (towerRadius / 2),
-					towerY + (Game.TILE_SIZE / 2) - (towerRadius / 2), towerRadius, towerRadius);
+			g.fillOval(towerX - towerRadius, towerY - towerRadius,
+					(towerRadius * 2) + Game.TILE_SIZE, (towerRadius * 2) + Game.TILE_SIZE);
 			g.drawImage(Tower.towerImages[intPlacingTower], towerX, towerY, null);
 		}
 		
@@ -295,13 +366,16 @@ public class Game extends State {
 		g.setColor(Color.ORANGE);
 		g.fillRect(Game.TILE_SIZE * 27, 0, Game.TILE_SIZE * 5, towerDefence.getHeight());
 		//RENDER ROUND COUNTER
-		//waiting to set up round counter
-		//g.drawString("Round:"+, 28 * Game.TILE_SIZE, 1 * Game.TILE_SIZE);
+		g.setColor(Color.BLACK);
+		g.drawString("Round: "+ waveNumber, 28 * Game.TILE_SIZE, 1 * Game.TILE_SIZE);
+		//RENDER BALANCE
+		BufferedImage cashSign = Utils.loadImage("sidebar/" + "cashsign.png");
+		g.drawImage(cashSign, 28 * Game.TILE_SIZE, 2 * Game.TILE_SIZE,null);
+		g.drawString("" +intBalance, 29* Game.TILE_SIZE, 3 * Game.TILE_SIZE);
 		//RENDER HEALTH
 		BufferedImage heart = Utils.loadImage("sidebar/" + "heart.png");
-		g.drawImage(heart, 28 * Game.TILE_SIZE, 3 * Game.TILE_SIZE, null);
-		g.setColor(Color.BLACK);
-		g.drawString("" + intHealth, Game.TILE_SIZE * 29, Game.TILE_SIZE * 4);
+		g.drawImage(heart, 28 * Game.TILE_SIZE, 4 * Game.TILE_SIZE, null);
+		g.drawString("" + intHealth, Game.TILE_SIZE * 29, 5*Game.TILE_SIZE);
 		//RENDER PURCHASABLE TOWERS
 		g.drawImage(Tower.towerImages[Tower.BASIC], 28* Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
 		g.drawImage(Tower.towerImages[Tower.FIRE], 28* Game.TILE_SIZE, 8 * Game.TILE_SIZE, null);
@@ -325,7 +399,7 @@ public class Game extends State {
 		//DRAW ROUND TIMER
 		if(this.roundTime > 0) {
 			g.setFont(TowerDefence.font);
-			g.drawString("" + roundTime, towerDefence.getWidth() / 2, towerDefence.getHeight() - Game.TILE_SIZE);
+			g.drawString("Next Round: " + roundTime, (towerDefence.getWidth() / 2) - 3 * Game.TILE_SIZE, towerDefence.getHeight() - Game.TILE_SIZE);
 		}
 	}
 
@@ -349,16 +423,12 @@ public class Game extends State {
 		this.imgPathTileUL = Utils.loadImage("tiles/" + "PathTileUL.jpg");
 		this.imgPathTileDR = Utils.loadImage("tiles/" + "PathTileDR.jpg");
 		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");
-
-		
+		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");	
 		
 		map = new GameMap("map");
 		
-		towers = new ArrayList<>();
-		towers.add(new BasicTower(9, 15));
-		
+		towers = new ArrayList<>();		
 		enemies = new ArrayList<>();
-		
 		projectiles = new ArrayList<>();
 		
 		font = new Font("Arial", Font.PLAIN, 18);

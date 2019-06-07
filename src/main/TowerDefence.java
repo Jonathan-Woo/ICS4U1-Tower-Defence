@@ -1,25 +1,31 @@
 package main;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import states.Game;
 import states.MainMenu;
+import states.Settings;
 import states.State;
 
 //MAKE THIS MAIN CLASS THE JFRAME SO WE DON'T
 //NEED A SEPARATE OBJECT FOR THAT
 public class TowerDefence extends JFrame implements ActionListener {
 	
-	/** Keeps track of the current game State */
+	public final static int WIDTH = 1280, HEIGHT = 720;
+	
+	/** Keeps track of the current game State */	
 	private State currentState;
 	private AnimationPanel pnl;
 	private Timer timer;
@@ -41,12 +47,12 @@ public class TowerDefence extends JFrame implements ActionListener {
 		pnl = new AnimationPanel(this);
 		this.setContentPane(pnl);
 		
-		//INIT DEFAULT STATE OF THE GAME
-		currentState = new Game(this);
-		
 		//SHOW FRAME
 		this.pack();
 		this.setVisible(true);
+		
+		//INIT DEFAULT STATE OF THE GAME
+		currentState = new Game(this);
 		
 		//SET INPUT LISTENER
 		InputListener inputListener = new InputListener(this.getInsets().top);
@@ -61,16 +67,17 @@ public class TowerDefence extends JFrame implements ActionListener {
 		timer = new Timer(1000 / 60, this);
 		timer.start();
 	}
-
+	
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(timer)) {
-			//UPDATE STATE
-			currentState.update();
-			
-			//REPAINT ANIMATION PANEL
-			pnl.repaint();
-		}
+	public Component add(Component component) {
+		Component comp = pnl.add(component);
+		this.pack();
+		return comp;
+	}
+	
+	@Override
+	public Dimension getPreferredSize() {
+		return pnl.getPreferredSize();
 	}
 	
 	/**
@@ -81,6 +88,17 @@ public class TowerDefence extends JFrame implements ActionListener {
 	public State getCurrentState() {
 		return currentState;
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(timer) && currentState != null) {
+			//UPDATE STATE
+			currentState.update();
+			
+			//REPAINT ANIMATION PANEL
+			pnl.repaint();
+		}
+	}
 	
 	//WE'LL MAKE THE ANIMATION PANEL CLASS IN HERE
 	//SINCE IT'S SO SMALL AND WE ONLY USE IT HERE
@@ -90,21 +108,23 @@ public class TowerDefence extends JFrame implements ActionListener {
 		private TowerDefence towerDefence;
 		
 		public AnimationPanel(TowerDefence towerDefence) {
-			this.setPreferredSize(new Dimension (1280, 720));
+			this.setPreferredSize(new Dimension (TowerDefence.WIDTH, TowerDefence.HEIGHT));
 			this.towerDefence = towerDefence;
 		}
 		
 		@Override
 		public void paintComponent(Graphics g) {
-			//CLEAR PANEL
-			g.setColor(Color.BLACK);
-			g.fillRect(0, 0, this.getWidth(), this.getHeight());
-			
-			//SET FONT
-			g.setFont(font);
-			
-			//RENDER BASED ON STATE
-			towerDefence.getCurrentState().render(g);
+			if(currentState != null) {
+				//CLEAR PANEL
+				g.setColor(Color.BLACK);
+				g.fillRect(0, 0, this.getWidth(), this.getHeight());
+				
+				//SET FONT
+				g.setFont(font);
+				
+				//RENDER BASED ON STATE
+				towerDefence.getCurrentState().render(g);
+			}
 		}
 		
 	}
