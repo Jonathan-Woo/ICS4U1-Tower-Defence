@@ -27,6 +27,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 	/** Keeps track of the current game State */	
 	private State currentState;
 	private AnimationPanel pnl;
+	public JPanel statePnl;
 	private Timer timer;
 	public static Font font;
 	
@@ -67,11 +68,11 @@ public class TowerDefence extends JFrame implements ActionListener {
 		timer.start();
 	}
 	
-	@Override
-	public Component add(Component component) {
-		Component comp = pnl.add(component);
-		this.pack();
-		return comp;
+	public void resetStatePanel() {
+		pnl.remove(statePnl);
+		this.statePnl = new JPanel(null);
+		this.statePnl.setPreferredSize(pnl.getPreferredSize());
+		pnl.add(statePnl);
 	}
 	
 	@Override
@@ -86,6 +87,10 @@ public class TowerDefence extends JFrame implements ActionListener {
 	 */
 	public State getCurrentState() {
 		return currentState;
+	}
+	
+	public void changeState(State state) {
+		this.currentState = state;
 	}
 
 	@Override

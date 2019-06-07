@@ -178,6 +178,8 @@ public abstract class Tower {
 		g.drawImage(towerImages[type], intxLocation, intyLocation, null);
 	}
 	
+	public abstract void effectOnHit(Enemy enemy);
+	
 	public static Tower newTower(final int type, int towerX, int towerY) {
 		switch(type) {
 			case Tower.BASIC:
