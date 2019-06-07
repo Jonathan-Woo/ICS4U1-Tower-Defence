@@ -16,18 +16,19 @@ import javax.swing.Timer;
 
 import states.Game;
 import states.MainMenu;
+import states.Settings;
 import states.State;
 
 //MAKE THIS MAIN CLASS THE JFRAME SO WE DON'T
 //NEED A SEPARATE OBJECT FOR THAT
 public class TowerDefence extends JFrame implements ActionListener {
 	
+	public final static int MAIN_MENU = 0, SETTINGS = 1, GAME_CREATION = 2, GAME = 3, GAME_OVER = 4;
 	public final static int WIDTH = 1280, HEIGHT = 720;
 	
 	/** Keeps track of the current game State */	
 	private State currentState;
 	private AnimationPanel pnl;
-	public JPanel statePnl;
 	private Timer timer;
 	public static Font font;
 	
@@ -52,7 +53,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 		this.setVisible(true);
 		
 		//INIT DEFAULT STATE OF THE GAME
-		currentState = new Game(this);
+		currentState = new Settings(this);
 		
 		//SET INPUT LISTENER
 		InputListener inputListener = new InputListener(this.getInsets().top);
@@ -68,13 +69,13 @@ public class TowerDefence extends JFrame implements ActionListener {
 		timer.start();
 	}
 	
-	public void resetStatePanel() {
-		if(statePnl != null) {
-			pnl.remove(statePnl);
-		}		
-		this.statePnl = new JPanel(null);
-		this.statePnl.setPreferredSize(pnl.getPreferredSize());
-		pnl.add(statePnl);
+	public void resetPanel() {
+		this.pnl.removeAll();
+	}
+	
+	@Override
+	public Component add(Component component) {
+		return this.pnl.add(component);
 	}
 	
 	@Override
@@ -122,7 +123,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 		public void paintComponent(Graphics g) {
 			if(currentState != null) {
 				//CLEAR PANEL
-				g.setColor(Color.BLACK);
+				g.setColor(Color.WHITE);
 				g.fillRect(0, 0, this.getWidth(), this.getHeight());
 				
 				//SET FONT

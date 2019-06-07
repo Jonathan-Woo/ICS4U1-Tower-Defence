@@ -7,7 +7,7 @@ import main.TowerDefence;
 /** BLUEPRINT FOR ALL STATE CLASSES */
 public abstract class State {
 	
-	private TowerDefence towerDefence;
+	protected TowerDefence towerDefence;
 
 	/** UPDATE METHOD THAT GETS CALLED EVERY GAME LOOP */
 	public abstract void update();
@@ -17,7 +17,7 @@ public abstract class State {
 	
 	public State(TowerDefence towerDefence) {
 		this.towerDefence = towerDefence;
-		towerDefence.resetStatePanel();
+		towerDefence.resetPanel();
 	}
 	
 }

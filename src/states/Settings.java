@@ -29,8 +29,7 @@ public class Settings extends State implements ActionListener{
 
 	@Override
 	public void render(Graphics g) {
-		/*g.setColor(Color.WHITE);
-		g.fillRect(0, 0, 1280, 720);*/
+		
 	}
 	
 	public Settings(TowerDefence towerDefence) {
@@ -38,15 +37,15 @@ public class Settings extends State implements ActionListener{
 		
 		JLabel lbl = new JLabel("Port: ");
 		lbl.setBounds((TowerDefence.WIDTH / 2) - 200, TowerDefence.HEIGHT / 2, 50, 30);
-		towerDefence.statePnl.add(lbl);
+		towerDefence.add(lbl);
 		
 		portField = new JTextField(port + "");
 		portField.setBounds((TowerDefence.WIDTH / 2) - 150, TowerDefence.HEIGHT / 2, 300, 30);
-		towerDefence.statePnl.add(portField);
+		towerDefence.add(portField);
 		
 		JButton btn = new JButton("BACK");
 		btn.setBounds((TowerDefence.WIDTH / 2) - 25, (TowerDefence.HEIGHT / 2) + 50, 100, 30);
-		towerDefence.statePnl.add(btn);
+		towerDefence.add(btn);
 	}
 
 	@Override

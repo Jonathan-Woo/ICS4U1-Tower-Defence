@@ -31,7 +31,6 @@ public class Game extends State {
 
 	public static ArrayList<Enemy> removeEnemies = new ArrayList<>();
 
-	private TowerDefence towerDefence;
 	public GameMap map;
 	private int intHealth = 100;
 	private int waveNumber = 1;
