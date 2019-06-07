@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -13,7 +15,7 @@ import javax.swing.JTextField;
 
 import main.TowerDefence;
 
-public class Settings extends State {
+public class Settings extends State implements ActionListener{
 	
 	public static int port = 3456;
 	
@@ -36,18 +38,23 @@ public class Settings extends State {
 		pnl.setPreferredSize(towerDefence.getPreferredSize());
 		
 		JLabel lbl = new JLabel("Port: ");
-		lbl.setLocation((TowerDefence.WIDTH / 2) - 200, TowerDefence.HEIGHT);
+		lbl.setBounds((TowerDefence.WIDTH / 2) - 200, TowerDefence.HEIGHT / 2, 50, 30);
 		pnl.add(lbl);
 		
 		portField = new JTextField(port + "");
-		portField.setBounds((TowerDefence.WIDTH / 2) - 150, TowerDefence.HEIGHT, 300, 30);
+		portField.setBounds((TowerDefence.WIDTH / 2) - 150, TowerDefence.HEIGHT / 2, 300, 30);
 		pnl.add(portField);
 		
 		JButton btn = new JButton("BACK");
-		btn.setBounds((TowerDefence.WIDTH / 2) - 25, TowerDefence.HEIGHT + 50, 50, 30);
+		btn.setBounds((TowerDefence.WIDTH / 2) - 25, (TowerDefence.HEIGHT / 2) + 50, 100, 30);
 		pnl.add(btn);
 		
 		towerDefence.add(pnl);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
 	}
 
 }
