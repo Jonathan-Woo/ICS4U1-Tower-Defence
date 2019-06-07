@@ -34,11 +34,13 @@ public class MainMenu extends State implements ActionListener{
 		super(towerDefence);
 		
 		playGameButton = new JButton ("Play Game");
-		//playGameButton.setBounds(TowerDefence.wi);
+		playGameButton.setBounds(TowerDefence.WIDTH/4, 3 * Game.TILE_SIZE, TowerDefence.WIDTH/2, 3 * Game.TILE_SIZE);
 		
 		helpButton = new JButton("Help");
+		helpButton.setBounds(TowerDefence.WIDTH/4, 3 * Game.TILE_SIZE, TowerDefence.WIDTH/2, 8 * Game.TILE_SIZE);
 		
 		settingsButton = new JButton("Settings");
+		settingsButton.setBounds(TowerDefence.WIDTH/4, 3 * Game.TILE_SIZE, TowerDefence.WIDTH/2, 13 * Game.TILE_SIZE);
 	}
 
 	
