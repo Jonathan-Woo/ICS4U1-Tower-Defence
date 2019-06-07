@@ -69,7 +69,9 @@ public class TowerDefence extends JFrame implements ActionListener {
 	}
 	
 	public void resetStatePanel() {
-		pnl.remove(statePnl);
+		if(statePnl != null) {
+			pnl.remove(statePnl);
+		}		
 		this.statePnl = new JPanel(null);
 		this.statePnl.setPreferredSize(pnl.getPreferredSize());
 		pnl.add(statePnl);
