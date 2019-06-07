@@ -8,6 +8,8 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -21,7 +23,9 @@ import states.State;
 //NEED A SEPARATE OBJECT FOR THAT
 public class TowerDefence extends JFrame implements ActionListener {
 	
-	/** Keeps track of the current game State */
+	public final static int WIDTH = 1280, HEIGHT = 720;
+	
+	/** Keeps track of the current game State */	
 	private State currentState;
 	private AnimationPanel pnl;
 	private Timer timer;
@@ -40,16 +44,15 @@ public class TowerDefence extends JFrame implements ActionListener {
 		//this.setLocationRelativeTo(null);
 		
 		//INIT ANIMATION PANEL
-		this.setLayout(null);
 		pnl = new AnimationPanel(this);
 		this.setContentPane(pnl);
-		
-		//INIT DEFAULT STATE OF THE GAME
-		currentState = new Game(this);
 		
 		//SHOW FRAME
 		this.pack();
 		this.setVisible(true);
+		
+		//INIT DEFAULT STATE OF THE GAME
+		currentState = new Game(this);
 		
 		//SET INPUT LISTENER
 		InputListener inputListener = new InputListener(this.getInsets().top);
@@ -72,6 +75,11 @@ public class TowerDefence extends JFrame implements ActionListener {
 		return comp;
 	}
 	
+	@Override
+	public Dimension getPreferredSize() {
+		return pnl.getPreferredSize();
+	}
+	
 	/**
 	 * Returns the current State of the game.
 	 * 
@@ -83,7 +91,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(timer)) {
+		if(e.getSource().equals(timer) && currentState != null) {
 			//UPDATE STATE
 			currentState.update();
 			
@@ -100,22 +108,23 @@ public class TowerDefence extends JFrame implements ActionListener {
 		private TowerDefence towerDefence;
 		
 		public AnimationPanel(TowerDefence towerDefence) {
-			this.setLayout(null);
-			this.setPreferredSize(new Dimension (1280, 720));
+			this.setPreferredSize(new Dimension (TowerDefence.WIDTH, TowerDefence.HEIGHT));
 			this.towerDefence = towerDefence;
 		}
 		
 		@Override
 		public void paintComponent(Graphics g) {
-			//CLEAR PANEL
-			g.setColor(Color.BLACK);
-			g.fillRect(0, 0, this.getWidth(), this.getHeight());
-			
-			//SET FONT
-			g.setFont(font);
-			
-			//RENDER BASED ON STATE
-			towerDefence.getCurrentState().render(g);
+			if(currentState != null) {
+				//CLEAR PANEL
+				g.setColor(Color.BLACK);
+				g.fillRect(0, 0, this.getWidth(), this.getHeight());
+				
+				//SET FONT
+				g.setFont(font);
+				
+				//RENDER BASED ON STATE
+				towerDefence.getCurrentState().render(g);
+			}
 		}
 		
 	}

@@ -30,7 +30,7 @@ public class MainMenu extends State implements ActionListener{
 	//constructor
 	public MainMenu() {
 		playGameButton = new JButton ("Play Game");
-		playGameButton.setBounds(TowerDefence.wi);
+		//playGameButton.setBounds(TowerDefence.wi);
 		
 		helpButton = new JButton("Help");
 		

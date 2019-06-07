@@ -78,8 +78,10 @@ public class Game extends State {
 		
 		//REMOVE DEAD ENEMIES
 		for(Enemy enemy : removeEnemies) {
-			enemies.remove(enemy);
-			intBalance += enemy.getReward();
+			if(enemies.contains(enemy)) {
+				enemies.remove(enemy);
+				intBalance += enemy.getReward();
+			}
 		}
 		removeEnemies.clear();
 		
