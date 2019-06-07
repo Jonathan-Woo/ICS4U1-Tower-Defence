@@ -17,6 +17,7 @@ import javax.swing.Timer;
 import states.Game;
 import states.GameCreation;
 import states.GameOver;
+import states.Help;
 import states.MainMenu;
 import states.Settings;
 import states.State;
@@ -25,7 +26,7 @@ import states.State;
 //NEED A SEPARATE OBJECT FOR THAT
 public class TowerDefence extends JFrame implements ActionListener {
 	
-	public final static int MAIN_MENU = 0, SETTINGS = 1, GAME_CREATION = 2, GAME = 3, GAME_OVER = 4;
+	public final static int MAIN_MENU = 0, SETTINGS = 1, GAME_CREATION = 2, GAME = 3, GAME_OVER = 4, HELP = 5;
 	public final static int WIDTH = 1280, HEIGHT = 720;
 	
 	/** Keeps track of the current game State */	
@@ -55,7 +56,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 		this.setVisible(true);
 		
 		//INIT DEFAULT STATE OF THE GAME
-		currentState = new Settings(this);
+		currentState = new MainMenu(this);
 		
 		//SET INPUT LISTENER
 		InputListener inputListener = new InputListener(this.getInsets().top);
@@ -106,6 +107,8 @@ public class TowerDefence extends JFrame implements ActionListener {
 				this.currentState = new MainMenu(this);
 			case TowerDefence.GAME_OVER:
 				this.currentState = new GameOver(this);
+			case TowerDefence.HELP:
+				this.currentState = new Help(this);
 		}
 	}
 
