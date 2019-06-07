@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import states.Game;
+import states.GameCreation;
+import states.GameOver;
 import states.MainMenu;
 import states.Settings;
 import states.State;
@@ -92,8 +94,19 @@ public class TowerDefence extends JFrame implements ActionListener {
 		return currentState;
 	}
 	
-	public void changeState(State state) {
-		this.currentState = state;
+	public void changeState(final int state, Object... args) {
+		switch(state) {
+			case TowerDefence.MAIN_MENU:
+				this.currentState = new MainMenu(this);
+			case TowerDefence.GAME_CREATION:
+				this.currentState = new GameCreation(this);
+			case TowerDefence.GAME:
+				this.currentState = new Game(this);
+			case TowerDefence.SETTINGS:
+				this.currentState = new MainMenu(this);
+			case TowerDefence.GAME_OVER:
+				this.currentState = new GameOver(this);
+		}
 	}
 
 	@Override
@@ -116,6 +129,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 		
 		public AnimationPanel(TowerDefence towerDefence) {
 			this.setPreferredSize(new Dimension (TowerDefence.WIDTH, TowerDefence.HEIGHT));
+			this.setLayout(null);
 			this.towerDefence = towerDefence;
 		}
 		
