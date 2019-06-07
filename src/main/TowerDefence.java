@@ -53,7 +53,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 		this.setVisible(true);
 		
 		//INIT DEFAULT STATE OF THE GAME
-		currentState = new Settings(this);
+		currentState = new MainMenu(this);
 		
 		//SET INPUT LISTENER
 		InputListener inputListener = new InputListener(this.getInsets().top);
