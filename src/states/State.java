@@ -17,7 +17,6 @@ public abstract class State {
 	
 	public State(TowerDefence towerDefence) {
 		this.towerDefence = towerDefence;
-		towerDefence.resetPanel();
 	}
 	
 }

@@ -78,7 +78,9 @@ public class TowerDefence extends JFrame implements ActionListener {
 	
 	@Override
 	public Component add(Component component) {
-		return this.pnl.add(component);
+		Component comp = this.pnl.add(component);
+		this.pack();
+		return comp;
 	}
 	
 	@Override
@@ -96,6 +98,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 	}
 	
 	public void changeState(final int state, Object... args) {
+		resetPanel();
 		switch(state) {
 			case TowerDefence.MAIN_MENU:
 				this.currentState = new MainMenu(this);
@@ -104,7 +107,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 			case TowerDefence.GAME:
 				this.currentState = new Game(this);
 			case TowerDefence.SETTINGS:
-				this.currentState = new MainMenu(this);
+				this.currentState = new Settings(this);
 			case TowerDefence.GAME_OVER:
 				this.currentState = new GameOver(this);
 			case TowerDefence.HELP:

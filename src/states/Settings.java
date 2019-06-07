@@ -45,6 +45,7 @@ public class Settings extends State implements ActionListener{
 		
 		back = new JButton("BACK");
 		back.setBounds((TowerDefence.WIDTH / 2) - 50 - 100, (TowerDefence.HEIGHT / 2) + 50, 100, 30);
+		back.addActionListener(this);
 		towerDefence.add(back);
 	}
 
@@ -52,7 +53,7 @@ public class Settings extends State implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(back)) {
 			int port = Integer.parseInt(portField.getText());
-			if(port > 0 && port < 65255) {
+			if(port >= 0 && port <= 65255) {
 				Settings.port = port;
 				towerDefence.changeState(TowerDefence.MAIN_MENU);
 			}
