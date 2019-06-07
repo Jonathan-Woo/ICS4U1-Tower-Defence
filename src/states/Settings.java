@@ -20,7 +20,7 @@ public class Settings extends State implements ActionListener{
 	public static int port = 3456;
 	
 	JTextField portField;
-	JButton save, back;
+	JButton back;
 	
 	@Override
 	public void update() {
@@ -46,18 +46,15 @@ public class Settings extends State implements ActionListener{
 		back = new JButton("BACK");
 		back.setBounds((TowerDefence.WIDTH / 2) - 50 - 100, (TowerDefence.HEIGHT / 2) + 50, 100, 30);
 		towerDefence.add(back);
-		
-		save = new JButton("SAVE");
-		save.setBounds((TowerDefence.WIDTH / 2) - 100 + 50, (TowerDefence.HEIGHT / 2) + 50, 100, 30);
-		towerDefence.add(save);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(portField)) {
+		if(e.getSource().equals(back)) {
 			int port = Integer.parseInt(portField.getText());
 			if(port > 0 && port < 65255) {
-				
+				Settings.port = port;
+				towerDefence.changeState(TowerDefence.MAIN_MENU);
 			}
 		}
 	}
