@@ -180,9 +180,18 @@ public abstract class Tower {
 	
 	public static Tower newTower(final int type, int towerX, int towerY) {
 		switch(type) {
-			default:
+			case Tower.BASIC:
 				return new BasicTower(towerX, towerY);
+			case Tower.FIRE:
+				return new FireTower(towerX, towerY);
+			case Tower.ICE:
+				return new IceTower(towerX, towerY);
+			case Tower.SNIPE:
+				return new SnipeTower(towerX, towerY);
+			case Tower.BOMB:
+				return new BombTower(towerX, towerY);
 		}
+		return null;
 	}
 	
 	//constructor

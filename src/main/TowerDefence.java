@@ -16,7 +16,6 @@ import javax.swing.Timer;
 
 import states.Game;
 import states.MainMenu;
-import states.Settings;
 import states.State;
 
 //MAKE THIS MAIN CLASS THE JFRAME SO WE DON'T

@@ -35,7 +35,7 @@ public class Game extends State {
 	public GameMap map;
 	private int intHealth = 100;
 	private int waveNumber = 1;
-	private int intBalance = 100;
+	private int intBalance = 1000000;
 	private int intPlacingTower = -1;
 	private Font font;
 	private int[] enemyWave;

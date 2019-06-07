@@ -4,5 +4,5 @@ attackSpeed,2500
 damage,40
 image,BombTower.jpg
 projectileRadius,20
-projectileSpeed,0.5
+projectileSpeed,1
 projectileColor,#FFA500
