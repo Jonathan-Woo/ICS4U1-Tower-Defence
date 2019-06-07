@@ -34,22 +34,19 @@ public class Settings extends State implements ActionListener{
 	}
 	
 	public Settings(TowerDefence towerDefence) {
-		JPanel pnl = new JPanel(null);
-		pnl.setPreferredSize(towerDefence.getPreferredSize());
+		super(towerDefence);
 		
 		JLabel lbl = new JLabel("Port: ");
 		lbl.setBounds((TowerDefence.WIDTH / 2) - 200, TowerDefence.HEIGHT / 2, 50, 30);
-		pnl.add(lbl);
+		towerDefence.statePnl.add(lbl);
 		
 		portField = new JTextField(port + "");
 		portField.setBounds((TowerDefence.WIDTH / 2) - 150, TowerDefence.HEIGHT / 2, 300, 30);
-		pnl.add(portField);
+		towerDefence.statePnl.add(portField);
 		
 		JButton btn = new JButton("BACK");
 		btn.setBounds((TowerDefence.WIDTH / 2) - 25, (TowerDefence.HEIGHT / 2) + 50, 100, 30);
-		pnl.add(btn);
-		
-		towerDefence.add(pnl);
+		towerDefence.statePnl.add(btn);
 	}
 
 	@Override

@@ -412,7 +412,7 @@ public class Game extends State {
 	
 	//constructor
 	public Game(TowerDefence towerDefence) {
-		this.towerDefence = towerDefence;
+		super(towerDefence);
 		
 		Tower.loadTowerFiles();
 		

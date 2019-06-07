@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import main.TowerDefence;
+
 public class MainMenu extends State implements ActionListener{
 	
 	//properties
@@ -28,7 +30,9 @@ public class MainMenu extends State implements ActionListener{
 	}
 
 	//constructor
-	public MainMenu() {
+	public MainMenu(TowerDefence towerDefence) {
+		super(towerDefence);
+		
 		playGameButton = new JButton ("Play Game");
 		//playGameButton.setBounds(TowerDefence.wi);
 		
