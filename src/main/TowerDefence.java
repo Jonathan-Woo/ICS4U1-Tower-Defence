@@ -15,6 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import states.Game;
+import states.GameCreation;
+import states.GameOver;
+import states.Help;
 import states.MainMenu;
 import states.Settings;
 import states.State;
@@ -23,6 +26,7 @@ import states.State;
 //NEED A SEPARATE OBJECT FOR THAT
 public class TowerDefence extends JFrame implements ActionListener {
 	
+	public final static int MAIN_MENU = 0, SETTINGS = 1, GAME_CREATION = 2, GAME = 3, GAME_OVER = 4, HELP = 5;
 	public final static int WIDTH = 1280, HEIGHT = 720;
 	
 	/** Keeps track of the current game State */	
@@ -52,7 +56,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 		this.setVisible(true);
 		
 		//INIT DEFAULT STATE OF THE GAME
-		currentState = new Game(this);
+		currentState = new MainMenu(this);
 		
 		//SET INPUT LISTENER
 		InputListener inputListener = new InputListener(this.getInsets().top);
@@ -68,9 +72,13 @@ public class TowerDefence extends JFrame implements ActionListener {
 		timer.start();
 	}
 	
+	public void resetPanel() {
+		this.pnl.removeAll();
+	}
+	
 	@Override
 	public Component add(Component component) {
-		Component comp = pnl.add(component);
+		Component comp = this.pnl.add(component);
 		this.pack();
 		return comp;
 	}
@@ -87,6 +95,24 @@ public class TowerDefence extends JFrame implements ActionListener {
 	 */
 	public State getCurrentState() {
 		return currentState;
+	}
+	
+	public void changeState(final int state, Object... args) {
+		resetPanel();
+		switch(state) {
+			case TowerDefence.MAIN_MENU:
+				this.currentState = new MainMenu(this);
+			case TowerDefence.GAME_CREATION:
+				this.currentState = new GameCreation(this);
+			case TowerDefence.GAME:
+				this.currentState = new Game(this);
+			case TowerDefence.SETTINGS:
+				this.currentState = new Settings(this);
+			case TowerDefence.GAME_OVER:
+				this.currentState = new GameOver(this);
+			case TowerDefence.HELP:
+				this.currentState = new Help(this);
+		}
 	}
 
 	@Override
@@ -109,6 +135,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 		
 		public AnimationPanel(TowerDefence towerDefence) {
 			this.setPreferredSize(new Dimension (TowerDefence.WIDTH, TowerDefence.HEIGHT));
+			this.setLayout(null);
 			this.towerDefence = towerDefence;
 		}
 		
@@ -116,7 +143,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 		public void paintComponent(Graphics g) {
 			if(currentState != null) {
 				//CLEAR PANEL
-				g.setColor(Color.BLACK);
+				g.setColor(Color.WHITE);
 				g.fillRect(0, 0, this.getWidth(), this.getHeight());
 				
 				//SET FONT

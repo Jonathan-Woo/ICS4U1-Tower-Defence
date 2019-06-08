@@ -4,7 +4,11 @@ import java.awt.Graphics;
 
 import main.TowerDefence;
 
-public class GameCreation extends State {
+public class Help extends State{
+	
+	public Help(TowerDefence towerDefence) {
+		super(towerDefence);
+	}
 
 	@Override
 	public void update() {
@@ -14,10 +18,6 @@ public class GameCreation extends State {
 	@Override
 	public void render(Graphics g) {
 		
-	}
-	
-	public GameCreation(TowerDefence towerDefence) {
-		super(towerDefence);
 	}
 
 }

@@ -9,13 +9,14 @@ import towers.Tower;
 
 public class Projectile {
 	//properties
-	int intDamage;
-	int intxLocation;
-	int intyLocation;
-	int intRadius;
-	int intProjectileSpeed;
-	Color color;
-	Enemy currentEnemy;
+	private int intDamage;
+	private int intxLocation;
+	private int intyLocation;
+	private int intRadius;
+	private int intProjectileSpeed;
+	private Color color;
+	private Enemy currentEnemy;
+	private Tower tower;
 	
 	//methods
 	public void update(Game game) {
@@ -24,6 +25,7 @@ public class Projectile {
 			//HIT THE ENEMY: DAMAGE ENEMY, REMOVE PROJECTILE
 			game.projectiles.remove(this);
 			currentEnemy.dealDamage(intDamage);
+			tower.effectOnHit(currentEnemy);
 		}else{
 			//calculates the distance from the enemy
 			int intPythagA;
@@ -55,6 +57,7 @@ public class Projectile {
 	//constructor
 	public Projectile(int intDamage, Tower tower, int intRadius, int intProjectileSpeed, Color color, Enemy currentEnemy) {
 		this.intDamage = intDamage;
+		this.tower = tower;
 		this.intxLocation = tower.intxLocation + (Game.TILE_SIZE / 2);
 		this.intyLocation = tower.intyLocation + (Game.TILE_SIZE / 2);
 		this.intRadius = intRadius;

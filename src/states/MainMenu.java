@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import main.TowerDefence;
+
 public class MainMenu extends State implements ActionListener{
 	
 	//properties
@@ -24,17 +26,34 @@ public class MainMenu extends State implements ActionListener{
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		
+		if(e.getSource()==playGameButton) {
+			towerDefence.changeState(TowerDefence.GAME_CREATION);
+		}else if(e.getSource()== helpButton) {
+			towerDefence.changeState(TowerDefence.HELP);
+		}else if(e.getSource()== settingsButton) {
+			towerDefence.changeState(TowerDefence.SETTINGS);
+		}
 	}
 
 	//constructor
-	public MainMenu() {
+	public MainMenu(TowerDefence towerDefence) {
+		super(towerDefence);
+		
 		playGameButton = new JButton ("Play Game");
-		//playGameButton.setBounds(TowerDefence.wi);
+		playGameButton.setBounds(TowerDefence.WIDTH/4, 5 * Game.TILE_SIZE, TowerDefence.WIDTH/2, 3 * Game.TILE_SIZE);
+		playGameButton.addActionListener(this);
 		
 		helpButton = new JButton("Help");
+		helpButton.setBounds(TowerDefence.WIDTH/4, 8 * Game.TILE_SIZE, TowerDefence.WIDTH/2, 3 * Game.TILE_SIZE);
+		helpButton.addActionListener(this);
 		
 		settingsButton = new JButton("Settings");
+		settingsButton.setBounds(TowerDefence.WIDTH/4, 11 * Game.TILE_SIZE, TowerDefence.WIDTH/2, 3 * Game.TILE_SIZE);
+		settingsButton.addActionListener(this);
+		
+		towerDefence.add(playGameButton);
+		towerDefence.add(helpButton);
+		towerDefence.add(settingsButton);
 	}
 
 	

@@ -31,11 +31,10 @@ public class Game extends State {
 
 	public static ArrayList<Enemy> removeEnemies = new ArrayList<>();
 
-	private TowerDefence towerDefence;
 	public GameMap map;
 	private int intHealth = 100;
 	private int waveNumber = 1;
-	private int intBalance = 100;
+	private int intBalance = 1000000;
 	private int intPlacingTower = -1;
 	private Font font;
 	private int[] enemyWave;
@@ -412,7 +411,7 @@ public class Game extends State {
 	
 	//constructor
 	public Game(TowerDefence towerDefence) {
-		this.towerDefence = towerDefence;
+		super(towerDefence);
 		
 		Tower.loadTowerFiles();
 		

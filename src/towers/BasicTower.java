@@ -1,5 +1,7 @@
 package towers;
 
+import enemies.Enemy;
+
 public class BasicTower extends Tower{
 
 	/**
@@ -10,6 +12,11 @@ public class BasicTower extends Tower{
 	 */
 	public BasicTower(int intxLocation, int intyLocation) {
 		super(intxLocation, intyLocation, Tower.BASIC);
+	}
+
+	@Override
+	public void effectOnHit(Enemy enemy) {
+		
 	}
 
 }
