@@ -16,7 +16,6 @@ public class MainMenu extends State implements ActionListener{
 	JButton settingsButton;
 	
 	//methods
-
 	public void update() {
 		
 	}
@@ -26,11 +25,11 @@ public class MainMenu extends State implements ActionListener{
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==playGameButton) {
+		if(e.getSource() == playGameButton) {
 			towerDefence.changeState(TowerDefence.GAME_CREATION);
-		}else if(e.getSource()== helpButton) {
+		}else if(e.getSource() == helpButton) {
 			towerDefence.changeState(TowerDefence.HELP);
-		}else if(e.getSource()== settingsButton) {
+		}else if(e.getSource() == settingsButton) {
 			towerDefence.changeState(TowerDefence.SETTINGS);
 		}
 	}

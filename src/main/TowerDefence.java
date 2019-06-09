@@ -7,6 +7,9 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowStateListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -14,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import networking.Connections;
 import states.Game;
 import states.GameCreation;
 import states.GameOver;
@@ -24,7 +28,7 @@ import states.State;
 
 //MAKE THIS MAIN CLASS THE JFRAME SO WE DON'T
 //NEED A SEPARATE OBJECT FOR THAT
-public class TowerDefence extends JFrame implements ActionListener {
+public class TowerDefence extends JFrame implements ActionListener, WindowListener {
 	
 	public final static int MAIN_MENU = 0, SETTINGS = 1, GAME_CREATION = 2, GAME = 3, GAME_OVER = 4, HELP = 5;
 	public final static int WIDTH = 1280, HEIGHT = 720;
@@ -44,6 +48,7 @@ public class TowerDefence extends JFrame implements ActionListener {
 		super("Tower Defence");
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.addWindowListener(this);
 		//SHOW FRAME IN THE MIDDLE OF THE SCREEN ON CREATION
 		//this.setLocationRelativeTo(null);
 		
@@ -102,16 +107,22 @@ public class TowerDefence extends JFrame implements ActionListener {
 		switch(state) {
 			case TowerDefence.MAIN_MENU:
 				this.currentState = new MainMenu(this);
+				break;
 			case TowerDefence.GAME_CREATION:
 				this.currentState = new GameCreation(this);
+				break;
 			case TowerDefence.GAME:
 				this.currentState = new Game(this);
+				break;
 			case TowerDefence.SETTINGS:
 				this.currentState = new Settings(this);
+				break;
 			case TowerDefence.GAME_OVER:
 				this.currentState = new GameOver(this);
+				break;
 			case TowerDefence.HELP:
 				this.currentState = new Help(this);
+				break;
 		}
 	}
 
@@ -153,6 +164,47 @@ public class TowerDefence extends JFrame implements ActionListener {
 				towerDefence.getCurrentState().render(g);
 			}
 		}
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		Connections.closeConnection();
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 
