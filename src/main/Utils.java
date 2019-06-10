@@ -102,5 +102,13 @@ public class Utils {
 		
 		return data.toArray(new Integer[] {});
 	}
+
+	public static String genId() {
+		String id = "";
+		for(int i = 0; i < 10; i++) {
+			id += (char) ((int) Math.round(Math.random() * 25) + 65);
+		}
+		return id;
+	}
 	
 }

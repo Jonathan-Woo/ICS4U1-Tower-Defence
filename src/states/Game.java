@@ -33,7 +33,7 @@ public class Game extends State {
 	public static ArrayList<Enemy> removeEnemies = new ArrayList<>();
 
 	public GameMap map;
-	private int intHealth = 100;
+	public int intHealth = 100;
 	public int waveNumber = 1;
 	public int intBalance = 1000000;
 	private int intPlacingTower = -1;
@@ -109,7 +109,7 @@ public class Game extends State {
 			}else if(InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower != -1) {
 				int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
 				int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
-				this.placeTower(intPlacingTower, towerX, towerY);
+				this.placeTower(intPlacingTower, towerX, towerY, Connections.isServer);
 			}
 		}
 		
@@ -193,9 +193,10 @@ public class Game extends State {
 			while(!enemySpawned && enemiesInWave > 0) {
 				int random = (int) Math.round(Math.random() * 4);
 				if(enemyWave[random] > 0) {
-					Connections.sendMessage(Connections.SPAWN_ENEMY, random);
+					String id = Utils.genId();
+					Connections.sendMessage(Connections.SPAWN_ENEMY, random, id);
 					
-					enemies.add(Enemy.newEnemy(random));
+					enemies.add(Enemy.newEnemy(random, id));
 					enemyWave[random]--;
 					enemySpawned = true;
 				}
@@ -313,7 +314,20 @@ public class Game extends State {
 			g.fillOval(towerX - towerRadius, towerY - towerRadius,
 					(towerRadius * 2) + Game.TILE_SIZE, (towerRadius * 2) + Game.TILE_SIZE);
 			g.drawImage(Tower.towerImages[intPlacingTower], towerX, towerY, null);
+			
+			g.setColor(new Color(1f, 0f, 0f, 0.6f));
+			if(Connections.isServer) {
+				g.fillRect(Game.TILE_SIZE * 14, 0, TowerDefence.WIDTH - (Game.TILE_SIZE * (14 + 5)), TowerDefence.HEIGHT);
+			}else {
+				g.fillRect(0, 0, Game.TILE_SIZE * 14, TowerDefence.HEIGHT);
+			}
 		}
+		
+		//RENDER OUTLINE OF EACH PLAYER'S SIDE OF THE MAP
+		/*g.setColor(Color.RED);
+		g.drawRect(Game.TILE_SIZE * 14, 0, TowerDefence.WIDTH - (Game.TILE_SIZE * (14 + 5)), TowerDefence.HEIGHT);
+		g.setColor(Color.BLUE);
+		g.drawRect(0, 0, Game.TILE_SIZE * 14, TowerDefence.HEIGHT);*/
 		
 		/////UI/////
 		//RENDER CHAT
@@ -370,9 +384,18 @@ public class Game extends State {
 		}
 	}
 
-	public void placeTower(int placeTower, int towerX, int towerY) {		
+	public void placeTower(int placeTower, int towerX, int towerY, boolean fromServer) {		
+		if(fromServer) {
+			if(towerX >= Game.TILE_SIZE * 14) {
+				return;
+			}
+		}else {
+			if(towerX < Game.TILE_SIZE * 14) {
+				return;
+			}
+		}
+		
 		//CHECK IF TOWER IS GETTING PLACED IN PATH
-		boolean canBePlaced = true;
 		int previousCheckpointX = map.getCheckpointX(0);
 		int previousCheckpointY = map.getCheckpointY(0);
 		for(int n = 1; n < map.getNumberOfCheckpoints(); n++) {
@@ -382,47 +405,47 @@ public class Game extends State {
 			Line line = new Line(previousCheckpointX + (Game.TILE_SIZE / 2), previousCheckpointY + (Game.TILE_SIZE / 2),
 					checkpointX + (Game.TILE_SIZE / 2), checkpointY + (Game.TILE_SIZE / 2));
 			if(line.intersects(towerX, towerY, Game.TILE_SIZE, Game.TILE_SIZE)) {
-				canBePlaced = false;
-				break;
+				return;
 			}
 			
 			previousCheckpointX = checkpointX;
 			previousCheckpointY = checkpointY;
 		}
 		
-		if(canBePlaced) {
-			//CHECK IF TOWER IS GOING TO COLLIDE WITH OTHER TOWERS
-			for(Tower tower : towers) {
-				if(tower.intxLocation == towerX && tower.intyLocation == towerY) {
-					canBePlaced = false;
-					break;
-				}
+		//CHECK IF TOWER IS GOING TO COLLIDE WITH OTHER TOWERS
+		for(Tower tower : towers) {
+			if(tower.intxLocation == towerX && tower.intyLocation == towerY) {
+				return;
 			}
 		}
 		
-		if(canBePlaced) {
-			if(Connections.isServer) {
-				int towerPrice = Integer.parseInt(Tower.towerFiles[placeTower].get("price"));
-				if(intBalance >= towerPrice) {				
-					Tower tower = Tower.newTower(placeTower, towerX, towerY);
-					towers.add(tower);
-					
-					updateBalance(-towerPrice);
-					intPlacingTower = -1;
-				}
-			}
+		if(Connections.isServer) {
+			int towerPrice = Integer.parseInt(Tower.towerFiles[placeTower].get("price"));
+			if(intBalance >= towerPrice) {				
+				Tower tower = Tower.newTower(placeTower, towerX, towerY);
+				towers.add(tower);
 			
-			Connections.sendMessage(Connections.PLACE_TOWER, placeTower, towerX, towerY);
+				updateBalance(-towerPrice);
+				intPlacingTower = -1;
+			}
 		}
+			
+		Connections.sendMessage(Connections.PLACE_TOWER, placeTower, towerX, towerY);
 	}
 	
 	private void updateBalance(int money) {
 		this.intBalance += money;
-		Connections.sendMessage(Connections.BALANCE_UPDATE, this.intBalance);
+		Connections.sendMessage(Connections.STAT_UPDATE, this.intBalance, this.intHealth);
 	}
 
 	public void dealDamage(int intDamage) {
-		this.intHealth -= intDamage;
+		if(Connections.isServer) {
+			this.intHealth -= intDamage;
+			checkIfGameOver();
+		}
+	}
+	
+	public void checkIfGameOver() {
 		if(intHealth <= 0) {
 			//GAME OVER
 			towerDefence.changeState(TowerDefence.GAME_OVER);

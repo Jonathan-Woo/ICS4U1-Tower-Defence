@@ -12,8 +12,8 @@ import towers.Tower;
 public class Connections implements ActionListener{
 	
 	//properties
-	public static final int CONNECT = 0, DISCONNECT = 1, CHAT_MESSAGE = 2, PLACE_TOWER = 3, BALANCE_UPDATE = 4,
-			SPAWN_ENEMY = 5, UPDATE_TIMER = 6;
+	public static final int CONNECT = 0, DISCONNECT = 1, CHAT_MESSAGE = 2, PLACE_TOWER = 3, STAT_UPDATE = 4,
+			SPAWN_ENEMY = 5, UPDATE_TIMER = 6, UPDATE_ENEMY = 7, REMOVE_ENEMY = 8;
 	
 	private TowerDefence towerDefence;
 	private Game game;
@@ -44,23 +44,46 @@ public class Connections implements ActionListener{
 				int towerX = Integer.parseInt(strMessageParts[2]);
 				int towerY = Integer.parseInt(strMessageParts[3]);
 				if(isServer) {
-					game.placeTower(placeTower, towerX, towerY);
+					game.placeTower(placeTower, towerX, towerY, false);
 				}else {
 					game.towers.add(Tower.newTower(placeTower, towerX, towerY));
 				}
-			}else if(intMessageType == Connections.BALANCE_UPDATE) {
+			}else if(intMessageType == Connections.STAT_UPDATE) {
 				if(!isServer) {
 					game.intBalance = Integer.parseInt(strMessageParts[1]);
+					game.intHealth = Integer.parseInt(strMessageParts[2]);
+					game.checkIfGameOver();
 				}
 			}else if(intMessageType == Connections.SPAWN_ENEMY) {
 				if(!isServer) {
-					game.enemies.add(Enemy.newEnemy(Integer.parseInt(strMessageParts[1])));
+					game.enemies.add(Enemy.newEnemy(Integer.parseInt(strMessageParts[1]), strMessageParts[2]));
 				}
 			}else if(intMessageType == Connections.UPDATE_TIMER) {
 				if(!isServer) {
 					game.roundTime = Integer.parseInt(strMessageParts[1]);
 					game.waveNumber = Integer.parseInt(strMessageParts[2]);
 					game.enemies.clear();
+				}
+			}else if(intMessageType == Connections.UPDATE_ENEMY) {
+				if(!isServer) {
+					for(Enemy enemy : game.enemies) {
+						if(enemy.id.equals(strMessageParts[1])) {
+							int checkPoint = Integer.parseInt(strMessageParts[2]);
+							enemy.currentCheckpoint = checkPoint;
+							enemy.intxLocation = game.map.getCheckpointX(checkPoint);
+							enemy.intyLocation = game.map.getCheckpointY(checkPoint);
+							return;
+						}
+					}
+				}
+			}else if(intMessageType == Connections.REMOVE_ENEMY) {
+				if(!isServer) {
+					for(Enemy enemy : game.enemies) {
+						if(enemy.id.equals(strMessageParts[1])) {
+							Game.removeEnemies.add(enemy);
+							return;
+						}
+					}
 				}
 			}
 		}
@@ -72,7 +95,7 @@ public class Connections implements ActionListener{
 			for(int i = 0; i < strMessages.length; i++) {
 				strFinalMsg += "," + strMessages[i];
 			}
-			//System.out.println(strFinalMsg);
+			System.out.println(strFinalMsg);
 			ssm.sendText(strFinalMsg);
 		}
 	}

@@ -2,8 +2,8 @@ package enemies;
 
 public class BasicEnemy extends Enemy {
 
-	public BasicEnemy() {
-		super("basicEnemy", Enemy.BASIC);
+	public BasicEnemy(String id) {
+		super("basicEnemy", Enemy.BASIC, id);
 	}
 
 }

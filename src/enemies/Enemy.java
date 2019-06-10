@@ -6,6 +6,7 @@ import java.util.Map;
 
 import main.GameMap;
 import main.Utils;
+import networking.Connections;
 import states.Game;
 
 public abstract class Enemy {
@@ -14,6 +15,7 @@ public abstract class Enemy {
 	public static int startX, startY;
 	
 	private int type;
+	public String id;
 	public int intxLocation;
 	public int intyLocation;
 	private int intDamage;
@@ -22,11 +24,15 @@ public abstract class Enemy {
 	private BufferedImage enemyImage;
 	private int reward;
 	
-	private int checkpointX = -1, checkpointY = -1, currentCheckpoint = 0;
+	private int checkpointX = -1, checkpointY = -1;
+	public int currentCheckpoint = 0;
 	
 	public void dealDamage(int intDamage) {
 		this.intHealth -= intDamage;
 		if(this.intHealth <= 0) {
+			if(Connections.isServer) {
+				Connections.sendMessage(Connections.REMOVE_ENEMY, this.id);
+			}
 			Game.removeEnemies.add(this);
 		}
 	}	
@@ -46,11 +52,17 @@ public abstract class Enemy {
 			//WE HAVE REACHED MAP CHECKPOINT
 			if(game.map.getNumberOfCheckpoints() > currentCheckpoint + 1) {
 				//GET NEXT CHECKPOINT
+				if(Connections.isServer) {
+					Connections.sendMessage(Connections.UPDATE_ENEMY, this.id, currentCheckpoint);
+				}
 				currentCheckpoint++;
 				checkpointX = game.map.getCheckpointX(currentCheckpoint);
 				checkpointY = game.map.getCheckpointY(currentCheckpoint);
 			}else {
 				//ENEMY HAS REACHED THE END OF THE MAP
+				if(Connections.isServer) {
+					Connections.sendMessage(Connections.REMOVE_ENEMY, this.id);
+				}
 				Game.removeEnemies.add(this);
 				game.dealDamage(intDamage);
 			}
@@ -74,16 +86,18 @@ public abstract class Enemy {
 		g.drawImage(enemyImage, intxLocation, intyLocation, null);
 	}
 	
-	public static Enemy newEnemy(final int type) {
+	public static Enemy newEnemy(final int type, String id) {
 		switch(type) {
 			default:
-				return new BasicEnemy();
+				return new BasicEnemy(id);
 		}
 	}
 	
 	//constructor
-	public Enemy(String enemyFile, int type) {
+	public Enemy(String enemyFile, int type, String id) {
 		this.type = type;
+		this.id = id;
+		
 		Map<String, String> data = Utils.loadEnemy(enemyFile);
 		this.intDamage = Integer.parseInt(data.get("damage"));
 		this.intSpeed = Double.parseDouble(data.get("speed"));
