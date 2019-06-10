@@ -113,6 +113,7 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 				break;
 			case TowerDefence.GAME:
 				this.currentState = new Game(this);
+				this.requestFocus();
 				break;
 			case TowerDefence.SETTINGS:
 				this.currentState = new Settings(this);

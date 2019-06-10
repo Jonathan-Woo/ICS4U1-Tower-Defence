@@ -23,9 +23,9 @@ public class Projectile {
 	
 	//methods
 	public void update(Game game) {
-		if((Math.abs(currentEnemy.intxLocation + (Game.TILE_SIZE / 2) - intxLocation) <= 5
-				&& Math.abs(currentEnemy.intyLocation + (Game.TILE_SIZE / 2) - intyLocation) <= 5) ||
-				(System.currentTimeMillis() - longSpawnTime >= 3000)) {
+		if((Math.abs(currentEnemy.intxLocation + (Game.TILE_SIZE / 2) - intxLocation) <= intProjectileSpeed + intRadius
+				&& Math.abs(currentEnemy.intyLocation + (Game.TILE_SIZE / 2) - intyLocation) <= intProjectileSpeed + intRadius) ||
+				(System.currentTimeMillis() - longSpawnTime >= 2000)) {
 			//HIT THE ENEMY: DAMAGE ENEMY, REMOVE PROJECTILE
 			game.projectiles.remove(this);
 			currentEnemy.dealDamage(intDamage);
@@ -37,18 +37,17 @@ public class Projectile {
 			double dblPythagC;
 			intPythagA = (currentEnemy.intxLocation + (Game.TILE_SIZE / 2)) - this.intxLocation;
 			intPythagB = (currentEnemy.intyLocation + (Game.TILE_SIZE/2)) - this.intyLocation;
-			if(intPythagA == 0) {
-				dblPythagC = 1.0;
-			}else {
-				//dblPythagC = Math.pow((intPythagA * intPythagA) + (intPythagB * intPythagB), 0.5);
-				dblPythagC = (double) ((double) intPythagB / (double) Math.abs(intPythagA));
+			if(Math.abs(intPythagA) <= 5) {
+				intPythagA = 5;
 			}
+			
+			dblPythagC = (double) ((double) intPythagB / (double) Math.abs(intPythagA));
+			
 			if(intPythagA > 0) {
 				intxLocation += intProjectileSpeed;
 			}else if(intPythagA < 0) {
 				intxLocation -= intProjectileSpeed;
 			}
-			//intyLocation += (int)Math.pow(((dblPythagC * dblPythagC) - 1), 0.5);
 			intyLocation += (int) (dblPythagC * intProjectileSpeed);
 		}
 	}

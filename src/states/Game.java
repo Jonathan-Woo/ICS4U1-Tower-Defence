@@ -34,7 +34,7 @@ public class Game extends State {
 
 	public GameMap map;
 	private int intHealth = 100;
-	private int waveNumber = 1;
+	public int waveNumber = 1;
 	public int intBalance = 1000000;
 	private int intPlacingTower = -1;
 	private Font font;
@@ -131,8 +131,8 @@ public class Game extends State {
 		}
 		
 		//CREATE ENEMY WAVES AND HANDLE DOWNTIME
-		if(roundTime > 0) {
-			if(Connections.isServer) {
+		if(Connections.isServer) {
+			if(roundTime > 0) {
 				if(roundTimer == null) {
 					enemyWave = null;
 					roundTimer = new Timer(1000, new ActionListener() {
@@ -143,14 +143,12 @@ public class Game extends State {
 								roundTimer.stop();
 								roundTimer = null;
 							}
-							Connections.sendMessage(Connections.UPDATE_TIMER, roundTime);
+							Connections.sendMessage(Connections.UPDATE_TIMER, roundTime, waveNumber);
 						}
 					});
 					roundTimer.start();
 				}
-			}
-		}else{
-			if(Connections.isServer) {
+			}else{
 				if(enemyWave == null) {						
 					enemyWave = new int[] {
 							waveNumber,

@@ -12,7 +12,7 @@ import towers.Tower;
 public class Connections implements ActionListener{
 	
 	//properties
-	public static final int CONNECT = 0, DISCONNECT = 1, CHATMESSAGE = 2, PLACE_TOWER = 3, BALANCE_UPDATE = 4,
+	public static final int CONNECT = 0, DISCONNECT = 1, CHAT_MESSAGE = 2, PLACE_TOWER = 3, BALANCE_UPDATE = 4,
 			SPAWN_ENEMY = 5, UPDATE_TIMER = 6;
 	
 	private TowerDefence towerDefence;
@@ -37,7 +37,7 @@ public class Connections implements ActionListener{
 				Connections.closeConnection();
 				game = null;
 				towerDefence.changeState(TowerDefence.MAIN_MENU);
-			}else if(intMessageType == CHATMESSAGE) {
+			}else if(intMessageType == CHAT_MESSAGE) {
 				Game.strMessage = strMessageParts[1];
 			}else if(intMessageType == Connections.PLACE_TOWER) {
 				int placeTower = Integer.parseInt(strMessageParts[1]);
@@ -59,6 +59,7 @@ public class Connections implements ActionListener{
 			}else if(intMessageType == Connections.UPDATE_TIMER) {
 				if(!isServer) {
 					game.roundTime = Integer.parseInt(strMessageParts[1]);
+					game.waveNumber = Integer.parseInt(strMessageParts[2]);
 					game.enemies.clear();
 				}
 			}
@@ -71,7 +72,7 @@ public class Connections implements ActionListener{
 			for(int i = 0; i < strMessages.length; i++) {
 				strFinalMsg += "," + strMessages[i];
 			}
-			System.out.println(strFinalMsg);
+			//System.out.println(strFinalMsg);
 			ssm.sendText(strFinalMsg);
 		}
 	}
