@@ -102,7 +102,7 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 		return currentState;
 	}
 	
-	public void changeState(final int state, Object... args) {
+	public State changeState(final int state, Object... args) {
 		resetPanel();
 		switch(state) {
 			case TowerDefence.MAIN_MENU:
@@ -124,6 +124,7 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 				this.currentState = new Help(this);
 				break;
 		}
+		return this.currentState;
 	}
 
 	@Override

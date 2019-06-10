@@ -2,6 +2,8 @@ package projectiles;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import enemies.Enemy;
 import states.Game;
@@ -17,11 +19,13 @@ public class Projectile {
 	private Color color;
 	private Enemy currentEnemy;
 	private Tower tower;
+	private long longSpawnTime;
 	
 	//methods
 	public void update(Game game) {
-		if(Math.abs(currentEnemy.intxLocation + (Game.TILE_SIZE / 2) - intxLocation) <= 5
-				&& Math.abs(currentEnemy.intyLocation + (Game.TILE_SIZE / 2) - intyLocation) <= 5) {
+		if((Math.abs(currentEnemy.intxLocation + (Game.TILE_SIZE / 2) - intxLocation) <= 5
+				&& Math.abs(currentEnemy.intyLocation + (Game.TILE_SIZE / 2) - intyLocation) <= 5) ||
+				(System.currentTimeMillis() - longSpawnTime >= 3000)) {
 			//HIT THE ENEMY: DAMAGE ENEMY, REMOVE PROJECTILE
 			game.projectiles.remove(this);
 			currentEnemy.dealDamage(intDamage);
@@ -64,6 +68,8 @@ public class Projectile {
 		this.intProjectileSpeed = intProjectileSpeed;
 		this.color = color;
 		this.currentEnemy = currentEnemy;
+
+		longSpawnTime = System.currentTimeMillis();
 	}
 
 }

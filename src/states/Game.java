@@ -21,6 +21,7 @@ import main.GameMap;
 import main.InputListener;
 import main.TowerDefence;
 import main.Utils;
+import networking.Connections;
 import projectiles.Projectile;
 import towers.BasicTower;
 import towers.Tower;
@@ -34,11 +35,11 @@ public class Game extends State {
 	public GameMap map;
 	private int intHealth = 100;
 	private int waveNumber = 1;
-	private int intBalance = 1000000;
+	public int intBalance = 1000000;
 	private int intPlacingTower = -1;
 	private Font font;
 	private int[] enemyWave;
-	private int roundTime = 3;
+	public int roundTime = 5;
 	private Timer roundTimer, waveTimer;
 	private int enemiesInWave = 0;
 	
@@ -79,7 +80,9 @@ public class Game extends State {
 		for(Enemy enemy : removeEnemies) {
 			if(enemies.contains(enemy)) {
 				enemies.remove(enemy);
-				intBalance += enemy.getReward();
+				if(Connections.isServer) {
+					updateBalance(enemy.getReward());
+				}
 			}
 		}
 		removeEnemies.clear();
@@ -106,46 +109,7 @@ public class Game extends State {
 			}else if(InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower != -1) {
 				int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
 				int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
-				
-				//CHECK IF TOWER IS GETTING PLACED IN PATH
-				boolean canBePlaced = true;
-				int previousCheckpointX = map.getCheckpointX(0);
-				int previousCheckpointY = map.getCheckpointY(0);
-				for(int n = 1; n < map.getNumberOfCheckpoints(); n++) {
-					int checkpointX = map.getCheckpointX(n);
-					int checkpointY = map.getCheckpointY(n);
-					
-					Line line = new Line(previousCheckpointX + (Game.TILE_SIZE / 2), previousCheckpointY + (Game.TILE_SIZE / 2),
-							checkpointX + (Game.TILE_SIZE / 2), checkpointY + (Game.TILE_SIZE / 2));
-					if(line.intersects(towerX, towerY, Game.TILE_SIZE, Game.TILE_SIZE)) {
-						canBePlaced = false;
-						break;
-					}
-					
-					previousCheckpointX = checkpointX;
-					previousCheckpointY = checkpointY;
-				}
-				
-				if(canBePlaced) {
-					//CHECK IF TOWER IS GOING TO COLLIDE WITH OTHER TOWERS
-					for(Tower tower : towers) {
-						if(tower.intxLocation == towerX && tower.intyLocation == towerY) {
-							canBePlaced = false;
-							break;
-						}
-					}
-				}
-				
-				if(canBePlaced) {
-					int towerPrice = Integer.parseInt(Tower.towerFiles[intPlacingTower].get("price"));
-					if(intBalance >= towerPrice) {				
-						Tower tower = Tower.newTower(intPlacingTower, towerX, towerY);
-						towers.add(tower);
-						
-						intBalance -= towerPrice;
-						intPlacingTower = -1;
-					}
-				}
+				this.placeTower(intPlacingTower, towerX, towerY);
 			}
 		}
 		
@@ -168,50 +132,54 @@ public class Game extends State {
 		
 		//CREATE ENEMY WAVES AND HANDLE DOWNTIME
 		if(roundTime > 0) {
-			if(roundTimer == null) {
-				enemyWave = null;
-				roundTimer = new Timer(1000, new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
-						roundTime--;
-						if(roundTime <= 0) {
-							roundTimer.stop();
-							roundTimer = null;
+			if(Connections.isServer) {
+				if(roundTimer == null) {
+					enemyWave = null;
+					roundTimer = new Timer(1000, new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							roundTime--;
+							if(roundTime <= 0) {
+								roundTimer.stop();
+								roundTimer = null;
+							}
+							Connections.sendMessage(Connections.UPDATE_TIMER, roundTime);
 						}
-					}
-				});
-				roundTimer.start();
-			}			
-		}else{
-			if(enemyWave == null) {						
-				enemyWave = new int[] {
-						waveNumber,
-						(int) Math.floor(waveNumber / 2),
-						(int) Math.floor(waveNumber / 3),
-						(int) Math.floor(waveNumber / 4),
-						(int) Math.floor(waveNumber / 5)
-				};
-				
-				spawnEnemies();
+					});
+					roundTimer.start();
+				}
 			}
-			
-			if(waveTimer == null) {
-				waveTimer = new Timer(1500, new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						spawnEnemies();
-					}
-				});
-				waveTimer.start();
-			}	
-			
-			if(enemies.size() == 0 && enemiesInWave == 0) {
-				waveNumber++;
-				roundTime = 3;
-				waveTimer.stop();
-				waveTimer = null;
-				enemyWave = null;
+		}else{
+			if(Connections.isServer) {
+				if(enemyWave == null) {						
+					enemyWave = new int[] {
+							waveNumber,
+							(int) Math.floor(waveNumber / 2),
+							(int) Math.floor(waveNumber / 3),
+							(int) Math.floor(waveNumber / 4),
+							(int) Math.floor(waveNumber / 5)
+					};
+					
+					spawnEnemies();
+				}
+				
+				if(waveTimer == null) {
+					waveTimer = new Timer(1500, new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							spawnEnemies();
+						}
+					});
+					waveTimer.start();
+				}	
+				
+				if(enemies.size() == 0 && enemiesInWave == 0) {
+					waveNumber++;
+					roundTime = 3;
+					waveTimer.stop();
+					waveTimer = null;
+					enemyWave = null;
+				}
 			}
 		}
 	}
@@ -227,6 +195,8 @@ public class Game extends State {
 			while(!enemySpawned && enemiesInWave > 0) {
 				int random = (int) Math.round(Math.random() * 4);
 				if(enemyWave[random] > 0) {
+					Connections.sendMessage(Connections.SPAWN_ENEMY, random);
+					
 					enemies.add(Enemy.newEnemy(random));
 					enemyWave[random]--;
 					enemySpawned = true;
@@ -402,10 +372,62 @@ public class Game extends State {
 		}
 	}
 
+	public void placeTower(int placeTower, int towerX, int towerY) {		
+		//CHECK IF TOWER IS GETTING PLACED IN PATH
+		boolean canBePlaced = true;
+		int previousCheckpointX = map.getCheckpointX(0);
+		int previousCheckpointY = map.getCheckpointY(0);
+		for(int n = 1; n < map.getNumberOfCheckpoints(); n++) {
+			int checkpointX = map.getCheckpointX(n);
+			int checkpointY = map.getCheckpointY(n);
+			
+			Line line = new Line(previousCheckpointX + (Game.TILE_SIZE / 2), previousCheckpointY + (Game.TILE_SIZE / 2),
+					checkpointX + (Game.TILE_SIZE / 2), checkpointY + (Game.TILE_SIZE / 2));
+			if(line.intersects(towerX, towerY, Game.TILE_SIZE, Game.TILE_SIZE)) {
+				canBePlaced = false;
+				break;
+			}
+			
+			previousCheckpointX = checkpointX;
+			previousCheckpointY = checkpointY;
+		}
+		
+		if(canBePlaced) {
+			//CHECK IF TOWER IS GOING TO COLLIDE WITH OTHER TOWERS
+			for(Tower tower : towers) {
+				if(tower.intxLocation == towerX && tower.intyLocation == towerY) {
+					canBePlaced = false;
+					break;
+				}
+			}
+		}
+		
+		if(canBePlaced) {
+			if(Connections.isServer) {
+				int towerPrice = Integer.parseInt(Tower.towerFiles[placeTower].get("price"));
+				if(intBalance >= towerPrice) {				
+					Tower tower = Tower.newTower(placeTower, towerX, towerY);
+					towers.add(tower);
+					
+					updateBalance(-towerPrice);
+					intPlacingTower = -1;
+				}
+			}
+			
+			Connections.sendMessage(Connections.PLACE_TOWER, placeTower, towerX, towerY);
+		}
+	}
+	
+	private void updateBalance(int money) {
+		this.intBalance += money;
+		Connections.sendMessage(Connections.BALANCE_UPDATE, this.intBalance);
+	}
+
 	public void dealDamage(int intDamage) {
 		this.intHealth -= intDamage;
 		if(intHealth <= 0) {
 			//GAME OVER
+			towerDefence.changeState(TowerDefence.GAME_OVER);
 		}
 	}
 	
