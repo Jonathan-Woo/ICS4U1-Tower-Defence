@@ -28,11 +28,13 @@ public class Connections implements ActionListener{
 			int intMessageType = Integer.parseInt(strMessageParts[0]);
 			
 			if(intMessageType == CONNECT) {
-				if(isServer && !blnConnected) {
-					sendMessage(Connections.CONNECT, "0");
+				if(!blnConnected) {
+					if(isServer) {
+						sendMessage(Connections.CONNECT, "0");
+					}
+					blnConnected = true;
+					game = (Game) towerDefence.changeState(TowerDefence.GAME);
 				}
-				blnConnected = true;
-				game = (Game) towerDefence.changeState(TowerDefence.GAME);
 			}else if(intMessageType == DISCONNECT) {
 				Connections.closeConnection();
 				game = null;
@@ -95,14 +97,16 @@ public class Connections implements ActionListener{
 			for(int i = 0; i < strMessages.length; i++) {
 				strFinalMsg += "," + strMessages[i];
 			}
-			System.out.println(strFinalMsg);
+			//System.out.println(strFinalMsg);
 			ssm.sendText(strFinalMsg);
 		}
 	}
 	
 	public static void closeConnection() {
 		if(ssm != null) {
-			sendMessage(Connections.DISCONNECT, "0");
+			if(blnConnected) {
+				sendMessage(Connections.DISCONNECT, "0");
+			}			
 			ssm.disconnect();
 			ssm = null;
 			//FORCE JAVA TO GARBAGE COLLECT

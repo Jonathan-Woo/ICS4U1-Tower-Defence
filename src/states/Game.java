@@ -426,7 +426,7 @@ public class Game extends State {
 				towers.add(tower);
 			
 				updateBalance(-towerPrice);
-				intPlacingTower = -1;
+				//intPlacingTower = -1;
 			}
 		}
 			

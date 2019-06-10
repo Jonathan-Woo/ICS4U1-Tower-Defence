@@ -1,6 +1,7 @@
 package enemies;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
@@ -19,13 +20,15 @@ public abstract class Enemy {
 	public int intxLocation;
 	public int intyLocation;
 	private int intDamage;
-	private double intSpeed;
-	private int intHealth;
+	public double intSpeed;
+	public int intHealth;
 	private BufferedImage enemyImage;
 	private int reward;
 	
 	private int checkpointX = -1, checkpointY = -1;
 	public int currentCheckpoint = 0;
+	
+	private double rotationAngle;
 	
 	public void dealDamage(int intDamage) {
 		this.intHealth -= intDamage;
@@ -70,20 +73,26 @@ public abstract class Enemy {
 			//MOVE CLOSER TO CURRENT CHECKPOINT
 			if(intxLocation < checkpointX) {
 				intxLocation += intSpeed;
+				rotationAngle = 0;
 			}else if(intxLocation > checkpointX) {
 				intxLocation -= intSpeed;
+				rotationAngle = Math.PI;
 			}
 			
 			if(intyLocation < checkpointY) {
 				intyLocation += intSpeed;
+				rotationAngle = (Math.PI / 2) * 3;
 			}else if(intyLocation > checkpointY) {
 				intyLocation -= intSpeed;
+				rotationAngle = Math.PI / 2;
 			}
 		}
 	}
 	
 	public void render(Graphics g) {
+		((Graphics2D) g).rotate(rotationAngle, intxLocation + (Game.TILE_SIZE / 2), intyLocation + (Game.TILE_SIZE / 2));
 		g.drawImage(enemyImage, intxLocation, intyLocation, null);
+		((Graphics2D) g).rotate(-rotationAngle, intxLocation + (Game.TILE_SIZE / 2), intyLocation + (Game.TILE_SIZE / 2));
 	}
 	
 	public static Enemy newEnemy(final int type, String id) {

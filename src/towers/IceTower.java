@@ -10,6 +10,6 @@ public class IceTower extends Tower{
 
 	@Override
 	public void effectOnHit(Enemy enemy) {
-		
+		enemy.intSpeed /= 2;
 	}
 }

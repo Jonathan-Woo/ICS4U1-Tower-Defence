@@ -52,13 +52,13 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 		//SHOW FRAME IN THE MIDDLE OF THE SCREEN ON CREATION
 		//this.setLocationRelativeTo(null);
 		
+		//SHOW FRAME
+		this.setVisible(true);
+		
 		//INIT ANIMATION PANEL
 		pnl = new AnimationPanel(this);
 		this.setContentPane(pnl);
-		
-		//SHOW FRAME
 		this.pack();
-		this.setVisible(true);
 		
 		//INIT DEFAULT STATE OF THE GAME
 		currentState = new MainMenu(this);
@@ -147,7 +147,7 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 		private TowerDefence towerDefence;
 		
 		public AnimationPanel(TowerDefence towerDefence) {
-			this.setPreferredSize(new Dimension (TowerDefence.WIDTH, TowerDefence.HEIGHT));
+			this.setPreferredSize(new Dimension(TowerDefence.WIDTH, TowerDefence.HEIGHT + towerDefence.getInsets().top));
 			this.setLayout(null);
 			this.towerDefence = towerDefence;
 		}
