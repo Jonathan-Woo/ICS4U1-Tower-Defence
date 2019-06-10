@@ -3,10 +3,12 @@ package states;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
 import main.TowerDefence;
+import main.Utils;
 
 public class MainMenu extends State implements ActionListener{
 	
@@ -15,13 +17,16 @@ public class MainMenu extends State implements ActionListener{
 	JButton helpButton;
 	JButton settingsButton;
 	
+	BufferedImage titleImg;
+	
 	//methods
 	public void update() {
 		
 	}
 
 	public void render(Graphics g) {
-		
+		titleImg = Utils.loadImage("Main Menu/"+"title.png");
+		g.drawImage(titleImg,0,0,null);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
