@@ -84,10 +84,10 @@ public abstract class Enemy {
 			
 			if(intyLocation < checkpointY) {
 				intyLocation += intSpeed;
-				rotationAngle = (Math.PI / 2) * 3;
+				rotationAngle = Math.PI / 2;
 			}else if(intyLocation > checkpointY) {
 				intyLocation -= intSpeed;
-				rotationAngle = Math.PI / 2;
+				rotationAngle = (Math.PI / 2) * 3;
 			}
 		}
 	}

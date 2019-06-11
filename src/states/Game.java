@@ -350,7 +350,7 @@ public class Game extends State {
 		g.setColor(Color.BLACK);
 		g.drawString("Round: "+ waveNumber, 28 * Game.TILE_SIZE, 1 * Game.TILE_SIZE);
 		//RENDER BALANCE
-		BufferedImage cashSign = Utils.loadImage("sidebar/" + "Cash Sign.png");
+		BufferedImage cashSign = Utils.loadImage("sidebar/" + "CashSign.png");
 		g.drawImage(cashSign, 28 * Game.TILE_SIZE, 2 * Game.TILE_SIZE,null);
 		g.drawString("" +intBalance, 29* Game.TILE_SIZE, 3 * Game.TILE_SIZE);
 		//RENDER HEALTH
