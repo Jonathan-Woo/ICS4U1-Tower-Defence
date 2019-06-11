@@ -3,3 +3,5 @@ damage,8
 health,40
 image,quickEnemy.png
 reward,30
+health,75
+price,30
