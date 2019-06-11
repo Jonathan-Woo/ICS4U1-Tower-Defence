@@ -40,7 +40,7 @@ public class Connections implements ActionListener{
 				game = null;
 				towerDefence.changeState(TowerDefence.MAIN_MENU);
 			}else if(intMessageType == CHAT_MESSAGE) {
-				Game.strMessage = strMessageParts[1];
+				Game.strMessageReceived = strMessageParts[1];
 			}else if(intMessageType == Connections.PLACE_TOWER) {
 				int placeTower = Integer.parseInt(strMessageParts[1]);
 				int towerX = Integer.parseInt(strMessageParts[2]);

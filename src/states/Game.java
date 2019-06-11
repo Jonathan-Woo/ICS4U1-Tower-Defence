@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.JTextField;
 import javax.swing.Timer;
 
 import enemies.BasicEnemy;
@@ -43,6 +44,9 @@ public class Game extends State {
 	private Timer roundTimer, waveTimer;
 	private int enemiesInWave = 0;
 	
+	JTextField chatField = new JTextField();
+	ArrayList<String> strOldMessage = new ArrayList<>();
+	
 	//path tile image variables
 	//UD = up down
 	//LR = left right
@@ -53,7 +57,8 @@ public class Game extends State {
 	public ArrayList<Enemy> enemies;
 	public ArrayList<Projectile> projectiles;
 	
-	public static String strMessage;
+	public static String strMessageReceived;
+	int intCount;
 	
 	//methods
 	int intNumMessages = 0;
@@ -117,6 +122,8 @@ public class Game extends State {
 		if(InputListener.keys[KeyEvent.VK_ESCAPE]) {
 			if(intPlacingTower != -1) {
 				intPlacingTower = -1;
+			}else {
+				towerDefence.requestFocus();
 			}
 		}else if(InputListener.keys[KeyEvent.VK_1]) {
 			intPlacingTower = Tower.BASIC;
@@ -128,6 +135,11 @@ public class Game extends State {
 			intPlacingTower = Tower.SNIPE;
 		}else if(InputListener.keys[KeyEvent.VK_5]) {
 			intPlacingTower = Tower.BOMB;
+		}
+		
+		if(Game.strMessageReceived != null) {
+			strOldMessage.add(Game.strMessageReceived);
+			Game.strMessageReceived = null;			
 		}
 		
 		//CREATE ENEMY WAVES AND HANDLE DOWNTIME
@@ -331,16 +343,13 @@ public class Game extends State {
 		
 		/////UI/////
 		//RENDER CHAT
-		if(Game.strMessage != null) {
-			int intCount;
-			//creates an array to store old messages
-			String [] strOldMessage = new String [intNumMessages];
-			//loops through and draws 
-				for(intCount = 0; intCount<5; intCount++) {
-					g.drawString(strOldMessage[intNumMessages - intCount], 0, (18 - intCount) * Game.TILE_SIZE);
-				}
-			strOldMessage[intNumMessages] = Game.strMessage;
-			intNumMessages += 1;
+		
+		g.setColor(Color.WHITE);
+		for(intCount = 0; intCount < strOldMessage.size(); intCount++) {
+			if(intCount > 5) {
+				break;
+			}
+			g.drawString(strOldMessage.get(strOldMessage.size() - 1 - intCount), 0, (18 - (intCount +2)) * Game.TILE_SIZE);
 		}
 		
 		//RENDER TOOL BAR
@@ -472,6 +481,18 @@ public class Game extends State {
 		towers = new ArrayList<>();		
 		enemies = new ArrayList<>();
 		projectiles = new ArrayList<>();
+		
+		chatField.setBounds(0,17 * Game.TILE_SIZE, 4 * Game.TILE_SIZE,Game.TILE_SIZE);
+		chatField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String strMessageSend = chatField.getText();
+				if(!strMessageSend.isEmpty()) {
+					Connections.sendMessage(Connections.CHAT_MESSAGE, strMessageSend);
+					strOldMessage.add(strMessageSend);
+				}
+			}
+		});
+		towerDefence.add(chatField);
 		
 		font = new Font("Arial", Font.PLAIN, 18);
 	}
