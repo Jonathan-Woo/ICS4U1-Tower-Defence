@@ -1,34 +1,43 @@
 package towers;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.Timer;
-
+import java.util.ArrayList;
 import enemies.Enemy;
+import states.Game;
 
 public class FireTower extends Tower{
 	
-	Timer timer;
+	long longFireTick = 0;
+	ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	
 	public FireTower(int intxLocation, int intyLocation) {
 		super(intxLocation, intyLocation, Tower.FIRE);
 	}
 
 	@Override
-	public void effectOnHit(Enemy enemy) {
-		enemy.FIRE_EFFECT = true;
-		timer = new Timer(500, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+	public void update(Game game){
+		super.update(game);
+		if(System.currentTimeMillis() - longFireTick >= 500) {
+			ArrayList<Enemy> rmEnemies = new ArrayList<Enemy>();
+			for(Enemy enemy : enemies) {
 				if(enemy.intHealth <= 0) {
-					enemy.FIRE_EFFECT = false;
-					timer.stop();
+					rmEnemies.add(enemy);
 				}else {
-					enemy.dealDamage(intAttackDamage / 4);
+					enemy.dealDamage(intAttackDamage / 2);
 				}
 			}
-		});
-		timer.start();
+			
+			for(Enemy enemy : rmEnemies) {
+				enemies.remove(enemy);
+			}
+			longFireTick = System.currentTimeMillis();
+		}
+	}
+	
+	@Override
+	public void effectOnHit(Enemy enemy) {
+		enemy.FIRE_EFFECT = true;
+		if(!enemies.contains(enemy)) {
+			enemies.add(enemy);
+		}
 	}
 }
