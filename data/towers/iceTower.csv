@@ -1,6 +1,6 @@
 price,350
 range,60
-attackSpeed,1500
+attackSpeed,2000
 damage,25
 image,IceTower.jpg
 projectileRadius,10
