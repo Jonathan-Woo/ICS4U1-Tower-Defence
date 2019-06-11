@@ -1,5 +1,6 @@
 package enemies;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -9,6 +10,7 @@ import main.GameMap;
 import main.Utils;
 import networking.Connections;
 import states.Game;
+import towers.Tower;
 
 public abstract class Enemy {
 	//properties
@@ -27,8 +29,9 @@ public abstract class Enemy {
 	
 	private int checkpointX = -1, checkpointY = -1;
 	public int currentCheckpoint = 0;
-	
 	private double rotationAngle;
+	
+	public boolean FIRE_EFFECT = false, ICE_EFFECT = false;
 	
 	public void dealDamage(int intDamage) {
 		this.intHealth -= intDamage;
@@ -45,7 +48,7 @@ public abstract class Enemy {
 	}
 	
 	//methods
-	public void update(Game game) {
+	public void update(Game game) {		
 		if(checkpointX == -1 || checkpointY == -1) {
 			checkpointX = game.map.getCheckpointX(currentCheckpoint);
 			checkpointY = game.map.getCheckpointY(currentCheckpoint);
@@ -93,13 +96,34 @@ public abstract class Enemy {
 		((Graphics2D) g).rotate(rotationAngle, intxLocation + (Game.TILE_SIZE / 2), intyLocation + (Game.TILE_SIZE / 2));
 		g.drawImage(enemyImage, intxLocation, intyLocation, null);
 		((Graphics2D) g).rotate(-rotationAngle, intxLocation + (Game.TILE_SIZE / 2), intyLocation + (Game.TILE_SIZE / 2));
+		
+		if(FIRE_EFFECT) {
+			g.setColor(Color.RED);
+			g.drawRect(intxLocation, intyLocation, Game.TILE_SIZE, Game.TILE_SIZE);
+		}
+		
+		if(ICE_EFFECT) {
+			g.setColor(Color.CYAN);
+			((Graphics2D) g).rotate(Math.PI / 4, intxLocation + (Game.TILE_SIZE / 2), intyLocation + (Game.TILE_SIZE / 2));
+			g.drawRect(intxLocation, intyLocation, Game.TILE_SIZE, Game.TILE_SIZE);
+			((Graphics2D) g).rotate(-(Math.PI / 4), intxLocation + (Game.TILE_SIZE / 2), intyLocation + (Game.TILE_SIZE / 2));
+		}
 	}
 	
 	public static Enemy newEnemy(final int type, String id) {
 		switch(type) {
-			default:
+			case Enemy.BASIC:
 				return new BasicEnemy(id);
+			case Enemy.ARMORED:
+				return new ArmouredEnemy(id);
+			case Enemy.QUICK:
+				return new QuickEnemy(id);
+			case Enemy.SUMMONER:
+				return new SummonerEnemy(id);
+			case Enemy.BOSS:
+				return new BossEnemy(id);
 		}
+		return null;
 	}
 	
 	//constructor

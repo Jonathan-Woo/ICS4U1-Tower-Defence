@@ -17,10 +17,12 @@ public class FireTower extends Tower{
 
 	@Override
 	public void effectOnHit(Enemy enemy) {
+		enemy.FIRE_EFFECT = true;
 		timer = new Timer(500, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(enemy.intHealth <= 0) {
+					enemy.FIRE_EFFECT = false;
 					timer.stop();
 				}else {
 					enemy.dealDamage(intAttackDamage / 4);
