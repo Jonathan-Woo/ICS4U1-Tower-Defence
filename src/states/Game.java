@@ -134,6 +134,10 @@ public class Game extends State {
 						// intX = towerX;
 						// intY = towerY;
 						// strTowerSelected = Tower.strName;
+						// intTowerSelected = Tower.;
+						// intRange = Tower.;
+						// intAttack = Tower.;
+						// intSpeed = Tower.;
 						
 						return;
 					}else{
