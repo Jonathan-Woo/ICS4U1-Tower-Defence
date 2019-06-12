@@ -44,6 +44,11 @@ public class Game extends State {
 	private Timer roundTimer, waveTimer;
 	private int enemiesInWave = 0;
 	
+	private boolean blnTowerSelected = false;
+	public int intX;
+	public int intY;
+	private String strTowerSelected;
+	
 	JTextField chatField = new JTextField();
 	ArrayList<String> strOldMessage = new ArrayList<>();
 	
@@ -115,6 +120,29 @@ public class Game extends State {
 				int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
 				int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
 				this.placeTower(intPlacingTower, towerX, towerY, Connections.isServer);
+			}else if(blnTowerSelected == false && InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower == -1){
+			//CHECK IF TOWER IS PRESSED FROM MAP
+			/*
+				int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
+				int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
+				
+				for(Tower tower : towers) {
+					if(tower.intxLocation == towerX && tower.intyLocation == towerY) {
+						blnTowerSelected = true;
+						
+						// intX = towerX;
+						// intY = towerY;
+						// strTowerSelected = Tower.strName;
+						
+						return;
+					}else{
+						blnTowerSelected = false;
+					}
+				}
+			*/
+			}else if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 29 && blnTowerSelected == true){
+				//User interface for tower selected
+				
 			}
 		}
 		
@@ -366,6 +394,9 @@ public class Game extends State {
 		BufferedImage heart = Utils.loadImage("sidebar/" + "heart.png");
 		g.drawImage(heart, 28 * Game.TILE_SIZE, 4 * Game.TILE_SIZE, null);
 		g.drawString("" + intHealth, Game.TILE_SIZE * 29, 5*Game.TILE_SIZE);
+		
+		//IF TOWER IS NOT SELECTED
+		//if(blnTowerSelected == false){
 		//RENDER PURCHASABLE TOWERS
 		g.drawImage(Tower.towerImages[Tower.BASIC], 28* Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
 		g.drawImage(Tower.towerImages[Tower.FIRE], 28* Game.TILE_SIZE, 8 * Game.TILE_SIZE, null);
@@ -386,6 +417,45 @@ public class Game extends State {
 		g.drawString("Snipe", 28 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
 		g.drawString("Bomb", 28 * Game.TILE_SIZE, 14 * Game.TILE_SIZE);
 		
+		/*}else{
+			//Sidebar when tower is selected, see Tower Upgrade UI
+			int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
+			int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
+			int towerRadius = Integer.parseInt(Tower.towerFiles[intPlacingTower].get("range"));
+
+			g.setColor(new Color(0.8f, 0f, 1f, 0.4f));
+			g.fillOval(intX - towerRadius, intY - towerRadius,
+					(towerRadius * 2) + Game.TILE_SIZE, (towerRadius * 2) + Game.TILE_SIZE);
+			g.drawImage(Tower.towerImages[intPlacingTower], towerX, towerY, null);
+			
+			g.drawImage(Tower.towerImages[Tower.BASIC], 28* Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
+			g.setFont(font);
+			g.drawString(strTowerSelected, 28 * Game.TILE_SIZE, 6 * Game.TILE_SIZE);
+			
+			//BufferedImage _
+			//g.drawImage(_, _, _);
+			//g.drawString("" + intSpeed, _, _);
+			//g.drawString("" + intUpgradePrice, _, _);
+			
+			//BufferedImage _
+			//g.drawImage(_, _, _);
+			//g.drawString("" + intSpeed, _, _);
+			
+			//g.setColor(Color.WHITE);
+			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
+			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
+			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
+			
+			//g.setColor(Color.GREEN);
+			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
+			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
+			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
+			
+			//g.setColor(Color.RED);
+			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
+			//g.drawString("$" + intValue, _, _);
+		}*/
+
 		//DRAW ROUND TIMER
 		if(this.roundTime > 0) {
 			g.setFont(TowerDefence.font);
@@ -460,6 +530,13 @@ public class Game extends State {
 			towerDefence.changeState(TowerDefence.GAME_OVER);
 		}
 	}
+	
+	//SELL TOWER
+	/*
+	public void sellTower(Tower.towerFiles, int money, ){
+		
+	}
+	*/ 
 	
 	//constructor
 	public Game(TowerDefence towerDefence) {
