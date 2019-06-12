@@ -222,9 +222,9 @@ public class Game extends State {
 				towers.remove(tower);
 				if(Connections.isServer) {
 					int money = tower.intPrice / 2;
-					money += (100 * Math.pow(2, tower.damageUpgrades)) / 2;
-					money += (100 * Math.pow(2, tower.rangeUpgrades)) / 2;
-					money += (100 * Math.pow(2, tower.speedUpgrades)) / 2;
+					money += ((tower.intPrice / 4) * Math.pow(2, tower.damageUpgrades)) / 2;
+					money += ((tower.intPrice / 4) * Math.pow(2, tower.rangeUpgrades)) / 2;
+					money += ((tower.intPrice / 4) * Math.pow(2, tower.speedUpgrades)) / 2;
 					updateBalance(money);
 				}
 			}

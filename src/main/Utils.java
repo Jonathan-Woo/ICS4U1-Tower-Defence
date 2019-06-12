@@ -111,9 +111,13 @@ public class Utils {
 		return id;
 	}
 	
-	public String[] findMaps() {
+	public static String[] findMaps() {
 		File mapDir = new File("data/maps/");
-		return mapDir.list();
+		String[] maps = mapDir.list();
+		for(int i = 0; i < maps.length; i++) {
+			maps[i] = maps[i].split(".")[0];
+		}
+		return maps;
 	}
 	
 }
