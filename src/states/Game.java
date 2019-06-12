@@ -510,7 +510,7 @@ public class Game extends State {
 	public void checkIfGameOver() {
 		if(intHealth <= 0) {
 			//GAME OVER
-			towerDefence.changeState(TowerDefence.GAME_OVER);
+			towerDefence.changeState(TowerDefence.GAME_OVER, waveNumber);
 		}
 	}
 	

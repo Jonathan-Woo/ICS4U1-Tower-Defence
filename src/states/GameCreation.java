@@ -3,6 +3,7 @@ package states;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -11,12 +12,14 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import main.TowerDefence;
+import main.Utils;
 import networking.Connections;
 
 public class GameCreation extends State implements ActionListener {
 	
 	JTextField ipAddressField;
 	JButton createGameBtn, connectToGameBtn, backBtn;
+	BufferedImage gameCreationImg;
 	
 	@Override
 	public void update() {
@@ -25,7 +28,7 @@ public class GameCreation extends State implements ActionListener {
 
 	@Override
 	public void render(Graphics g) {
-		
+		g.drawImage(gameCreationImg,0,0,null);
 	}
 
 	@Override
@@ -90,6 +93,8 @@ public class GameCreation extends State implements ActionListener {
 		towerDefence.add(createGameBtn);
 		towerDefence.add(connectToGameBtn);
 		towerDefence.add(backBtn);
+		
+		gameCreationImg = Utils.loadImage("Main Menu/" + "Settings.png");
 	}
 
 }
