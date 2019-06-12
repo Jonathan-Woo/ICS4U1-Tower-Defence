@@ -78,6 +78,10 @@ public abstract class Tower {
 	private int intProjectileSpeed;
 	private Color projectileColor;
 	
+	public int damageUpgrades = 0;
+	public int rangeUpgrades = 0;
+	public int speedUpgrades = 0;
+	
 	//methods
 	@SuppressWarnings("unchecked")
 	public static void loadTowerFiles() {

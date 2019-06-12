@@ -549,7 +549,7 @@ public class Game extends State {
 				if(!strMessageSend.isEmpty()) {
 					Connections.sendMessage(Connections.CHAT_MESSAGE, strMessageSend);
 					strOldMessage.add(strMessageSend);
-					towerDefence.requestFocus();
+					towerDefence.requestFocusInWindow();
 				}
 			}
 		});

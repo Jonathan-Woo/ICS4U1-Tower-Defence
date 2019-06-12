@@ -13,7 +13,7 @@ public class SummonerEnemy extends Enemy {
 	@Override
 	public void update(Game game) {
 		super.update(game);
-		if(System.currentTimeMillis() - longSummonTime >= 1000) {
+		if(System.currentTimeMillis() - longSummonTime >= 1500) {
 			game.enemies.add(new QuickEnemy(id));
 			longSummonTime = System.currentTimeMillis();
 		}
