@@ -124,12 +124,29 @@ public class Game extends State {
 					}
 					
 					//Check if tower is being upgraded
-					if(InputListener.mouseX){
-						//Check if it is 
+					if(InputListener.mouseX >= Game.TILE_SIZE * 30.5 && InputListener.mouseX <= Game.TILE_SIZE * 31.5){
+						//Check which upgrade is being applied
+						if(InputListener.mouseY >= Game.TILE_SIZE * 9 && InputListener.mouseY <= Game.TILE_SIZE * 10){
+							//Check if there is room for improvement and enough money
+							if(intBalance >= Tower.intAttackSpeedUpgradePrice && Tower.speedUpgrades < 5){
+								//Speed Upgrade for selected tower
+							}
+						}else if(InputListener.mouseY >= Game.TILE_SIZE * 12 && InputListener.mouseY <= Game.TILE_SIZE * 13){
+							//Check if there is room for improvement and enough money
+							if(intBalance >= Tower.intAttackDamageUpgradePrice && Tower.damageUpgrades < 5){
+								//Damage Upgrade for selected tower
+							}
+						}else if(InputListener.mouseY >= Game.TILE_SIZE * 15 && InputListener.mouseY <= Game.TILE_SIZE * 15){
+							//Check if there is room for improvement and enough money
+							if(intBalance >= Tower.intAttackSpeedUpgradePrice && Tower.rangeUpgrades < 5){
+								//Range Upgrade for selected tower
+							}
+						}
 					}
 					
 					//Check if tower is being sold
-					if(){
+					if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 31 && InputListener.mouseY >= Game.TILE_SIZE * 17 && InputListener.mouseY <= Game.TILE_SIZE * 17.5){
+						//Initiate Sell tower method
 						
 					}
 				}
@@ -226,7 +243,7 @@ public class Game extends State {
 	}
 	
 	private synchronized void removeSoldTowers() {
-		//REMOVE DEAD ENEMIES
+		//REMOVE SOLD TOWERS
 		for(Tower tower : removeTowers) {
 			if(towers.contains(tower)) {
 				towers.remove(tower);
@@ -450,22 +467,28 @@ public class Game extends State {
 			g.drawString(selectedTower.strName, 28 * Game.TILE_SIZE, 7 * Game.TILE_SIZE);
 			
 			//Speed Upgrade
-			//BufferedImage _
-			//g.drawImage(_, 27.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
+			BufferedImage Speed = Utils.loadImage("sidebar/" + "Speed.png");
+			g.drawImage(Speed, 27.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
 			g.drawString("" + Tower.intAttackSpeed, 28.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
-			g.drawString("" + Tower.intAttackSpeedSpeedUpgradePrice, 28.5 * Game.TILE_SIZE, 9.5 * Game.TILE_SIZE);
+			if(Tower.speedUpgrades < 5){
+				g.drawString("$" + Tower.intAttackSpeedUpgradePrice, 28.5 * Game.TILE_SIZE, 9.5 * Game.TILE_SIZE);
+			}
 			
 			//Attack Upgrade
-			//BufferedImage _
-			//g.drawImage(_, 27.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
+			BufferedImage Attack = Utils.loadImage("sidebar/" + "Damage.png");
+			g.drawImage(Attack, 27.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
 			g.drawString("" + Tower.intAttackDamage, 28.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
-			g.drawString("" + Tower.intAttackDamageUpgradePrice, 28.5 * Game.TILE_SIZE, 12.5 * Game.TILE_SIZE);
+			if(Tower.speedUpgrades < 5){
+				g.drawString("$" + Tower.intAttackDamageUpgradePrice, 28.5 * Game.TILE_SIZE, 12.5 * Game.TILE_SIZE);
+			}
 			
 			//Range Upgrade
-			//BufferedImage _
-			//g.drawImage(_, 27.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
+			BufferedImage Range = Utils.loadImage("sidebar/" + "Range.png");
+			g.drawImage(Range, 27.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
 			g.drawString("" + Tower.intRange, 28.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
-			g.drawString("" + Tower.intRangeUpgradePrice, 28.5 * Game.TILE_SIZE, 15.5 * Game.TILE_SIZE);
+			if(Tower.speedUpgrades < 5){
+				g.drawString("$" + Tower.intRangeUpgradePrice, 28.5 * Game.TILE_SIZE, 15.5 * Game.TILE_SIZE);
+			}
 			
 			g.setColor(Color.WHITE);
 			fillRoundRect(27.5 * Game.TILE_SIZE, 8.25 * Game.TILE_SIZE, 4 * Game.TILE_SIZE, 0.5 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE);
@@ -482,10 +505,25 @@ public class Game extends State {
 			g.drawString("$" + intValue, 27.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
 			
 			//Upgrade Button
-			//BufferedImage _
-			//g.drawImage(_, 30.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
-			//g.drawImage(_, 30.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
-			//g.drawImage(_, 30.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
+			BufferedImage Plus = Utils.loadImage("sidebar/" + "Addition.png");
+			BufferedImage Cross = Utils.loadImage("sidebar/" + "Cross.png");
+			if(Tower.speedUpgrades < 5){
+				g.drawImage(Plus, 30.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
+			}else{
+				g.drawImage(Cross, 30.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
+			}
+			
+			if(Tower.rangeUpgrades < 5){
+				g.drawImage(Plus, 30.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
+			}else{
+				g.drawImage(Cross, 30.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
+			}
+			
+			if(Tower.rangeUpgrades < 5){
+				g.drawImage(Plus, 30.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
+			}else{
+				g.drawImage(Cross, 30.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
+			}
 		}
 
 		//DRAW ROUND TIMER
