@@ -115,7 +115,7 @@ public class Utils {
 		File mapDir = new File("data/maps/");
 		String[] maps = mapDir.list();
 		for(int i = 0; i < maps.length; i++) {
-			maps[i] = maps[i].split(".")[0];
+			maps[i].replaceAll(".csv", "");
 		}
 		return maps;
 	}

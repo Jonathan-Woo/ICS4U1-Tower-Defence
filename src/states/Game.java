@@ -551,7 +551,7 @@ public class Game extends State {
 	*/ 
 	
 	//constructor
-	public Game(TowerDefence towerDefence) {
+	public Game(TowerDefence towerDefence, String mapName) {
 		super(towerDefence);
 		
 		Tower.loadTowerFiles();
@@ -565,7 +565,7 @@ public class Game extends State {
 		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");
 		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");	
 		
-		map = new GameMap("map");
+		map = new GameMap(mapName);
 		
 		towers = new ArrayList<>();		
 		enemies = new ArrayList<>();
