@@ -424,34 +424,41 @@ public class Game extends State {
 			
 			g.drawImage(Tower.towerImages[selectedTower.type], 28 * Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
 			g.setColor(Color.BLACK);
-			g.drawString(selectedTower.strName, 28 * Game.TILE_SIZE, 6 * Game.TILE_SIZE);
+			g.drawString(selectedTower.strName, 28 * Game.TILE_SIZE, 7 * Game.TILE_SIZE);
 			
 			//BufferedImage _
-			//g.drawImage(_, _, _);
-			//g.drawString("" + intSpeed, _, _);
-			//g.drawString("" + intUpgradePrice, _, _);
+			//g.drawImage(_, 27.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
+			//g.drawString("" + intSpeed, 28.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
+			//g.drawString("" + intSpeedUpgradePrice, 28.5 * Game.TILE_SIZE, 9.5 * Game.TILE_SIZE);
 			
 			//BufferedImage _
-			//g.drawImage(_, _, _);
-			//g.drawString("" + intAttack, _, _);
+			//g.drawImage(_, 27.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
+			//g.drawString("" + intAttack, 28.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
+			//g.drawString("" + intAttackUpgradePrice, 28.5 * Game.TILE_SIZE, 12.5 * Game.TILE_SIZE);
 			
 			//BufferedImage _
-			//g.drawImage(_, _, _);
-			//g.drawString("" + intRange, _, _);
+			//g.drawImage(_, 27.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
+			//g.drawString("" + intRange, 28.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
+			//g.drawString("" + intRangeUpgradePrice, 28.5 * Game.TILE_SIZE, 15.5 * Game.TILE_SIZE);
 			
-			//g.setColor(Color.WHITE);
-			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
-			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
-			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
+			g.setColor(Color.WHITE);
+			fillRoundRect(27.5 * Game.TILE_SIZE, 8.25 * Game.TILE_SIZE, 4 * Game.TILE_SIZE, 0.5 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE);
+			fillRoundRect(27.5 * Game.TILE_SIZE, 11.25 * Game.TILE_SIZE, 4 * Game.TILE_SIZE, 0.5 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE);
+			fillRoundRect(27.5 * Game.TILE_SIZE, 14.25 * Game.TILE_SIZE, 4 * Game.TILE_SIZE, 0.5 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE);
 			
-			//g.setColor(Color.GREEN);
-			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
-			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
-			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
+			g.setColor(Color.GREEN);
+			fillRoundRect(27.5 * Game.TILE_SIZE, 8.25 * Game.TILE_SIZE, Tower.speedUpgrades * 0.8 * Game.TILE_SIZE, 0.5 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE);
+			fillRoundRect(27.5 * Game.TILE_SIZE, 11.25 * Game.TILE_SIZE, Tower.rangeUpgrades * 0.8 * Game.TILE_SIZE, 0.5 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE);
+			fillRoundRect(27.5 * Game.TILE_SIZE, 14.25 * Game.TILE_SIZE, Tower.damageUpgrades * 0.8 * Game.TILE_SIZE, 0.5 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE);
 			
-			//g.setColor(Color.RED);
-			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
-			//g.drawString("$" + intValue, _, _);
+			g.setColor(Color.RED);
+			fillRoundRect(28 * Game.TILE_SIZE, 17 * Game.TILE_SIZE, 3 * Game.TILE_SIZE, 0.5 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE);
+			g.drawString("$" + intValue, 27.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
+			
+			//BufferedImage _
+			//g.drawImage(_, 30.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
+			//g.drawImage(_, 30.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
+			//g.drawImage(_, 30.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
 		}
 
 		//DRAW ROUND TIMER
