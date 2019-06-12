@@ -85,6 +85,12 @@ public abstract class Tower {
 	public int speedUpgrades = 0;
 	private int defaultDamage, defaultRange, defaultSpeed;
 	
+	private int intInitialUpgradePrice = 0.25 * intPrice;
+	public int intAttackSpeedUpgradePrice = intInitialUpgradePrice;
+	public int intAttackDamageUpgradePrice = intInitialUpgradePrice;
+	public int intRangeUpgradePrice = intInitialUpgradePrice;
+	//doubles every upgrade
+	
 	//methods
 	@SuppressWarnings("unchecked")
 	public static void loadTowerFiles() {

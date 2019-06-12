@@ -120,6 +120,16 @@ public class Game extends State {
 							break;
 						}
 					}
+					
+					//Check if tower is being upgraded
+					if(InputListener.mouseX){
+						//Check if it is 
+					}
+					
+					//Check if tower is being sold
+					if(){
+						
+					}
 				}
 			}else {
 				
@@ -426,20 +436,23 @@ public class Game extends State {
 			g.setColor(Color.BLACK);
 			g.drawString(selectedTower.strName, 28 * Game.TILE_SIZE, 7 * Game.TILE_SIZE);
 			
+			//Speed Upgrade
 			//BufferedImage _
 			//g.drawImage(_, 27.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
-			//g.drawString("" + intSpeed, 28.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
-			//g.drawString("" + intSpeedUpgradePrice, 28.5 * Game.TILE_SIZE, 9.5 * Game.TILE_SIZE);
+			g.drawString("" + Tower.intAttackSpeed, 28.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
+			g.drawString("" + Tower.intAttackSpeedSpeedUpgradePrice, 28.5 * Game.TILE_SIZE, 9.5 * Game.TILE_SIZE);
 			
+			//Attack Upgrade
 			//BufferedImage _
 			//g.drawImage(_, 27.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
-			//g.drawString("" + intAttack, 28.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
-			//g.drawString("" + intAttackUpgradePrice, 28.5 * Game.TILE_SIZE, 12.5 * Game.TILE_SIZE);
+			g.drawString("" + Tower.intAttackDamage, 28.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
+			g.drawString("" + Tower.intAttackDamageUpgradePrice, 28.5 * Game.TILE_SIZE, 12.5 * Game.TILE_SIZE);
 			
+			//Range Upgrade
 			//BufferedImage _
 			//g.drawImage(_, 27.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
-			//g.drawString("" + intRange, 28.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
-			//g.drawString("" + intRangeUpgradePrice, 28.5 * Game.TILE_SIZE, 15.5 * Game.TILE_SIZE);
+			g.drawString("" + Tower.intRange, 28.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
+			g.drawString("" + Tower.intRangeUpgradePrice, 28.5 * Game.TILE_SIZE, 15.5 * Game.TILE_SIZE);
 			
 			g.setColor(Color.WHITE);
 			fillRoundRect(27.5 * Game.TILE_SIZE, 8.25 * Game.TILE_SIZE, 4 * Game.TILE_SIZE, 0.5 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE);
@@ -455,6 +468,7 @@ public class Game extends State {
 			fillRoundRect(28 * Game.TILE_SIZE, 17 * Game.TILE_SIZE, 3 * Game.TILE_SIZE, 0.5 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE, 0.25 * Game.TILE_SIZE);
 			g.drawString("$" + intValue, 27.5 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
 			
+			//Upgrade Button
 			//BufferedImage _
 			//g.drawImage(_, 30.5 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
 			//g.drawImage(_, 30.5 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
