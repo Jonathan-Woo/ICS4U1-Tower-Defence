@@ -18,7 +18,7 @@ import networking.Connections;
 
 public class GameCreation extends State implements ActionListener {
 	
-	JTextField ipAddressField;
+	JTextField ipAddressField, mapSelectionField;
 	JButton createGameBtn, connectToGameBtn, backBtn;
 	JComboBox mapSelection;
 	BufferedImage gameCreationImg;
@@ -90,7 +90,10 @@ public class GameCreation extends State implements ActionListener {
 		backBtn.setBounds((TowerDefence.WIDTH / 2) - 75, (TowerDefence.HEIGHT / 2)  + 50, 150, 30);
 		backBtn.addActionListener(this);
 		
-		mapSelection = new JComboBox(Utils.findMaps());
+		mapSelectionField = new JTextField("Choose Map");
+		mapSelectionField.setBounds((TowerDefence.WIDTH / 2) - 150, (TowerDefence.HEIGHT / 2) - 220, 300, 30);
+		
+		mapSelection = new JComboBox<>(Utils.findMaps());
 		mapSelection.setBounds((TowerDefence.WIDTH / 2) - 150, (TowerDefence.HEIGHT / 2) - 170, 300, 30);
 		
 		towerDefence.add(lbl);
