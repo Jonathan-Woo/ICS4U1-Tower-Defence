@@ -48,6 +48,7 @@ public class Game extends State {
 	public int intX;
 	public int intY;
 	private String strTowerSelected;
+	private int intTowerSelected;
 	
 	JTextField chatField = new JTextField();
 	ArrayList<String> strOldMessage = new ArrayList<>();
@@ -426,7 +427,7 @@ public class Game extends State {
 			g.setColor(new Color(0.8f, 0f, 1f, 0.4f));
 			g.fillOval(intX - towerRadius, intY - towerRadius,
 					(towerRadius * 2) + Game.TILE_SIZE, (towerRadius * 2) + Game.TILE_SIZE);
-			g.drawImage(Tower.towerImages[intPlacingTower], towerX, towerY, null);
+			g.drawImage(Tower.towerImages[intSelectedTower], towerX, towerY, null);
 			
 			g.drawImage(Tower.towerImages[Tower.BASIC], 28* Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
 			g.setFont(font);
@@ -439,7 +440,11 @@ public class Game extends State {
 			
 			//BufferedImage _
 			//g.drawImage(_, _, _);
-			//g.drawString("" + intSpeed, _, _);
+			//g.drawString("" + intAttack, _, _);
+			
+			//BufferedImage _
+			//g.drawImage(_, _, _);
+			//g.drawString("" + intRange, _, _);
 			
 			//g.setColor(Color.WHITE);
 			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
