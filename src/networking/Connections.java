@@ -13,7 +13,7 @@ public class Connections implements ActionListener{
 	
 	//properties
 	public static final int CONNECT = 0, DISCONNECT = 1, CHAT_MESSAGE = 2, PLACE_TOWER = 3, STAT_UPDATE = 4,
-			SPAWN_ENEMY = 5, UPDATE_TIMER = 6, UPDATE_ENEMY = 7, REMOVE_ENEMY = 8;
+			SPAWN_ENEMY = 5, UPDATE_TIMER = 6, UPDATE_ENEMY = 7, REMOVE_ENEMY = 8, UPDATE_TOWER = 9, REMOVE_TOWER = 10;
 	
 	private TowerDefence towerDefence;
 	private Game game;
@@ -21,7 +21,7 @@ public class Connections implements ActionListener{
 	public static boolean isServer, blnConnected = false;
 	
 	//methods
-	public void actionPerformed(ActionEvent e) {
+	public synchronized void actionPerformed(ActionEvent e) {
 		if(e.getSource() == ssm) {
 			String strText = ssm.readText();
 			String strMessageParts[] = strText.split(",");
@@ -48,7 +48,7 @@ public class Connections implements ActionListener{
 				if(isServer) {
 					game.placeTower(placeTower, towerX, towerY, false);
 				}else {
-					game.towers.add(Tower.newTower(placeTower, towerX, towerY));
+					game.towers.add(Tower.newTower(placeTower, towerX, towerY, strMessageParts[4]));
 				}
 			}else if(intMessageType == Connections.STAT_UPDATE) {
 				if(!isServer) {

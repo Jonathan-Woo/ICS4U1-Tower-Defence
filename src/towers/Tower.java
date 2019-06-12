@@ -39,10 +39,14 @@ public abstract class Tower {
 	 **/
 	public static final int BOMB = 4;
 	
+	public static final int UPGRADE_DAMAGE = 0, UPGRADE_RANGE = 1, UPGRADE_SPEED = 2;
+	
 	/**
 	 * Type of the tower.
 	 */
 	public int type;
+	
+	public String id;
 	/**
 	 * Name of the tower type.
 	 **/
@@ -81,6 +85,7 @@ public abstract class Tower {
 	public int damageUpgrades = 0;
 	public int rangeUpgrades = 0;
 	public int speedUpgrades = 0;
+	private int defaultDamage, defaultRange, defaultSpeed;
 	
 	//methods
 	@SuppressWarnings("unchecked")
@@ -155,6 +160,29 @@ public abstract class Tower {
 		return this.intPrice;
 	}
 	
+	public void upgrade(final int upgrade) {
+		switch(upgrade) {
+			case Tower.UPGRADE_DAMAGE:
+				if(this.damageUpgrades < 5) {
+					this.damageUpgrades++;
+					this.intAttackDamage += this.defaultDamage * 0.2;
+				}
+				break;
+			case Tower.UPGRADE_RANGE:
+				if(this.rangeUpgrades < 5) {
+					this.rangeUpgrades++;
+					this.intRange += this.defaultRange * 0.1;
+				}
+				break;
+			case Tower.UPGRADE_SPEED:
+				if(this.speedUpgrades < 5) {
+					this.speedUpgrades++;
+					this.intAttackSpeed += this.defaultSpeed * 0.2;
+				}
+				break;
+		}
+	}
+	
 	/**
 	 * Update method gets called every game loop. Either finds new enemy or attacks currently targeted enemy
 	 * @param game The Game State.
@@ -184,18 +212,18 @@ public abstract class Tower {
 	
 	public abstract void effectOnHit(Enemy enemy);
 	
-	public static Tower newTower(final int type, int towerX, int towerY) {
+	public static Tower newTower(final int type, int towerX, int towerY, String id) {
 		switch(type) {
 			case Tower.BASIC:
-				return new BasicTower(towerX, towerY);
+				return new BasicTower(towerX, towerY, id);
 			case Tower.FIRE:
-				return new FireTower(towerX, towerY);
+				return new FireTower(towerX, towerY, id);
 			case Tower.ICE:
-				return new IceTower(towerX, towerY);
+				return new IceTower(towerX, towerY, id);
 			case Tower.SNIPE:
-				return new SnipeTower(towerX, towerY);
+				return new SnipeTower(towerX, towerY, id);
 			case Tower.BOMB:
-				return new BombTower(towerX, towerY);
+				return new BombTower(towerX, towerY, id);
 		}
 		return null;
 	}
@@ -207,8 +235,10 @@ public abstract class Tower {
 	 * @param intxLocation The X coordinate of the Tower.
 	 * @param intyLocation The Y coordinate of the Tower.
 	 */
-	public Tower(int intxLocation, int intyLocation, int type) {
+	public Tower(int intxLocation, int intyLocation, int type, String id) {
 		this.type = type;
+		this.id = id;
+		
 		Map<String, String> data = towerFiles[type];
 		this.strName = data.get("name");
 		this.intxLocation = intxLocation;
@@ -221,5 +251,9 @@ public abstract class Tower {
 		this.intProjectileRadius = Integer.parseInt(data.get("projectileRadius"));
 		this.intProjectileSpeed = Integer.parseInt(data.get("projectileSpeed"));
 		this.projectileColor = Color.decode(data.get("projectileColor"));
+		
+		this.defaultDamage = this.intAttackDamage;
+		this.defaultRange = this.intRange;
+		this.defaultSpeed = this.intAttackSpeed;
 	}
 }

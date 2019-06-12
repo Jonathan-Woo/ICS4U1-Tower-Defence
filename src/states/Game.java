@@ -32,6 +32,7 @@ public class Game extends State {
 	public static final int TILE_SIZE = 40;
 
 	public static ArrayList<Enemy> removeEnemies = new ArrayList<>();
+	public static ArrayList<Tower> removeTowers = new ArrayList<>();
 
 	public GameMap map;
 	public int intHealth = 100;
@@ -83,52 +84,48 @@ public class Game extends State {
 			projectiles.get(i).update(this);
 		}
 		
-		//REMOVE DEAD ENEMIES
-		for(Enemy enemy : removeEnemies) {
-			if(enemies.contains(enemy)) {
-				enemies.remove(enemy);
-				if(Connections.isServer) {
-					updateBalance(enemy.getReward());
-				}
-			}
-		}
-		removeEnemies.clear();
+		removeDeadEnemies();
+		removeSoldTowers();
 		
 		//CHECK IF TOWER IS PRESSED FROM TOWER BAR
 		if(InputListener.mouseButtons[MouseEvent.BUTTON1]) {
-			if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 29) {
-				if(InputListener.mouseY >= Game.TILE_SIZE * 6 && InputListener.mouseY <= Game.TILE_SIZE * 7) {
-					//PRESSED BASIC TOWER
-					this.intPlacingTower = Tower.BASIC;
-				}else if(InputListener.mouseY >= Game.TILE_SIZE * 8 && InputListener.mouseY <= Game.TILE_SIZE * 9) {
-					//PRESSED FIRE TOWER
-					this.intPlacingTower = Tower.FIRE;
-				}else if(InputListener.mouseY >= Game.TILE_SIZE * 10 && InputListener.mouseY <= Game.TILE_SIZE * 11) {
-					//PRESSED ICE TOWER
-					this.intPlacingTower = Tower.ICE;
-				}else if(InputListener.mouseY >= Game.TILE_SIZE * 12 && InputListener.mouseY <= Game.TILE_SIZE * 13) {
-					//PRESSED SNIPE TOWER
-					this.intPlacingTower = Tower.SNIPE;
-				}else if(InputListener.mouseY >= Game.TILE_SIZE * 14 && InputListener.mouseY <= Game.TILE_SIZE * 15) {
-					//PRESSED BOMB TOWER
-					this.intPlacingTower = Tower.BOMB;
-				}
-			}else if(InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower != -1) {
-				int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
-				int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
-				this.placeTower(intPlacingTower, towerX, towerY, Connections.isServer);
-			}else if(InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower == -1){
-				//CHECK IF TOWER IS PRESSED FROM MAP
-				int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
-				int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
-				
-				for(Tower tower : towers) {
-					if(tower.intxLocation == towerX && tower.intyLocation == towerY) {						
-						this.selectedTower = tower;
-						break;
+			if(selectedTower == null) {
+				if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 29) {
+					if(InputListener.mouseY >= Game.TILE_SIZE * 6 && InputListener.mouseY <= Game.TILE_SIZE * 7) {
+						//PRESSED BASIC TOWER
+						this.intPlacingTower = Tower.BASIC;
+					}else if(InputListener.mouseY >= Game.TILE_SIZE * 8 && InputListener.mouseY <= Game.TILE_SIZE * 9) {
+						//PRESSED FIRE TOWER
+						this.intPlacingTower = Tower.FIRE;
+					}else if(InputListener.mouseY >= Game.TILE_SIZE * 10 && InputListener.mouseY <= Game.TILE_SIZE * 11) {
+						//PRESSED ICE TOWER
+						this.intPlacingTower = Tower.ICE;
+					}else if(InputListener.mouseY >= Game.TILE_SIZE * 12 && InputListener.mouseY <= Game.TILE_SIZE * 13) {
+						//PRESSED SNIPE TOWER
+						this.intPlacingTower = Tower.SNIPE;
+					}else if(InputListener.mouseY >= Game.TILE_SIZE * 14 && InputListener.mouseY <= Game.TILE_SIZE * 15) {
+						//PRESSED BOMB TOWER
+						this.intPlacingTower = Tower.BOMB;
+					}
+				}else if(InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower != -1) {
+					int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
+					int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
+					this.placeTower(intPlacingTower, towerX, towerY, Connections.isServer);
+				}else if(InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower == -1){
+					//CHECK IF TOWER IS PRESSED FROM MAP
+					int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
+					int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
+					
+					for(Tower tower : towers) {
+						if(tower.intxLocation == towerX && tower.intyLocation == towerY) {						
+							this.selectedTower = tower;
+							break;
+						}
 					}
 				}
-			}
+			}else {
+				
+			}			
 		}
 		
 		//CHECK FOR PRESSED KEYS
@@ -156,6 +153,7 @@ public class Game extends State {
 		if(Connections.isServer) {
 			if(roundTime > 0) {
 				if(roundTimer == null) {
+					Connections.sendMessage(Connections.UPDATE_TIMER, roundTime, waveNumber);
 					enemyWave = null;
 					roundTimer = new Timer(1000, new ActionListener() {
 						@Override
@@ -202,6 +200,36 @@ public class Game extends State {
 				}
 			}
 		}
+	}
+	
+	private synchronized void removeDeadEnemies() {
+		//REMOVE DEAD ENEMIES
+		for(Enemy enemy : removeEnemies) {
+			if(enemies.contains(enemy)) {
+				enemies.remove(enemy);
+				if(Connections.isServer) {
+					updateBalance(enemy.getReward());
+				}
+			}
+		}
+		removeEnemies.clear();
+	}
+	
+	private synchronized void removeSoldTowers() {
+		//REMOVE DEAD ENEMIES
+		for(Tower tower : removeTowers) {
+			if(towers.contains(tower)) {
+				towers.remove(tower);
+				if(Connections.isServer) {
+					int money = tower.intPrice / 2;
+					money += (100 * Math.pow(2, tower.damageUpgrades)) / 2;
+					money += (100 * Math.pow(2, tower.rangeUpgrades)) / 2;
+					money += (100 * Math.pow(2, tower.speedUpgrades)) / 2;
+					updateBalance(money);
+				}
+			}
+		}
+		removeEnemies.clear();
 	}
 	
 	private void spawnEnemies() {
@@ -442,7 +470,8 @@ public class Game extends State {
 		//DRAW ROUND TIMER
 		if(this.roundTime > 0) {
 			g.setFont(TowerDefence.font);
-			g.drawString("Next Round: " + roundTime, (towerDefence.getWidth() / 2) - 3 * Game.TILE_SIZE, towerDefence.getHeight() - Game.TILE_SIZE);
+			g.drawString("Next Round: " + roundTime, (towerDefence.getWidth() / 2) - 3 * Game.TILE_SIZE,
+					towerDefence.getHeight() - Game.TILE_SIZE);
 		}
 	}
 
@@ -481,18 +510,18 @@ public class Game extends State {
 			}
 		}
 		
+		String id = Utils.genId();
 		if(Connections.isServer) {
 			int towerPrice = Integer.parseInt(Tower.towerFiles[placeTower].get("price"));
 			if(intBalance >= towerPrice) {				
-				Tower tower = Tower.newTower(placeTower, towerX, towerY);
+				Tower tower = Tower.newTower(placeTower, towerX, towerY, id);
 				towers.add(tower);
 			
 				updateBalance(-towerPrice);
-				//intPlacingTower = -1;
 			}
 		}
 			
-		Connections.sendMessage(Connections.PLACE_TOWER, placeTower, towerX, towerY);
+		Connections.sendMessage(Connections.PLACE_TOWER, placeTower, towerX, towerY, id);
 	}
 	
 	private void updateBalance(int money) {

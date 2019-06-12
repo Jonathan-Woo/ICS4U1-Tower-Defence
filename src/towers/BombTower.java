@@ -10,8 +10,8 @@ public class BombTower extends Tower{
 	private long explosionStart = 0L, damageCounter = 0L;
 	private int explosionX, explosionY, explosionRadius = Game.TILE_SIZE * 2;
 
-	public BombTower(int intxLocation, int intyLocation) {
-		super(intxLocation, intyLocation, Tower.BOMB);
+	public BombTower(int intxLocation, int intyLocation, String id) {
+		super(intxLocation, intyLocation, Tower.BOMB, id);
 	}
 
 	@Override

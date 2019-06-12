@@ -11,8 +11,8 @@ public class IceTower extends Tower{
 	
 	Timer timer;
 
-	public IceTower(int intxLocation, int intyLocation) {
-		super(intxLocation, intyLocation, Tower.ICE);
+	public IceTower(int intxLocation, int intyLocation, String id) {
+		super(intxLocation, intyLocation, Tower.ICE, id);
 	}
 
 	@Override

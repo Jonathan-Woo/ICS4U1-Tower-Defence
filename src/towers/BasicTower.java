@@ -1,6 +1,7 @@
 package towers;
 
 import enemies.Enemy;
+import main.Utils;
 
 public class BasicTower extends Tower{
 
@@ -10,8 +11,8 @@ public class BasicTower extends Tower{
 	 * @param intxLocation The X coordinate of the Tower.
 	 * @param intyLocation The Y coordinate of the Tower.
 	 */
-	public BasicTower(int intxLocation, int intyLocation) {
-		super(intxLocation, intyLocation, Tower.BASIC);
+	public BasicTower(int intxLocation, int intyLocation, String id) {
+		super(intxLocation, intyLocation, Tower.BASIC, id);
 	}
 
 	@Override
