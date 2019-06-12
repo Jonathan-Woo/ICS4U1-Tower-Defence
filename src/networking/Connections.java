@@ -21,7 +21,7 @@ public class Connections implements ActionListener{
 	public static boolean isServer, blnConnected = false;
 	
 	//methods
-	public void actionPerformed(ActionEvent e) {
+	public synchronized void actionPerformed(ActionEvent e) {
 		if(e.getSource() == ssm) {
 			String strText = ssm.readText();
 			String strMessageParts[] = strText.split(",");
