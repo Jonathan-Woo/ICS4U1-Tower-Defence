@@ -45,7 +45,7 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 	
 	public TowerDefence() {
 		//INIT JFRAME
-		super("Tower Defence");
+		super("TowerField");
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.addWindowListener(this);

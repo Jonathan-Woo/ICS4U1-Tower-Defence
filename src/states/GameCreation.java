@@ -8,6 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
@@ -19,6 +20,7 @@ public class GameCreation extends State implements ActionListener {
 	
 	JTextField ipAddressField;
 	JButton createGameBtn, connectToGameBtn, backBtn;
+	JComboBox mapSelection;
 	BufferedImage gameCreationImg;
 	
 	@Override
@@ -88,11 +90,15 @@ public class GameCreation extends State implements ActionListener {
 		backBtn.setBounds((TowerDefence.WIDTH / 2) - 75, (TowerDefence.HEIGHT / 2)  + 50, 150, 30);
 		backBtn.addActionListener(this);
 		
+		mapSelection = new JComboBox(Utils.findMaps());
+		mapSelection.setBounds((TowerDefence.WIDTH / 2) - 150, (TowerDefence.HEIGHT / 2) - 170, 300, 30);
+		
 		towerDefence.add(lbl);
 		towerDefence.add(ipAddressField);
 		towerDefence.add(createGameBtn);
 		towerDefence.add(connectToGameBtn);
 		towerDefence.add(backBtn);
+		towerDefence.add(mapSelection);
 		
 		gameCreationImg = Utils.loadImage("Main Menu/" + "Settings.png");
 	}
