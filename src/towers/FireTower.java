@@ -9,8 +9,8 @@ public class FireTower extends Tower{
 	long longFireTick = 0;
 	ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	
-	public FireTower(int intxLocation, int intyLocation) {
-		super(intxLocation, intyLocation, Tower.FIRE);
+	public FireTower(int intxLocation, int intyLocation, String id) {
+		super(intxLocation, intyLocation, Tower.FIRE, id);
 	}
 
 	@Override

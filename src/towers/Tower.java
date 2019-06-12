@@ -45,6 +45,8 @@ public abstract class Tower {
 	 * Type of the tower.
 	 */
 	public int type;
+	
+	public String id;
 	/**
 	 * Name of the tower type.
 	 **/
@@ -210,18 +212,18 @@ public abstract class Tower {
 	
 	public abstract void effectOnHit(Enemy enemy);
 	
-	public static Tower newTower(final int type, int towerX, int towerY) {
+	public static Tower newTower(final int type, int towerX, int towerY, String id) {
 		switch(type) {
 			case Tower.BASIC:
-				return new BasicTower(towerX, towerY);
+				return new BasicTower(towerX, towerY, id);
 			case Tower.FIRE:
-				return new FireTower(towerX, towerY);
+				return new FireTower(towerX, towerY, id);
 			case Tower.ICE:
-				return new IceTower(towerX, towerY);
+				return new IceTower(towerX, towerY, id);
 			case Tower.SNIPE:
-				return new SnipeTower(towerX, towerY);
+				return new SnipeTower(towerX, towerY, id);
 			case Tower.BOMB:
-				return new BombTower(towerX, towerY);
+				return new BombTower(towerX, towerY, id);
 		}
 		return null;
 	}
@@ -233,8 +235,10 @@ public abstract class Tower {
 	 * @param intxLocation The X coordinate of the Tower.
 	 * @param intyLocation The Y coordinate of the Tower.
 	 */
-	public Tower(int intxLocation, int intyLocation, int type) {
+	public Tower(int intxLocation, int intyLocation, int type, String id) {
 		this.type = type;
+		this.id = id;
+		
 		Map<String, String> data = towerFiles[type];
 		this.strName = data.get("name");
 		this.intxLocation = intxLocation;
