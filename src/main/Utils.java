@@ -30,7 +30,7 @@ public class Utils {
 	}
 	
 	public static Map<String, String> loadEnemy(String enemyFile){
-		//GET CORRECT TOWER FILE
+		//GET CORRECT ENEMY FILE
 		File file = new File("data/enemies/" + enemyFile + ".csv");
 		return loadCSV(file);
 	}
