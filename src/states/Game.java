@@ -44,12 +44,6 @@ public class Game extends State {
 	private Timer roundTimer, waveTimer;
 	private int enemiesInWave = 0;
 	
-	private boolean blnTowerSelected = false;
-	public int intX;
-	public int intY;
-	private String strTowerSelected;
-	private int intTowerSelected;
-	
 	JTextField chatField = new JTextField();
 	ArrayList<String> strOldMessage = new ArrayList<>();
 	
@@ -65,6 +59,8 @@ public class Game extends State {
 	
 	public static String strMessageReceived;
 	int intCount;
+	
+	public Tower selectedTower;
 	
 	//methods
 	int intNumMessages = 0;
@@ -121,43 +117,24 @@ public class Game extends State {
 				int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
 				int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
 				this.placeTower(intPlacingTower, towerX, towerY, Connections.isServer);
-			}else if(blnTowerSelected == false && InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower == -1){
-			//CHECK IF TOWER IS PRESSED FROM MAP
-			/*
+			}else if(InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower == -1){
+				//CHECK IF TOWER IS PRESSED FROM MAP
 				int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
 				int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
 				
 				for(Tower tower : towers) {
-					if(tower.intxLocation == towerX && tower.intyLocation == towerY) {
-						blnTowerSelected = true;
-						
-						// intX = towerX;
-						// intY = towerY;
-						// strTowerSelected = Tower.strName;
-						// intTowerSelected = Tower.;
-						// intRange = Tower.;
-						// intAttack = Tower.;
-						// intSpeed = Tower.;
-						
-						return;
-					}else{
-						blnTowerSelected = false;
+					if(tower.intxLocation == towerX && tower.intyLocation == towerY) {						
+						this.selectedTower = tower;
+						break;
 					}
 				}
-			*/
-			}else if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 29 && blnTowerSelected == true){
-				//User interface for tower selected
-				
 			}
 		}
 		
 		//CHECK FOR PRESSED KEYS
 		if(InputListener.keys[KeyEvent.VK_ESCAPE]) {
-			if(intPlacingTower != -1) {
-				intPlacingTower = -1;
-			}else {
-				towerDefence.requestFocus();
-			}
+			intPlacingTower = -1;
+			selectedTower = null;
 		}else if(InputListener.keys[KeyEvent.VK_1]) {
 			intPlacingTower = Tower.BASIC;
 		}else if(InputListener.keys[KeyEvent.VK_2]) {
@@ -401,41 +378,38 @@ public class Game extends State {
 		g.drawString("" + intHealth, Game.TILE_SIZE * 29, 5*Game.TILE_SIZE);
 		
 		//IF TOWER IS NOT SELECTED
-		//if(blnTowerSelected == false){
-		//RENDER PURCHASABLE TOWERS
-		g.drawImage(Tower.towerImages[Tower.BASIC], 28* Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
-		g.drawImage(Tower.towerImages[Tower.FIRE], 28* Game.TILE_SIZE, 8 * Game.TILE_SIZE, null);
-		g.drawImage(Tower.towerImages[Tower.ICE], 28* Game.TILE_SIZE, 10 * Game.TILE_SIZE, null);
-		g.drawImage(Tower.towerImages[Tower.SNIPE], 28* Game.TILE_SIZE, 12 * Game.TILE_SIZE, null);
-		g.drawImage(Tower.towerImages[Tower.BOMB], 28* Game.TILE_SIZE,14 * Game.TILE_SIZE, null);
-		//RENDER TOWER PRICES
-		g.drawString("$"+ Tower.towerFiles[Tower.BASIC].get("price"), 29 * Game.TILE_SIZE, 7 * Game.TILE_SIZE);
-		g.drawString("$"+ Tower.towerFiles[Tower.FIRE].get("price"), 29 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
-		g.drawString("$"+ Tower.towerFiles[Tower.ICE].get("price"), 29 * Game.TILE_SIZE, 11 * Game.TILE_SIZE);
-		g.drawString("$"+ Tower.towerFiles[Tower.SNIPE].get("price"), 29 * Game.TILE_SIZE, 13 * Game.TILE_SIZE);
-		g.drawString("$"+ Tower.towerFiles[Tower.BOMB].get("price"), 29 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
-		//RENDER TOWER NAMES
-		g.setFont(font);
-		g.drawString("Basic", 28 * Game.TILE_SIZE, 6 * Game.TILE_SIZE);
-		g.drawString("Fire", 28 * Game.TILE_SIZE, 8 * Game.TILE_SIZE);
-		g.drawString("Ice", 28 * Game.TILE_SIZE, 10 * Game.TILE_SIZE);
-		g.drawString("Snipe", 28 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
-		g.drawString("Bomb", 28 * Game.TILE_SIZE, 14 * Game.TILE_SIZE);
-		
-		/*}else{
-			//Sidebar when tower is selected, see Tower Upgrade UI
-			int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
-			int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
-			int towerRadius = Integer.parseInt(Tower.towerFiles[intPlacingTower].get("range"));
-
-			g.setColor(new Color(0.8f, 0f, 1f, 0.4f));
-			g.fillOval(intX - towerRadius, intY - towerRadius,
-					(towerRadius * 2) + Game.TILE_SIZE, (towerRadius * 2) + Game.TILE_SIZE);
-			g.drawImage(Tower.towerImages[intSelectedTower], towerX, towerY, null);
-			
+		if(selectedTower == null){
+			//RENDER PURCHASABLE TOWERS
 			g.drawImage(Tower.towerImages[Tower.BASIC], 28* Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
+			g.drawImage(Tower.towerImages[Tower.FIRE], 28* Game.TILE_SIZE, 8 * Game.TILE_SIZE, null);
+			g.drawImage(Tower.towerImages[Tower.ICE], 28* Game.TILE_SIZE, 10 * Game.TILE_SIZE, null);
+			g.drawImage(Tower.towerImages[Tower.SNIPE], 28* Game.TILE_SIZE, 12 * Game.TILE_SIZE, null);
+			g.drawImage(Tower.towerImages[Tower.BOMB], 28* Game.TILE_SIZE,14 * Game.TILE_SIZE, null);
+			//RENDER TOWER PRICES
+			g.drawString("$"+ Tower.towerFiles[Tower.BASIC].get("price"), 29 * Game.TILE_SIZE, 7 * Game.TILE_SIZE);
+			g.drawString("$"+ Tower.towerFiles[Tower.FIRE].get("price"), 29 * Game.TILE_SIZE, 9 * Game.TILE_SIZE);
+			g.drawString("$"+ Tower.towerFiles[Tower.ICE].get("price"), 29 * Game.TILE_SIZE, 11 * Game.TILE_SIZE);
+			g.drawString("$"+ Tower.towerFiles[Tower.SNIPE].get("price"), 29 * Game.TILE_SIZE, 13 * Game.TILE_SIZE);
+			g.drawString("$"+ Tower.towerFiles[Tower.BOMB].get("price"), 29 * Game.TILE_SIZE, 15 * Game.TILE_SIZE);
+			//RENDER TOWER NAMES
 			g.setFont(font);
-			g.drawString(strTowerSelected, 28 * Game.TILE_SIZE, 6 * Game.TILE_SIZE);
+			g.drawString("Basic", 28 * Game.TILE_SIZE, 6 * Game.TILE_SIZE);
+			g.drawString("Fire", 28 * Game.TILE_SIZE, 8 * Game.TILE_SIZE);
+			g.drawString("Ice", 28 * Game.TILE_SIZE, 10 * Game.TILE_SIZE);
+			g.drawString("Snipe", 28 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
+			g.drawString("Bomb", 28 * Game.TILE_SIZE, 14 * Game.TILE_SIZE);
+		}else{
+			//Sidebar when tower is selected, see Tower Upgrade UI
+			g.setColor(new Color(0.8f, 0f, 1f, 0.4f));
+			g.fillOval(selectedTower.intxLocation - selectedTower.intRange,
+					selectedTower.intyLocation - selectedTower.intRange,
+					(selectedTower.intRange * 2) + Game.TILE_SIZE, (selectedTower.intRange * 2) + Game.TILE_SIZE);
+			g.drawImage(Tower.towerImages[selectedTower.type], selectedTower.intxLocation,
+					selectedTower.intyLocation, null);
+			
+			g.drawImage(Tower.towerImages[selectedTower.type], 28 * Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
+			g.setColor(Color.BLACK);
+			g.drawString(selectedTower.strName, 28 * Game.TILE_SIZE, 6 * Game.TILE_SIZE);
 			
 			//BufferedImage _
 			//g.drawImage(_, _, _);
@@ -463,7 +437,7 @@ public class Game extends State {
 			//g.setColor(Color.RED);
 			//fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight);
 			//g.drawString("$" + intValue, _, _);
-		}*/
+		}
 
 		//DRAW ROUND TIMER
 		if(this.roundTime > 0) {
@@ -575,6 +549,7 @@ public class Game extends State {
 				if(!strMessageSend.isEmpty()) {
 					Connections.sendMessage(Connections.CHAT_MESSAGE, strMessageSend);
 					strOldMessage.add(strMessageSend);
+					towerDefence.requestFocus();
 				}
 			}
 		});

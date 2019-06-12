@@ -1,6 +1,7 @@
+name,Snipe Tower
 price,600
 range,1400
-attackSpeed,2500
+attackSpeed,3500
 damage,100
 image,SnipeTower.jpg
 projectileRadius,10

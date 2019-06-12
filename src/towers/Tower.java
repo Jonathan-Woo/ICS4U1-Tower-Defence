@@ -42,7 +42,7 @@ public abstract class Tower {
 	/**
 	 * Type of the tower.
 	 */
-	private int type;
+	public int type;
 	/**
 	 * Name of the tower type.
 	 **/
