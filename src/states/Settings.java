@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import main.TowerDefence;
+import main.Utils;
 
 public class Settings extends State implements ActionListener{
 	
@@ -21,6 +23,7 @@ public class Settings extends State implements ActionListener{
 	
 	JTextField portField;
 	JButton back;
+	BufferedImage settingsImg;
 	
 	@Override
 	public void update() {
@@ -29,7 +32,7 @@ public class Settings extends State implements ActionListener{
 
 	@Override
 	public void render(Graphics g) {
-		
+		g.drawImage(settingsImg, 0,0,null);
 	}
 	
 	public Settings(TowerDefence towerDefence) {
@@ -47,6 +50,8 @@ public class Settings extends State implements ActionListener{
 		back.setBounds((TowerDefence.WIDTH / 2) - 50 - 100, (TowerDefence.HEIGHT / 2) + 50, 100, 30);
 		back.addActionListener(this);
 		towerDefence.add(back);
+		
+		settingsImg = Utils.loadImage("main menu/"+"Settings.png");
 	}
 
 	@Override

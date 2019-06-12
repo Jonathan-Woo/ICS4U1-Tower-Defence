@@ -1,5 +1,7 @@
 package enemies;
 
+import main.Utils;
+
 public class QuickEnemy extends Enemy {
 
 	public QuickEnemy(String id) {

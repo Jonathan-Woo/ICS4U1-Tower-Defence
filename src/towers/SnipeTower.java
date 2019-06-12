@@ -4,8 +4,8 @@ import enemies.Enemy;
 
 public class SnipeTower extends Tower{
 
-	public SnipeTower(int intxLocation, int intyLocation) {
-		super(intxLocation, intyLocation, Tower.SNIPE);
+	public SnipeTower(int intxLocation, int intyLocation, String id) {
+		super(intxLocation, intyLocation, Tower.SNIPE, id);
 	}
 
 	@Override

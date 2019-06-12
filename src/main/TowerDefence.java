@@ -45,7 +45,7 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 	
 	public TowerDefence() {
 		//INIT JFRAME
-		super("Tower Defence");
+		super("TowerField");
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.addWindowListener(this);
@@ -112,14 +112,14 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 				this.currentState = new GameCreation(this);
 				break;
 			case TowerDefence.GAME:
-				this.currentState = new Game(this);
+				this.currentState = new Game(this, (String) args[0]);
 				this.requestFocus();
 				break;
 			case TowerDefence.SETTINGS:
 				this.currentState = new Settings(this);
 				break;
 			case TowerDefence.GAME_OVER:
-				this.currentState = new GameOver(this);
+				this.currentState = new GameOver(this, (int) args[0]);
 				break;
 			case TowerDefence.HELP:
 				this.currentState = new Help(this);

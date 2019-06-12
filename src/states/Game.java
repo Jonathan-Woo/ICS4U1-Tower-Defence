@@ -32,6 +32,7 @@ public class Game extends State {
 	public static final int TILE_SIZE = 40;
 
 	public static ArrayList<Enemy> removeEnemies = new ArrayList<>();
+	public static ArrayList<Tower> removeTowers = new ArrayList<>();
 
 	public GameMap map;
 	public int intHealth = 100;
@@ -84,6 +85,7 @@ public class Game extends State {
 		}
 		
 		removeDeadEnemies();
+		removeSoldTowers();
 		
 		//CHECK IF TOWER IS PRESSED FROM TOWER BAR
 		if(InputListener.mouseButtons[MouseEvent.BUTTON1]) {
@@ -139,14 +141,7 @@ public class Game extends State {
 		//CHECK FOR PRESSED KEYS
 		if(InputListener.keys[KeyEvent.VK_ESCAPE]) {
 			intPlacingTower = -1;
-			if(selectedTower != null) {
-				selectedTower.upgrade(Tower.UPGRADE_DAMAGE);
-			}
 			selectedTower = null;
-			
-			for(Tower tower: towers) {
-				System.out.println(tower.intAttackDamage);
-			}
 		}else if(InputListener.keys[KeyEvent.VK_1]) {
 			intPlacingTower = Tower.BASIC;
 		}else if(InputListener.keys[KeyEvent.VK_2]) {
@@ -168,6 +163,7 @@ public class Game extends State {
 		if(Connections.isServer) {
 			if(roundTime > 0) {
 				if(roundTimer == null) {
+					Connections.sendMessage(Connections.UPDATE_TIMER, roundTime, waveNumber);
 					enemyWave = null;
 					roundTimer = new Timer(1000, new ActionListener() {
 						@Override
@@ -223,6 +219,23 @@ public class Game extends State {
 				enemies.remove(enemy);
 				if(Connections.isServer) {
 					updateBalance(enemy.getReward());
+				}
+			}
+		}
+		removeEnemies.clear();
+	}
+	
+	private synchronized void removeSoldTowers() {
+		//REMOVE DEAD ENEMIES
+		for(Tower tower : removeTowers) {
+			if(towers.contains(tower)) {
+				towers.remove(tower);
+				if(Connections.isServer) {
+					int money = tower.intPrice / 2;
+					money += ((tower.intPrice / 4) * Math.pow(2, tower.damageUpgrades)) / 2;
+					money += ((tower.intPrice / 4) * Math.pow(2, tower.rangeUpgrades)) / 2;
+					money += ((tower.intPrice / 4) * Math.pow(2, tower.speedUpgrades)) / 2;
+					updateBalance(money);
 				}
 			}
 		}
@@ -518,18 +531,18 @@ public class Game extends State {
 			}
 		}
 		
+		String id = Utils.genId();
 		if(Connections.isServer) {
 			int towerPrice = Integer.parseInt(Tower.towerFiles[placeTower].get("price"));
 			if(intBalance >= towerPrice) {				
-				Tower tower = Tower.newTower(placeTower, towerX, towerY);
+				Tower tower = Tower.newTower(placeTower, towerX, towerY, id);
 				towers.add(tower);
 			
 				updateBalance(-towerPrice);
-				//intPlacingTower = -1;
 			}
 		}
 			
-		Connections.sendMessage(Connections.PLACE_TOWER, placeTower, towerX, towerY);
+		Connections.sendMessage(Connections.PLACE_TOWER, placeTower, towerX, towerY, id);
 	}
 	
 	private void updateBalance(int money) {
@@ -547,7 +560,7 @@ public class Game extends State {
 	public void checkIfGameOver() {
 		if(intHealth <= 0) {
 			//GAME OVER
-			towerDefence.changeState(TowerDefence.GAME_OVER);
+			towerDefence.changeState(TowerDefence.GAME_OVER, waveNumber);
 		}
 	}
 	
@@ -559,7 +572,7 @@ public class Game extends State {
 	*/ 
 	
 	//constructor
-	public Game(TowerDefence towerDefence) {
+	public Game(TowerDefence towerDefence, String mapName) {
 		super(towerDefence);
 		
 		Tower.loadTowerFiles();
@@ -573,7 +586,7 @@ public class Game extends State {
 		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");
 		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");	
 		
-		map = new GameMap("map");
+		map = new GameMap(mapName);
 		
 		towers = new ArrayList<>();		
 		enemies = new ArrayList<>();

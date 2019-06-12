@@ -26,9 +26,7 @@ public class MainMenu extends State implements ActionListener{
 	}
 
 	public void render(Graphics g) {
-		titleImg = Utils.loadImage("main menu/"+"Title.png");
 		g.drawImage(titleImg,0,0,null);
-		sidebarImg = Utils.loadImage("main menu/"+"SideBar.png");
 		g.drawImage(sidebarImg, 0,200,null);
 	}
 	
@@ -61,6 +59,9 @@ public class MainMenu extends State implements ActionListener{
 		towerDefence.add(playGameButton);
 		towerDefence.add(helpButton);
 		towerDefence.add(settingsButton);
+		
+		titleImg = Utils.loadImage("main menu/"+"Title.png");
+		sidebarImg = Utils.loadImage("main menu/"+"SideBar.png");
 	}
 
 	
