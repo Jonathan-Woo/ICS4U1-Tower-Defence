@@ -18,6 +18,8 @@ import networking.Connections;
 
 public class GameCreation extends State implements ActionListener {
 	
+	public static String selectedMap;
+	
 	JTextField ipAddressField, mapSelectionField;
 	JButton createGameBtn, connectToGameBtn, backBtn;
 	JComboBox mapSelection;
@@ -52,6 +54,7 @@ public class GameCreation extends State implements ActionListener {
 					public void run() {
 						if(!Connections.blnConnected && GameCreation.this != null) {
 							Connections.closeConnection();
+							mapSelection.setEnabled(true);
 							createGameBtn.setEnabled(true);
 							connectToGameBtn.setEnabled(true);
 							backBtn.setEnabled(true);
@@ -64,6 +67,8 @@ public class GameCreation extends State implements ActionListener {
 			//GO BACK TO MAIN MENU
 			this.towerDefence.changeState(TowerDefence.MAIN_MENU);
 		}
+		selectedMap = (String) mapSelection.getSelectedItem();
+		mapSelection.setEnabled(false);
 		createGameBtn.setEnabled(false);
 		connectToGameBtn.setEnabled(false);
 		backBtn.setEnabled(false);

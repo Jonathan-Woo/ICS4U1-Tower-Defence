@@ -10,6 +10,7 @@ import java.util.Map;
 
 import enemies.Enemy;
 import main.Utils;
+import networking.Connections;
 import projectiles.Projectile;
 import states.Game;
 
@@ -88,7 +89,6 @@ public abstract class Tower {
 	private int defaultDamage, defaultRange, defaultSpeed;
 	
 	public int intInitialUpgradePrice;
-	public int intAttackDamageUpgradePrice, intRangeUpgradePrice, intAttackSpeedUpgradePrice;
 	
 	//public int intValue = intPrice * _;
 	
@@ -169,29 +169,61 @@ public abstract class Tower {
 		switch(upgrade) {
 			case Tower.UPGRADE_DAMAGE:
 				if(this.damageUpgrades < 5) {
-					this.damageUpgrades++;
-					this.intAttackDamage += this.defaultDamage * 0.2;
-					
-					this.intAttackDamageUpgradePrice = (int) (Math.pow(2, this.damageUpgrades) * this.intInitialUpgradePrice);
+					if(Connections.isServer) {
+						this.damageUpgrades++;
+						this.intAttackDamage += this.defaultDamage * 0.2;
+					}
+					this.sendUpdateMessage(Tower.UPGRADE_DAMAGE);
 				}
 				break;
 			case Tower.UPGRADE_RANGE:
 				if(this.rangeUpgrades < 5) {
 					this.rangeUpgrades++;
 					this.intRange += this.defaultRange * 0.1;
-					
-					this.intRangeUpgradePrice = (int) (Math.pow(2, this.rangeUpgrades) * this.intInitialUpgradePrice);
+					this.sendUpdateMessage(Tower.UPGRADE_RANGE);
 				}
 				break;
 			case Tower.UPGRADE_SPEED:
 				if(this.speedUpgrades < 5) {
 					this.speedUpgrades++;
-					this.intAttackSpeed += this.defaultSpeed * 0.2;
-					
-					this.intAttackSpeedUpgradePrice = (int) (Math.pow(2, this.speedUpgrades) * this.intInitialUpgradePrice);
+					this.intAttackSpeed -= this.defaultSpeed * 0.2;
+					this.sendUpdateMessage(Tower.UPGRADE_SPEED);
 				}
 				break;
 		}
+	}
+	
+	private void sendUpdateMessage(int upgrade) {
+		if(Connections.isServer) {
+			Connections.sendMessage(Connections.UPDATE_TOWER, this.id, this.damageUpgrades, this.rangeUpgrades,
+					this.speedUpgrades, this.intAttackDamage, this.intAttackSpeed, this.intRange);
+		}else {
+			Connections.sendMessage(Connections.UPDATE_TOWER, this.id, upgrade);
+		}
+	}
+	
+	public int getSellPrice() {
+		int money = this.intPrice / 2;
+		money += getUpgradePriceFromNum(this.damageUpgrades - 1) / 2;
+		money += getUpgradePriceFromNum(this.rangeUpgrades - 1) / 2;
+		money += getUpgradePriceFromNum(this.speedUpgrades - 1) / 2;
+		return money;
+	}
+	
+	public int getUpgradePrice(final int upgrade) {
+		switch(upgrade) {
+			case Tower.UPGRADE_DAMAGE:
+				return getUpgradePriceFromNum(this.damageUpgrades);
+			case Tower.UPGRADE_SPEED:
+				return getUpgradePriceFromNum(this.speedUpgrades);
+			case Tower.UPGRADE_RANGE:
+				return getUpgradePriceFromNum(this.rangeUpgrades);
+		}
+		return 0;
+	}
+	
+	private int getUpgradePriceFromNum(int numOfUpgrades) {
+		return ((int) Math.pow(2, numOfUpgrades) * this.intInitialUpgradePrice);
 	}
 	
 	/**
@@ -268,8 +300,5 @@ public abstract class Tower {
 		this.defaultSpeed = this.intAttackSpeed;
 		
 		this.intInitialUpgradePrice = intPrice / 4;
-		this.intAttackDamageUpgradePrice = intInitialUpgradePrice;
-		this.intRangeUpgradePrice = intInitialUpgradePrice;
-		this.intAttackSpeedUpgradePrice = intInitialUpgradePrice;
 	}
 }

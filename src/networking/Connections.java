@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import enemies.Enemy;
 import main.TowerDefence;
 import states.Game;
+import states.GameCreation;
 import states.Settings;
 import towers.Tower;
 
@@ -30,10 +31,12 @@ public class Connections implements ActionListener{
 			if(intMessageType == CONNECT) {
 				if(!blnConnected) {
 					if(isServer) {
-						sendMessage(Connections.CONNECT, "0");
+						sendMessage(Connections.CONNECT, GameCreation.selectedMap);
+					}else {
+						GameCreation.selectedMap = strMessageParts[1];
 					}
 					blnConnected = true;
-					game = (Game) towerDefence.changeState(TowerDefence.GAME);
+					game = (Game) towerDefence.changeState(TowerDefence.GAME, GameCreation.selectedMap);
 				}
 			}else if(intMessageType == DISCONNECT) {
 				Connections.closeConnection();
@@ -58,7 +61,12 @@ public class Connections implements ActionListener{
 				}
 			}else if(intMessageType == Connections.SPAWN_ENEMY) {
 				if(!isServer) {
-					game.enemies.add(Enemy.newEnemy(Integer.parseInt(strMessageParts[1]), strMessageParts[2]));
+					Enemy newEnemy = Enemy.newEnemy(Integer.parseInt(strMessageParts[1]), strMessageParts[2]);
+					if(strMessageParts.length > 3) {
+						newEnemy.intxLocation = Integer.parseInt(strMessageParts[3]);
+						newEnemy.intyLocation = Integer.parseInt(strMessageParts[4]);
+					}
+					game.enemies.add(newEnemy);
 				}
 			}else if(intMessageType == Connections.UPDATE_TIMER) {
 				if(!isServer) {
@@ -85,6 +93,42 @@ public class Connections implements ActionListener{
 							Game.removeEnemies.add(enemy);
 							return;
 						}
+					}
+				}
+			}else if(intMessageType == Connections.UPDATE_TOWER) {
+				if(!isServer) {
+					for(Tower tower : game.towers) {
+						if(tower.id.equals(strMessageParts[1])) {
+							tower.damageUpgrades = Integer.parseInt(strMessageParts[2]);
+							tower.speedUpgrades = Integer.parseInt(strMessageParts[3]);
+							tower.rangeUpgrades = Integer.parseInt(strMessageParts[4]);
+							
+							tower.intAttackDamage = Integer.parseInt(strMessageParts[5]);
+							tower.intAttackSpeed = Integer.parseInt(strMessageParts[6]);
+							tower.intRange = Integer.parseInt(strMessageParts[7]);
+							return;
+						}
+					}
+				}else {
+					for(Tower tower : game.towers) {
+						if(tower.id.equals(strMessageParts[1])) {
+							int upgrade = Integer.parseInt(strMessageParts[2]);
+							if(game.intBalance >= tower.getUpgradePrice(upgrade)) {
+								tower.upgrade(upgrade);
+							}
+							return;
+						}
+					}
+				}
+			}else if(intMessageType == Connections.REMOVE_TOWER) {
+				if(isServer) {
+					Connections.sendMessage(Connections.REMOVE_TOWER, strMessageParts[1]);
+				}
+				
+				for(Tower tower : game.towers) {
+					if(tower.id.equals(strMessageParts[1])) {
+						Game.removeTowers.add(tower);
+						return;
 					}
 				}
 			}
