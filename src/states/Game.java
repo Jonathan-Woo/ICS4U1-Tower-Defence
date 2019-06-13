@@ -148,6 +148,8 @@ public class Game extends State {
 					if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 31 && InputListener.mouseY >= Game.TILE_SIZE * 17 && InputListener.mouseY <= Game.TILE_SIZE * 17.5){
 						//Initiate Sell tower method
 						
+						
+						//intBalance = intBalance + Tower.intValue;
 					}
 				}
 			}else {
