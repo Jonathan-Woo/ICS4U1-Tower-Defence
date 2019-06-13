@@ -470,28 +470,28 @@ public class Game extends State {
 			//Speed Upgrade
 			BufferedImage speed = Utils.loadImage("sidebar/" + "Speed.png");
 			g.drawImage(speed, (int) (27.5 * Game.TILE_SIZE), 9 * Game.TILE_SIZE, null);
-			g.drawString("" + selectedTower.intAttackSpeed, (int) (28.5 * Game.TILE_SIZE), 9 * Game.TILE_SIZE);
+			//g.drawString("" + selectedTower.intAttackSpeed, (int) (28.5 * Game.TILE_SIZE), 9 * Game.TILE_SIZE);
 			if(selectedTower.speedUpgrades < 5){
 				g.drawString("$" + selectedTower.getUpgradePrice(Tower.UPGRADE_SPEED),
-						(int) (28.5 * Game.TILE_SIZE), (int) (9.5 * Game.TILE_SIZE));
+						(int) (28.5 * Game.TILE_SIZE), (int) (10 * Game.TILE_SIZE));
 			}
 			
 			//Attack Upgrade
 			BufferedImage attack = Utils.loadImage("sidebar/" + "Damage.png");
 			g.drawImage(attack, (int) (27.5 * Game.TILE_SIZE), 12 * Game.TILE_SIZE, null);
-			g.drawString("" + selectedTower.intAttackDamage, (int) (28.5 * Game.TILE_SIZE), 12 * Game.TILE_SIZE);
+			//g.drawString("" + selectedTower.intAttackDamage, (int) (28.5 * Game.TILE_SIZE), 12 * Game.TILE_SIZE);
 			if(selectedTower.speedUpgrades < 5){
 				g.drawString("$" + selectedTower.getUpgradePrice(Tower.UPGRADE_SPEED),
-						(int) (28.5 * Game.TILE_SIZE), (int) (12.5 * Game.TILE_SIZE));
+						(int) (28.5 * Game.TILE_SIZE), (int) (13 * Game.TILE_SIZE));
 			}
 			
 			//Range Upgrade
 			BufferedImage range = Utils.loadImage("sidebar/" + "Range.png");
 			g.drawImage(range, (int) (27.5 * Game.TILE_SIZE), 15 * Game.TILE_SIZE, null);
-			g.drawString("" + selectedTower.intRange, (int) (28.5 * Game.TILE_SIZE), 15 * Game.TILE_SIZE);
+			//g.drawString("" + selectedTower.intRange, (int) (28.5 * Game.TILE_SIZE), 15 * Game.TILE_SIZE);
 			if(selectedTower.rangeUpgrades < 5){
 				g.drawString("$" + selectedTower.getUpgradePrice(Tower.UPGRADE_RANGE),
-						(int) (28.5 * Game.TILE_SIZE), (int) (15.5 * Game.TILE_SIZE));
+						(int) (28.5 * Game.TILE_SIZE), (int) (16 * Game.TILE_SIZE));
 			}
 			
 			g.setColor(Color.WHITE);
