@@ -44,6 +44,7 @@ public class Game extends State {
 	public int roundTime = 5;
 	private Timer roundTimer, waveTimer;
 	private int enemiesInWave = 0;
+	private boolean clicked = false;
 	
 	JTextField chatField = new JTextField();
 	ArrayList<String> strOldMessage = new ArrayList<>();
@@ -88,8 +89,13 @@ public class Game extends State {
 		removeDeadEnemies();
 		removeSoldTowers();
 		
-		//CHECK IF TOWER IS PRESSED FROM TOWER BAR
 		if(InputListener.mouseButtons[MouseEvent.BUTTON1]) {
+			clicked = true;
+		}
+		
+		//CHECK IF TOWER IS PRESSED FROM TOWER BAR
+		if(clicked && !InputListener.mouseButtons[MouseEvent.BUTTON1]) {
+			clicked = false;
 			if(selectedTower == null) {
 				if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 29) {
 					if(InputListener.mouseY >= Game.TILE_SIZE * 6 && InputListener.mouseY <= Game.TILE_SIZE * 7) {
@@ -130,15 +136,15 @@ public class Game extends State {
 					//Check which upgrade is being applied
 					if(InputListener.mouseY >= Game.TILE_SIZE * 9 && InputListener.mouseY <= Game.TILE_SIZE * 10){
 						//Check if there is room for improvement and enough money
-						if(intBalance >= selectedTower.getUpgradePrice(Tower.UPGRADE_DAMAGE)){
+						if(intBalance >= selectedTower.getUpgradePrice(Tower.UPGRADE_SPEED)){
 							//Speed Upgrade for selected tower
-							selectedTower.upgrade(Tower.UPGRADE_DAMAGE);
+							selectedTower.upgrade(Tower.UPGRADE_SPEED);
 						}
 					}else if(InputListener.mouseY >= Game.TILE_SIZE * 11 && InputListener.mouseY <= Game.TILE_SIZE * 12){
 						//Check if there is room for improvement and enough money
-						if(intBalance >= selectedTower.getUpgradePrice(Tower.UPGRADE_SPEED)){
+						if(intBalance >= selectedTower.getUpgradePrice(Tower.UPGRADE_DAMAGE)){
 							//Damage Upgrade for selected tower
-							selectedTower.upgrade(Tower.UPGRADE_SPEED);
+							selectedTower.upgrade(Tower.UPGRADE_DAMAGE);
 						}
 					}else if(InputListener.mouseY >= Game.TILE_SIZE * 13 && InputListener.mouseY <= Game.TILE_SIZE * 15){
 						//Check if there is room for improvement and enough money
@@ -413,11 +419,22 @@ public class Game extends State {
 		//RENDER CHAT
 		
 		g.setColor(Color.WHITE);
+		g.setFont(font);
 		for(intCount = 0; intCount < strOldMessage.size(); intCount++) {
 			if(intCount > 5) {
 				break;
 			}
-			g.drawString(strOldMessage.get(strOldMessage.size() - 1 - intCount), 0, (18 - (intCount +2)) * Game.TILE_SIZE);
+			g.drawString(strOldMessage.get(strOldMessage.size() - 1 - intCount), 0,
+					(18  * Game.TILE_SIZE) - ((intCount + 2) * Game.TILE_SIZE / 2));
+		}
+		
+		if(selectedTower != null) {
+			g.setColor(new Color(0.8f, 0f, 1f, 0.4f));
+			g.fillOval(selectedTower.intxLocation - selectedTower.intRange,
+					selectedTower.intyLocation - selectedTower.intRange,
+					(selectedTower.intRange * 2) + Game.TILE_SIZE, (selectedTower.intRange * 2) + Game.TILE_SIZE);
+			g.drawImage(Tower.towerImages[selectedTower.type], selectedTower.intxLocation,
+					selectedTower.intyLocation, null);
 		}
 		
 		//RENDER TOOL BAR
@@ -457,14 +474,7 @@ public class Game extends State {
 			g.drawString("Snipe", 28 * Game.TILE_SIZE, 12 * Game.TILE_SIZE);
 			g.drawString("Bomb", 28 * Game.TILE_SIZE, 14 * Game.TILE_SIZE);
 		}else{
-			//Sidebar when tower is selected, see Tower Upgrade UI
-			g.setColor(new Color(0.8f, 0f, 1f, 0.4f));
-			g.fillOval(selectedTower.intxLocation - selectedTower.intRange,
-					selectedTower.intyLocation - selectedTower.intRange,
-					(selectedTower.intRange * 2) + Game.TILE_SIZE, (selectedTower.intRange * 2) + Game.TILE_SIZE);
-			g.drawImage(Tower.towerImages[selectedTower.type], selectedTower.intxLocation,
-					selectedTower.intyLocation, null);
-			
+			//Sidebar when tower is selected, see Tower Upgrade UI			
 			g.drawImage(Tower.towerImages[selectedTower.type], 28 * Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
 			g.setColor(Color.BLACK);
 			g.setFont(font);
@@ -482,6 +492,14 @@ public class Game extends State {
 			if(selectedTower.speedUpgrades < 5){
 				g.drawString("$" + selectedTower.getUpgradePrice(Tower.UPGRADE_SPEED),
 						(int) (28.5 * Game.TILE_SIZE), (int) (11.5 * Game.TILE_SIZE));
+			}
+			
+			//Attack Upgrade
+			g.drawImage(attack, (int) (27.5 * Game.TILE_SIZE), 12 * Game.TILE_SIZE, null);
+			//g.drawString("" + selectedTower.intAttackDamage, (int) (28.5 * Game.TILE_SIZE), 12 * Game.TILE_SIZE);
+			if(selectedTower.damageUpgrades < 5){
+				g.drawString("$" + selectedTower.getUpgradePrice(Tower.UPGRADE_DAMAGE),
+						(int) (28.5 * Game.TILE_SIZE), (int) (13 * Game.TILE_SIZE));
 			}
 			
 			//Range Upgrade
@@ -508,6 +526,12 @@ public class Game extends State {
 					Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
 			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (10 * Game.TILE_SIZE),
 					(int) (selectedTower.speedUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
+					Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
+			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (8.25 * Game.TILE_SIZE),
+					(int) (selectedTower.speedUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
+					Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
+			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (11.25 * Game.TILE_SIZE),
+					(int) (selectedTower.damageUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
 					Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
 			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (12 * Game.TILE_SIZE),
 					(int) (selectedTower.rangeUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
@@ -648,9 +672,14 @@ public class Game extends State {
 				String strMessageSend = chatField.getText();
 				if(!strMessageSend.isEmpty()) {
 					Connections.sendMessage(Connections.CHAT_MESSAGE, strMessageSend);
-					strOldMessage.add(strMessageSend);
-					towerDefence.requestFocusInWindow();
+					if(Connections.isServer) {
+						strOldMessage.add("Server: " + strMessageSend);
+					}else {
+						strOldMessage.add("Client: " + strMessageSend);
+					}
 				}
+				chatField.setText("");
+				towerDefence.requestFocusInWindow();
 			}
 		});
 		towerDefence.add(chatField);

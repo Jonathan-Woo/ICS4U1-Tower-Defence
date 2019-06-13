@@ -88,8 +88,6 @@ public abstract class Tower {
 	public int speedUpgrades = 0;
 	private int defaultDamage, defaultRange, defaultSpeed;
 	
-	public int intInitialUpgradePrice;
-	
 	//public int intValue = intPrice * _;
 	
 	//methods
@@ -186,7 +184,7 @@ public abstract class Tower {
 			case Tower.UPGRADE_SPEED:
 				if(this.speedUpgrades < 5) {
 					this.speedUpgrades++;
-					this.intAttackSpeed -= this.defaultSpeed * 0.2;
+					this.intAttackSpeed -= this.defaultSpeed * 0.05;
 					this.sendUpdateMessage(Tower.UPGRADE_SPEED);
 				}
 				break;
@@ -223,7 +221,7 @@ public abstract class Tower {
 	}
 	
 	private int getUpgradePriceFromNum(int numOfUpgrades) {
-		return ((int) Math.pow(2, numOfUpgrades) * this.intInitialUpgradePrice);
+		return ((int) Math.pow(2, numOfUpgrades) * (intPrice / 4));
 	}
 	
 	/**
@@ -298,7 +296,5 @@ public abstract class Tower {
 		this.defaultDamage = this.intAttackDamage;
 		this.defaultRange = this.intRange;
 		this.defaultSpeed = this.intAttackSpeed;
-		
-		this.intInitialUpgradePrice = intPrice / 4;
 	}
 }
