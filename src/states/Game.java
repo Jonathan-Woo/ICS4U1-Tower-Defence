@@ -52,7 +52,8 @@ public class Game extends State {
 	//UD = up down
 	//LR = left right
 
-	private BufferedImage imgGrassTile, imgPathTileUD, imgPathTileLR, imgPathTileUR, imgPathTileUL, imgPathTileDL, imgPathTileDR;
+	private BufferedImage imgGrassTile, imgPathTileUD, imgPathTileLR, imgPathTileUR, imgPathTileUL, imgPathTileDL, imgPathTileDR,
+			speed, attack, range, plus, cross;
 	
 	public ArrayList<Tower> towers;
 	public ArrayList<Enemy> enemies;
@@ -135,15 +136,15 @@ public class Game extends State {
 						}
 					}else if(InputListener.mouseY >= Game.TILE_SIZE * 12 && InputListener.mouseY <= Game.TILE_SIZE * 13){
 						//Check if there is room for improvement and enough money
-						if(intBalance >= selectedTower.getUpgradePrice(Tower.UPGRADE_RANGE)){
-							//Damage Upgrade for selected tower
-							selectedTower.upgrade(Tower.UPGRADE_RANGE);
-						}
-					}else if(InputListener.mouseY >= Game.TILE_SIZE * 15 && InputListener.mouseY <= Game.TILE_SIZE * 15){
-						//Check if there is room for improvement and enough money
 						if(intBalance >= selectedTower.getUpgradePrice(Tower.UPGRADE_SPEED)){
-							//Range Upgrade for selected tower
+							//Damage Upgrade for selected tower
 							selectedTower.upgrade(Tower.UPGRADE_SPEED);
+						}
+					}else if(InputListener.mouseY >= Game.TILE_SIZE * 15 && InputListener.mouseY <= Game.TILE_SIZE * 16){
+						//Check if there is room for improvement and enough money
+						if(intBalance >= selectedTower.getUpgradePrice(Tower.UPGRADE_RANGE)){
+							//Range Upgrade for selected tower
+							selectedTower.upgrade(Tower.UPGRADE_RANGE);
 						}
 					}
 				}
@@ -156,6 +157,7 @@ public class Game extends State {
 						removeTowers.add(selectedTower);
 					}
 					Connections.sendMessage(Connections.REMOVE_TOWER, selectedTower.id);
+					selectedTower = null;
 				}
 			}			
 		}
@@ -468,16 +470,16 @@ public class Game extends State {
 			g.drawString(selectedTower.strName, 28 * Game.TILE_SIZE, 7 * Game.TILE_SIZE);
 			
 			//Speed Upgrade
-			BufferedImage speed = Utils.loadImage("sidebar/" + "Speed.png");
 			g.drawImage(speed, (int) (27.5 * Game.TILE_SIZE), 9 * Game.TILE_SIZE, null);
 			//g.drawString("" + selectedTower.intAttackSpeed, (int) (28.5 * Game.TILE_SIZE), 9 * Game.TILE_SIZE);
 			if(selectedTower.speedUpgrades < 5){
 				g.drawString("$" + selectedTower.getUpgradePrice(Tower.UPGRADE_SPEED),
 						(int) (28.5 * Game.TILE_SIZE), (int) (10 * Game.TILE_SIZE));
+				g.drawString("$" + selectedTower.getUpgradePrice(Tower.UPGRADE_DAMAGE),
+						(int) (28.5 * Game.TILE_SIZE), (int) (9.5 * Game.TILE_SIZE));
 			}
 			
 			//Attack Upgrade
-			BufferedImage attack = Utils.loadImage("sidebar/" + "Damage.png");
 			g.drawImage(attack, (int) (27.5 * Game.TILE_SIZE), 12 * Game.TILE_SIZE, null);
 			//g.drawString("" + selectedTower.intAttackDamage, (int) (28.5 * Game.TILE_SIZE), 12 * Game.TILE_SIZE);
 			if(selectedTower.speedUpgrades < 5){
@@ -486,7 +488,6 @@ public class Game extends State {
 			}
 			
 			//Range Upgrade
-			BufferedImage range = Utils.loadImage("sidebar/" + "Range.png");
 			g.drawImage(range, (int) (27.5 * Game.TILE_SIZE), 15 * Game.TILE_SIZE, null);
 			//g.drawString("" + selectedTower.intRange, (int) (28.5 * Game.TILE_SIZE), 15 * Game.TILE_SIZE);
 			if(selectedTower.rangeUpgrades < 5){
@@ -507,13 +508,13 @@ public class Game extends State {
 			
 			g.setColor(Color.GREEN);
 			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (8.25 * Game.TILE_SIZE),
-					(int) (selectedTower.speedUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
+					(int) (selectedTower.damageUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
 					Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
 			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (11.25 * Game.TILE_SIZE),
-					(int) (selectedTower.rangeUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
+					(int) (selectedTower.speedUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
 					Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
 			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (14.25 * Game.TILE_SIZE),
-					(int) (selectedTower.damageUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
+					(int) (selectedTower.rangeUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
 					Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
 			
 			g.setColor(Color.RED);
@@ -522,15 +523,13 @@ public class Game extends State {
 			g.drawString("$" + selectedTower.getSellPrice(), (int) (27.5 * Game.TILE_SIZE), 15 * Game.TILE_SIZE);
 			
 			//Upgrade Button
-			BufferedImage plus = Utils.loadImage("sidebar/" + "Addition.png");
-			BufferedImage cross = Utils.loadImage("sidebar/" + "Cross.png");
-			if(selectedTower.speedUpgrades < 5){
+			if(selectedTower.damageUpgrades < 5){
 				g.drawImage(plus, (int) (30.5 * Game.TILE_SIZE), 9 * Game.TILE_SIZE, null);
 			}else{
 				g.drawImage(cross, (int) (30.5 * Game.TILE_SIZE), 9 * Game.TILE_SIZE, null);
 			}
 			
-			if(selectedTower.rangeUpgrades < 5){
+			if(selectedTower.speedUpgrades < 5){
 				g.drawImage(plus, (int) (30.5 * Game.TILE_SIZE), 12 * Game.TILE_SIZE, null);
 			}else{
 				g.drawImage(cross, (int) (30.5 * Game.TILE_SIZE), 12 * Game.TILE_SIZE, null);
@@ -545,6 +544,7 @@ public class Game extends State {
 
 		//DRAW ROUND TIMER
 		if(this.roundTime > 0) {
+			g.setColor(Color.BLACK);
 			g.setFont(TowerDefence.font);
 			g.drawString("Next Round: " + roundTime, (towerDefence.getWidth() / 2) - 3 * Game.TILE_SIZE,
 					towerDefence.getHeight() - Game.TILE_SIZE);
@@ -619,13 +619,6 @@ public class Game extends State {
 		}
 	}
 	
-	//SELL TOWER
-	/*
-	public void sellTower(Tower.towerFiles, int money, ){
-		
-	}
-	*/ 
-	
 	//constructor
 	public Game(TowerDefence towerDefence, String mapName) {
 		super(towerDefence);
@@ -639,13 +632,19 @@ public class Game extends State {
 		this.imgPathTileUL = Utils.loadImage("tiles/" + "PathTileUL.jpg");
 		this.imgPathTileDR = Utils.loadImage("tiles/" + "PathTileDR.jpg");
 		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");
-		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");	
+		this.imgPathTileDL = Utils.loadImage("tiles/" + "PathTileDL.jpg");
+		
+		speed = Utils.loadImage("sidebar/" + "Speed.png");
+		attack = Utils.loadImage("sidebar/" + "Damage.png");
+		range = Utils.loadImage("sidebar/" + "Range.png");
+		plus = Utils.loadImage("sidebar/" + "Addition.png");
+		cross = Utils.loadImage("sidebar/" + "Cross.png");
 		
 		map = new GameMap(mapName);
 		
 		towers = new ArrayList<>();		
 		enemies = new ArrayList<>();
-		projectiles = new ArrayList<>();
+		projectiles = new ArrayList<>();		
 		
 		chatField.setBounds(0,17 * Game.TILE_SIZE, 4 * Game.TILE_SIZE,Game.TILE_SIZE);
 		chatField.addActionListener(new ActionListener() {

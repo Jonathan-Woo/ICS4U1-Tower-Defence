@@ -95,8 +95,8 @@ public class Connections implements ActionListener{
 					for(Tower tower : game.towers) {
 						if(tower.id.equals(strMessageParts[1])) {
 							tower.damageUpgrades = Integer.parseInt(strMessageParts[2]);
-							tower.speedUpgrades = Integer.parseInt(strMessageParts[3]);
-							tower.rangeUpgrades = Integer.parseInt(strMessageParts[4]);
+							tower.rangeUpgrades = Integer.parseInt(strMessageParts[3]);
+							tower.speedUpgrades = Integer.parseInt(strMessageParts[4]);
 							
 							tower.intAttackDamage = Integer.parseInt(strMessageParts[5]);
 							tower.intAttackSpeed = Integer.parseInt(strMessageParts[6]);
