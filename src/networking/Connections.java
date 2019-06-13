@@ -61,12 +61,7 @@ public class Connections implements ActionListener{
 				}
 			}else if(intMessageType == Connections.SPAWN_ENEMY) {
 				if(!isServer) {
-					Enemy newEnemy = Enemy.newEnemy(Integer.parseInt(strMessageParts[1]), strMessageParts[2]);
-					if(strMessageParts.length > 3) {
-						newEnemy.intxLocation = Integer.parseInt(strMessageParts[3]);
-						newEnemy.intyLocation = Integer.parseInt(strMessageParts[4]);
-					}
-					game.enemies.add(newEnemy);
+					game.enemies.add(Enemy.newEnemy(Integer.parseInt(strMessageParts[1]), strMessageParts[2]));
 				}
 			}else if(intMessageType == Connections.UPDATE_TIMER) {
 				if(!isServer) {

@@ -18,8 +18,7 @@ public class SummonerEnemy extends Enemy {
 		if(Connections.isServer) {
 			if(System.currentTimeMillis() - longSummonTime >= 1500) {
 				String newQuickId = Utils.genId();
-				Connections.sendMessage(Connections.SPAWN_ENEMY, Enemy.QUICK, newQuickId,
-						this.intxLocation, this.intyLocation);
+				Connections.sendMessage(Connections.SPAWN_ENEMY, Enemy.QUICK, newQuickId);
 				game.enemies.add(new QuickEnemy(newQuickId));
 				longSummonTime = System.currentTimeMillis();
 			}
