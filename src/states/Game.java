@@ -437,6 +437,7 @@ public class Game extends State {
 					selectedTower.intyLocation, null);
 		}
 		
+		g.setFont(TowerDefence.font);
 		//RENDER TOOL BAR
 		g.setColor(Color.ORANGE);
 		g.fillRect(Game.TILE_SIZE * 27, 0, Game.TILE_SIZE * 5, towerDefence.getHeight());
