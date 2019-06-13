@@ -87,10 +87,8 @@ public abstract class Tower {
 	public int speedUpgrades = 0;
 	private int defaultDamage, defaultRange, defaultSpeed;
 	
-	private int intInitialUpgradePrice = 0.25 * intPrice;
-	public int intAttackSpeedUpgradePrice = intInitialUpgradePrice;
-	public int intAttackDamageUpgradePrice = intInitialUpgradePrice;
-	public int intRangeUpgradePrice = intInitialUpgradePrice;
+	public int intInitialUpgradePrice;
+	public int intAttackDamageUpgradePrice, intRangeUpgradePrice, intAttackSpeedUpgradePrice;
 	
 	//public int intValue = intPrice * _;
 	
@@ -174,9 +172,7 @@ public abstract class Tower {
 					this.damageUpgrades++;
 					this.intAttackDamage += this.defaultDamage * 0.2;
 					
-					//this.intValue = intValue + intAttackDamageUpgradePrice * _;
-					
-					this.intAttackDamageUpgradePrice = this.intAttackDamageUpgradePrice * 2;
+					this.intAttackDamageUpgradePrice = (int) (Math.pow(2, this.damageUpgrades) * this.intInitialUpgradePrice);
 				}
 				break;
 			case Tower.UPGRADE_RANGE:
@@ -184,9 +180,7 @@ public abstract class Tower {
 					this.rangeUpgrades++;
 					this.intRange += this.defaultRange * 0.1;
 					
-					//this.intValue = intValue + intRangeUpgradePrice * _;
-					
-					this.intRangeUpgradePrice = this.intRangeUpgradePrice * 2;
+					this.intRangeUpgradePrice = (int) (Math.pow(2, this.rangeUpgrades) * this.intInitialUpgradePrice);
 				}
 				break;
 			case Tower.UPGRADE_SPEED:
@@ -194,9 +188,7 @@ public abstract class Tower {
 					this.speedUpgrades++;
 					this.intAttackSpeed += this.defaultSpeed * 0.2;
 					
-					//this.intValue = intValue + intAttackSpeedUpgradePrice * _;
-					
-					this.intAttackSpeedUpgradePrice = this.intAttackSpeedUpgradePrice * 2;
+					this.intAttackSpeedUpgradePrice = (int) (Math.pow(2, this.speedUpgrades) * this.intInitialUpgradePrice);
 				}
 				break;
 		}
@@ -274,5 +266,10 @@ public abstract class Tower {
 		this.defaultDamage = this.intAttackDamage;
 		this.defaultRange = this.intRange;
 		this.defaultSpeed = this.intAttackSpeed;
+		
+		this.intInitialUpgradePrice = intPrice / 4;
+		this.intAttackDamageUpgradePrice = intInitialUpgradePrice;
+		this.intRangeUpgradePrice = intInitialUpgradePrice;
+		this.intAttackSpeedUpgradePrice = intInitialUpgradePrice;
 	}
 }

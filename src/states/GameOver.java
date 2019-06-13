@@ -42,7 +42,7 @@ public class GameOver extends State implements ActionListener{
 		mainMenuButton.addActionListener(this);
 		this.intWave = intWave;
 		towerDefence.add(mainMenuButton);
-		gameOverImg = Utils.loadImage("Game Over/"+"GameOver.png");
+		gameOverImg = Utils.loadImage("game over/"+"GameOver.png");
 	}
 
 	

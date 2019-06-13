@@ -122,38 +122,37 @@ public class Game extends State {
 							break;
 						}
 					}
-					
-					//Check if tower is being upgraded
-					if(InputListener.mouseX >= Game.TILE_SIZE * 30.5 && InputListener.mouseX <= Game.TILE_SIZE * 31.5){
-						//Check which upgrade is being applied
-						if(InputListener.mouseY >= Game.TILE_SIZE * 9 && InputListener.mouseY <= Game.TILE_SIZE * 10){
-							//Check if there is room for improvement and enough money
-							if(intBalance >= Tower.intAttackSpeedUpgradePrice && Tower.speedUpgrades < 5){
-								//Speed Upgrade for selected tower
-							}
-						}else if(InputListener.mouseY >= Game.TILE_SIZE * 12 && InputListener.mouseY <= Game.TILE_SIZE * 13){
-							//Check if there is room for improvement and enough money
-							if(intBalance >= Tower.intAttackDamageUpgradePrice && Tower.damageUpgrades < 5){
-								//Damage Upgrade for selected tower
-							}
-						}else if(InputListener.mouseY >= Game.TILE_SIZE * 15 && InputListener.mouseY <= Game.TILE_SIZE * 15){
-							//Check if there is room for improvement and enough money
-							if(intBalance >= Tower.intAttackSpeedUpgradePrice && Tower.rangeUpgrades < 5){
-								//Range Upgrade for selected tower
-							}
-						}
-					}
-					
-					//Check if tower is being sold
-					if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 31 && InputListener.mouseY >= Game.TILE_SIZE * 17 && InputListener.mouseY <= Game.TILE_SIZE * 17.5){
-						//Initiate Sell tower method
-						
-						
-						//intBalance = intBalance + Tower.intValue;
-					}
 				}
 			}else {
+				//Check if tower is being upgraded
+				if(InputListener.mouseX >= Game.TILE_SIZE * 30.5 && InputListener.mouseX <= Game.TILE_SIZE * 31.5){
+					//Check which upgrade is being applied
+					if(InputListener.mouseY >= Game.TILE_SIZE * 9 && InputListener.mouseY <= Game.TILE_SIZE * 10){
+						//Check if there is room for improvement and enough money
+						if(intBalance >= selectedTower.intAttackDamageUpgradePrice){
+							//Speed Upgrade for selected tower
+							selectedTower.upgrade(Tower.UPGRADE_DAMAGE);
+						}
+					}else if(InputListener.mouseY >= Game.TILE_SIZE * 12 && InputListener.mouseY <= Game.TILE_SIZE * 13){
+						//Check if there is room for improvement and enough money
+						if(intBalance >= Tower.intAttackDamageUpgradePrice && Tower.damageUpgrades < 5){
+							//Damage Upgrade for selected tower
+						}
+					}else if(InputListener.mouseY >= Game.TILE_SIZE * 15 && InputListener.mouseY <= Game.TILE_SIZE * 15){
+						//Check if there is room for improvement and enough money
+						if(intBalance >= Tower.intAttackSpeedUpgradePrice && Tower.rangeUpgrades < 5){
+							//Range Upgrade for selected tower
+						}
+					}
+				}
 				
+				//Check if tower is being sold
+				if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 31 && InputListener.mouseY >= Game.TILE_SIZE * 17 && InputListener.mouseY <= Game.TILE_SIZE * 17.5){
+					//Initiate Sell tower method
+					
+					
+					//intBalance = intBalance + Tower.intValue;
+				}
 			}			
 		}
 		
