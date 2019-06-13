@@ -39,11 +39,14 @@ public class Connections implements ActionListener{
 					game = (Game) towerDefence.changeState(TowerDefence.GAME, GameCreation.selectedMap);
 				}
 			}else if(intMessageType == DISCONNECT) {
-				Connections.closeConnection();
+				towerDefence.changeState(TowerDefence.GAME_OVER, game.waveNumber);
 				game = null;
-				towerDefence.changeState(TowerDefence.MAIN_MENU);
 			}else if(intMessageType == CHAT_MESSAGE) {
-				Game.strMessageReceived = strMessageParts[1];
+				if(Connections.isServer) {
+					Game.strMessageReceived = "Client: " + strMessageParts[1];
+				}else {
+					Game.strMessageReceived = "Server: " + strMessageParts[1];
+				}
 			}else if(intMessageType == Connections.PLACE_TOWER) {
 				int placeTower = Integer.parseInt(strMessageParts[1]);
 				int towerX = Integer.parseInt(strMessageParts[2]);
