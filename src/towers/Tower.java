@@ -91,7 +91,8 @@ public abstract class Tower {
 	public int intAttackSpeedUpgradePrice = intInitialUpgradePrice;
 	public int intAttackDamageUpgradePrice = intInitialUpgradePrice;
 	public int intRangeUpgradePrice = intInitialUpgradePrice;
-	//doubles every upgrade
+	
+	//public int intValue = intPrice * _;
 	
 	//methods
 	@SuppressWarnings("unchecked")
@@ -172,18 +173,30 @@ public abstract class Tower {
 				if(this.damageUpgrades < 5) {
 					this.damageUpgrades++;
 					this.intAttackDamage += this.defaultDamage * 0.2;
+					
+					//this.intValue = intValue + intAttackDamageUpgradePrice * _;
+					
+					this.intAttackDamageUpgradePrice = this.intAttackDamageUpgradePrice * 2;
 				}
 				break;
 			case Tower.UPGRADE_RANGE:
 				if(this.rangeUpgrades < 5) {
 					this.rangeUpgrades++;
 					this.intRange += this.defaultRange * 0.1;
+					
+					//this.intValue = intValue + intRangeUpgradePrice * _;
+					
+					this.intRangeUpgradePrice = this.intRangeUpgradePrice * 2;
 				}
 				break;
 			case Tower.UPGRADE_SPEED:
 				if(this.speedUpgrades < 5) {
 					this.speedUpgrades++;
 					this.intAttackSpeed += this.defaultSpeed * 0.2;
+					
+					//this.intValue = intValue + intAttackSpeedUpgradePrice * _;
+					
+					this.intAttackSpeedUpgradePrice = this.intAttackSpeedUpgradePrice * 2;
 				}
 				break;
 		}
