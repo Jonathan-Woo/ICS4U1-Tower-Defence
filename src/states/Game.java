@@ -495,14 +495,6 @@ public class Game extends State {
 						(int) (28.5 * Game.TILE_SIZE), (int) (11.5 * Game.TILE_SIZE));
 			}
 			
-			//Attack Upgrade
-			g.drawImage(attack, (int) (27.5 * Game.TILE_SIZE), 12 * Game.TILE_SIZE, null);
-			//g.drawString("" + selectedTower.intAttackDamage, (int) (28.5 * Game.TILE_SIZE), 12 * Game.TILE_SIZE);
-			if(selectedTower.damageUpgrades < 5){
-				g.drawString("$" + selectedTower.getUpgradePrice(Tower.UPGRADE_DAMAGE),
-						(int) (28.5 * Game.TILE_SIZE), (int) (13 * Game.TILE_SIZE));
-			}
-			
 			//Range Upgrade
 			g.drawImage(range, (int) (27.5 * Game.TILE_SIZE), 13 * Game.TILE_SIZE, null);
 			if(selectedTower.rangeUpgrades < 5){
