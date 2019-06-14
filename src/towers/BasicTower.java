@@ -17,9 +17,9 @@ public class BasicTower extends Tower{
 		super(intxLocation, intyLocation, Tower.BASIC, id);
 	}
 
-	@Override
+	//Apply basic tower effect
 	public void effectOnHit(Enemy enemy) {
-		
+		//Does nothing on hit
 	}
 
 }

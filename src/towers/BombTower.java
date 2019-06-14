@@ -16,24 +16,28 @@ public class BombTower extends Tower{
 		super(intxLocation, intyLocation, Tower.BOMB, id);
 	}
 
-	@Override
+	//Apply bomb tower effect on enemy
 	public void effectOnHit(Enemy enemy) {
 		//WHEN PROJECTILE HITS TARGET ENEMY, RECORD THE COLLISION COORDINTES
+		//Explodes on impact
 		explosionX = enemy.intxLocation + (Game.TILE_SIZE / 2);
 		explosionY = enemy.intyLocation + (Game.TILE_SIZE / 2);
 		explosionStart = System.currentTimeMillis();
 	}
 	
-	@Override
+	//Overide update method
 	public void update(Game game) {
 		super.update(game);
 		//DAMAGE ALL ENEMIES IN THE EXPLOSION RADIUS EVERY FEW TICKS OR UNTIL THE EXPLOSION DISAPPEARS
+		//Animate explosion effect
 		if(System.currentTimeMillis() - explosionStart <= intAttackSpeed / 2) {
 			if(System.currentTimeMillis() - damageCounter >= intAttackSpeed / 4) {
 				damageCounter = System.currentTimeMillis();
+				//Check enemies
 				for(Enemy enemy : game.enemies) {
 					int enemyX = enemy.intxLocation + (Game.TILE_SIZE / 2);
 					int enemyY = enemy.intyLocation + (Game.TILE_SIZE / 2);
+					//Deal splash damage on enemies
 					if(enemyX >= explosionX - explosionRadius && enemyX <= explosionX + explosionRadius
 							&& enemyY >= explosionY - explosionRadius && enemyY <= explosionY + explosionRadius) {
 						enemy.dealDamage(this.intAttackDamage / 4);
