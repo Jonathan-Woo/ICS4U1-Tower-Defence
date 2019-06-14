@@ -40,6 +40,7 @@ public abstract class Tower {
 	 **/
 	public static final int BOMB = 4;
 	
+	//Numerical representation of the upgrade commands.
 	public static final int UPGRADE_DAMAGE = 0, UPGRADE_RANGE = 1, UPGRADE_SPEED = 2;
 	
 	/**
@@ -79,20 +80,23 @@ public abstract class Tower {
 	private long longLastAttack = 0;
 	private Enemy currentEnemy;
 	
+	//Properties of the tower's projectiles
 	private int intProjectileRadius;
 	private int intProjectileSpeed;
 	private Color projectileColor;
 	
+	//Upgrades applied to the tower
 	public int damageUpgrades = 0;
 	public int rangeUpgrades = 0;
 	public int speedUpgrades = 0;
+	//Starting damage, range, and speed
 	private int defaultDamage, defaultRange, defaultSpeed;
 	
-	//public int intValue = intPrice * _;
-	
 	//methods
+	//Load Tower Files
 	@SuppressWarnings("unchecked")
 	public static void loadTowerFiles() {
+		//Load Utility file
 		towerFiles = (Map<String, String>[]) new Map[] {
 			Utils.loadTower("basicTower"),
 			Utils.loadTower("fireTower"),
@@ -101,6 +105,7 @@ public abstract class Tower {
 			Utils.loadTower("bombTower")
 		};
 		
+		//Load tower images
 		towerImages = new BufferedImage[] {
 			Utils.loadImage("towers/" + towerFiles[Tower.BASIC].get("image")),
 			Utils.loadImage("towers/" + towerFiles[Tower.FIRE].get("image")),
@@ -110,6 +115,7 @@ public abstract class Tower {
 		};
 	}
 	
+	//Check if enemy is in range
 	private boolean isInRange(Enemy enemy){
 		int xDistToTower = Math.abs(enemy.intxLocation - this.intxLocation) - (Game.TILE_SIZE / 2);
 		int yDistToTower = Math.abs(enemy.intyLocation - this.intyLocation) - (Game.TILE_SIZE / 2);
@@ -121,6 +127,7 @@ public abstract class Tower {
 		}
 	}
 	
+	//Seatching for closest enemy
 	private void findEnemy(ArrayList<Enemy> enemies) {
 		Enemy currentEnemy = null;
 		int bestXDistToTower = this.intRange;
@@ -149,6 +156,7 @@ public abstract class Tower {
 		this.currentEnemy = currentEnemy;
 	}
 	
+	//Fire a projectile at enemy
 	private void attackEnemy(Game game){
 		long longCurrentTime = System.currentTimeMillis();
 		if(longCurrentTime - longLastAttack >=intAttackSpeed) {
@@ -159,39 +167,57 @@ public abstract class Tower {
 		}
 	}
 	
+	//Get purchase price of tower
 	public int getPrice() {
 		return this.intPrice;
 	}
 	
+	//Upgrade tower
 	public void upgrade(final int upgrade) {
+		//Check for upgrade type
 		switch(upgrade) {
 			case Tower.UPGRADE_DAMAGE:
+				//Check if there is room for damage upgrades
 				if(this.damageUpgrades < 5) {
 					if(Connections.isServer) {
+						//Damage upgrade calculations
 						this.damageUpgrades++;
 						this.intAttackDamage += this.defaultDamage * 0.2;
 					}
+					//Apply damage upgrade
 					this.sendUpdateMessage(Tower.UPGRADE_DAMAGE);
 				}
 				break;
 			case Tower.UPGRADE_RANGE:
+				//Check if there is room for range upgrades
 				if(this.rangeUpgrades < 5) {
-					this.rangeUpgrades++;
-					this.intRange += this.defaultRange * 0.1;
+					if(Connections.isServer) {
+						//Range upgrade calculations
+						this.rangeUpgrades++;
+						this.intRange += this.defaultRange * 0.1;
+					}
+					//Apply range upgrade
 					this.sendUpdateMessage(Tower.UPGRADE_RANGE);
 				}
 				break;
 			case Tower.UPGRADE_SPEED:
 				if(this.speedUpgrades < 5) {
-					this.speedUpgrades++;
-					this.intAttackSpeed -= this.defaultSpeed * 0.05;
+					//Check if there is room for range upgrades
+					if(Connections.isServer) {
+						//Speed upgrade calculations
+						this.speedUpgrades++;
+						this.intAttackSpeed -= this.defaultSpeed * 0.05;
+					}
+					//Apply speed upgrade
 					this.sendUpdateMessage(Tower.UPGRADE_SPEED);
 				}
 				break;
 		}
 	}
 	
+	//Send update message to server
 	private void sendUpdateMessage(int upgrade) {
+		//Check if user is server
 		if(Connections.isServer) {
 			Connections.sendMessage(Connections.UPDATE_TOWER, this.id, this.damageUpgrades, this.rangeUpgrades,
 					this.speedUpgrades, this.intAttackDamage, this.intAttackSpeed, this.intRange);
@@ -200,6 +226,7 @@ public abstract class Tower {
 		}
 	}
 	
+	//Calculate money recieved from selling tower
 	public int getSellPrice() {
 		int money = this.intPrice / 2;
 		money += getUpgradePriceFromNum(this.damageUpgrades - 1) / 2;
@@ -208,18 +235,23 @@ public abstract class Tower {
 		return money;
 	}
 	
+	//Get price of each upgrade
 	public int getUpgradePrice(final int upgrade) {
 		switch(upgrade) {
 			case Tower.UPGRADE_DAMAGE:
+				//Get price of damage upgrade
 				return getUpgradePriceFromNum(this.damageUpgrades);
 			case Tower.UPGRADE_SPEED:
+				//Get price of speed upgrade
 				return getUpgradePriceFromNum(this.speedUpgrades);
 			case Tower.UPGRADE_RANGE:
+				//Get price of range upgrade
 				return getUpgradePriceFromNum(this.rangeUpgrades);
 		}
 		return 0;
 	}
 	
+	//Get upgrade price based on number of upgrades
 	private int getUpgradePriceFromNum(int numOfUpgrades) {
 		return ((int) Math.pow(2, numOfUpgrades) * (intPrice / 4));
 	}
@@ -230,11 +262,14 @@ public abstract class Tower {
 	 */
 	public void update(Game game) {
 		if (currentEnemy == null) {
+			//Finds enemies if it isn't aiming for one
 			findEnemy(game.enemies);
 		}else {
 			if(game.enemies.contains(currentEnemy) && isInRange(currentEnemy)) {
+				//Fires projectile if enemy is in range
 				attackEnemy(game);
 			}else {
+				//Does nothing
 				currentEnemy = null;
 			}			
 		}
@@ -251,19 +286,26 @@ public abstract class Tower {
 		g.drawImage(towerImages[type], intxLocation, intyLocation, null);
 	}
 	
+	//Applies an effect on enemy based on tower type
 	public abstract void effectOnHit(Enemy enemy);
 	
+	//Creates new tower
 	public static Tower newTower(final int type, int towerX, int towerY, String id) {
 		switch(type) {
 			case Tower.BASIC:
+				//Creates basic tower
 				return new BasicTower(towerX, towerY, id);
 			case Tower.FIRE:
+				//Creates fire tower
 				return new FireTower(towerX, towerY, id);
 			case Tower.ICE:
+				//Create ice tower
 				return new IceTower(towerX, towerY, id);
 			case Tower.SNIPE:
+				//Create snipe tower
 				return new SnipeTower(towerX, towerY, id);
 			case Tower.BOMB:
+				//Create bomb tower
 				return new BombTower(towerX, towerY, id);
 		}
 		return null;
