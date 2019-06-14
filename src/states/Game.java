@@ -480,6 +480,7 @@ public class Game extends State {
 			g.setColor(Color.BLACK);
 			g.setFont(font);
 			g.drawString(selectedTower.strName, 29 * Game.TILE_SIZE, (int)7 * Game.TILE_SIZE);
+			g.drawString(selectedTower.strName, 29 * Game.TILE_SIZE, (int)7.5 * Game.TILE_SIZE);
 			
 			//Speed Upgrade
 			g.drawImage(speed, (int) (27.5 * Game.TILE_SIZE), 9 * Game.TILE_SIZE, null);
