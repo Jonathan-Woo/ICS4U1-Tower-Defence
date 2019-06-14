@@ -39,11 +39,14 @@ public class Connections implements ActionListener{
 					game = (Game) towerDefence.changeState(TowerDefence.GAME, GameCreation.selectedMap);
 				}
 			}else if(intMessageType == DISCONNECT) {
-				Connections.closeConnection();
+				towerDefence.changeState(TowerDefence.GAME_OVER, game.waveNumber);
 				game = null;
-				towerDefence.changeState(TowerDefence.MAIN_MENU);
 			}else if(intMessageType == CHAT_MESSAGE) {
-				Game.strMessageReceived = strMessageParts[1];
+				if(Connections.isServer) {
+					Game.strMessageReceived = "Client: " + strMessageParts[1];
+				}else {
+					Game.strMessageReceived = "Server: " + strMessageParts[1];
+				}
 			}else if(intMessageType == Connections.PLACE_TOWER) {
 				int placeTower = Integer.parseInt(strMessageParts[1]);
 				int towerX = Integer.parseInt(strMessageParts[2]);
@@ -95,8 +98,8 @@ public class Connections implements ActionListener{
 					for(Tower tower : game.towers) {
 						if(tower.id.equals(strMessageParts[1])) {
 							tower.damageUpgrades = Integer.parseInt(strMessageParts[2]);
-							tower.speedUpgrades = Integer.parseInt(strMessageParts[3]);
-							tower.rangeUpgrades = Integer.parseInt(strMessageParts[4]);
+							tower.rangeUpgrades = Integer.parseInt(strMessageParts[3]);
+							tower.speedUpgrades = Integer.parseInt(strMessageParts[4]);
 							
 							tower.intAttackDamage = Integer.parseInt(strMessageParts[5]);
 							tower.intAttackSpeed = Integer.parseInt(strMessageParts[6]);
