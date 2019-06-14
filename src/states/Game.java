@@ -37,7 +37,7 @@ public class Game extends State {
 	public GameMap map;
 	public int intHealth = 100;
 	public int waveNumber = 1;
-	public int intBalance = 1000000;
+	public int intBalance = 100;
 	private int intPlacingTower = -1;
 	private Font font;
 	private int[] enemyWave;
@@ -81,21 +81,25 @@ public class Game extends State {
 			enemies.get(i).update(this);
 		}
 		
-		//UDPATE PROJECTILES
+		//UPDATE PROJECTILES
 		for(int i = 0; i < projectiles.size(); i++) {
 			projectiles.get(i).update(this);
 		}
 		
+		//CALLS METHOD TO REMOVE DEAD ENEMIES AND SOLD TOWERS
 		removeDeadEnemies();
 		removeSoldTowers();
 		
+		//CHECKS MOUSEBUTTONS BOOLEAN ARRAY TO SEE IF MOUSE 1 HAS BEEN CLICKED
 		if(InputListener.mouseButtons[MouseEvent.BUTTON1]) {
 			clicked = true;
 		}
 		
 		//CHECK IF TOWER IS PRESSED FROM TOWER BAR
+		//IF STATEMENT RUNS IF MOUSE IS RELEASED
 		if(clicked && !InputListener.mouseButtons[MouseEvent.BUTTON1]) {
 			clicked = false;
+			//IF STATEMENT RUNS IF A TOWER IS NOT SELECTED
 			if(selectedTower == null) {
 				if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 29) {
 					if(InputListener.mouseY >= Game.TILE_SIZE * 6 && InputListener.mouseY <= Game.TILE_SIZE * 7) {
@@ -114,15 +118,17 @@ public class Game extends State {
 						//PRESSED BOMB TOWER
 						this.intPlacingTower = Tower.BOMB;
 					}
+					//PLACES TOWER BASED ON THE POSITION OF THE MOUSE
 				}else if(InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower != -1) {
 					int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
 					int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
 					this.placeTower(intPlacingTower, towerX, towerY, Connections.isServer);
+					//CHECKS IF TOWER IS PRESSED FROM MAP. intPlacingTower IS NEGATIVE IF IT IS NOT BEING PLACED 
 				}else if(InputListener.mouseX < Game.TILE_SIZE * 27 && intPlacingTower == -1){
-					//CHECK IF TOWER IS PRESSED FROM MAP
 					int towerX = (int) Math.floor(InputListener.mouseX / Game.TILE_SIZE) * Game.TILE_SIZE;
 					int towerY = (int) Math.floor(InputListener.mouseY / Game.TILE_SIZE) * Game.TILE_SIZE;
-					
+	
+					//LOOPS THROUGH THE TOWERS TO FIND THE ONE THAT IS CLICKED
 					for(Tower tower : towers) {
 						if(tower.intxLocation == towerX && tower.intyLocation == towerY) {						
 							this.selectedTower = tower;
@@ -156,12 +162,13 @@ public class Game extends State {
 				}
 				
 				//Check if tower is being sold
-				if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 31
-						&& InputListener.mouseY >= Game.TILE_SIZE * 17 && InputListener.mouseY <= Game.TILE_SIZE * 17.5){
+				if(InputListener.mouseX >= Game.TILE_SIZE * 28 && InputListener.mouseX <= Game.TILE_SIZE * 29
+						&& InputListener.mouseY >= Game.TILE_SIZE * 15 && InputListener.mouseY <= Game.TILE_SIZE * 16){
 					//Initiate Sell tower method
 					if(Connections.isServer) {
 						removeTowers.add(selectedTower);
 					}
+					//SENDS MESSAGE TO CLIENT TO REMOVE TOWER FROM TOWER ARRAY
 					Connections.sendMessage(Connections.REMOVE_TOWER, selectedTower.id);
 					selectedTower = null;
 				}
@@ -184,7 +191,9 @@ public class Game extends State {
 			intPlacingTower = Tower.BOMB;
 		}
 		
+		//CHECKS IF THERE IS A MESSAGE SENT IN THE CHAT. strMessageReceived IS STATIC AND CHANGED BY CONNECTIONS CLASS
 		if(Game.strMessageReceived != null) {
+			//ADDS PAST MESSAGE TO OLD MESSAGE ARRAY TO BE LATER DRAWN TO THE GAME SCREEN
 			strOldMessage.add(Game.strMessageReceived);
 			Game.strMessageReceived = null;			
 		}
@@ -223,7 +232,6 @@ public class Game extends State {
 				
 				if(waveTimer == null) {
 					waveTimer = new Timer(1500, new ActionListener() {
-						@Override
 						public void actionPerformed(ActionEvent e) {
 							spawnEnemies();
 						}
@@ -268,6 +276,7 @@ public class Game extends State {
 		removeEnemies.clear();
 	}
 	
+	//METHOD TO SPAWN ENEMIES
 	private void spawnEnemies() {
 		if(enemyWave != null) {
 			enemiesInWave = 0;
@@ -290,7 +299,7 @@ public class Game extends State {
 		}		
 	}
 
-	@Override
+	//DRAWS GRAPHICS TO SCREEN
 	public void render(Graphics g) {
 		//RENDER GRASS TILES
 		for(int y = 0; y < towerDefence.getHeight(); y += Game.TILE_SIZE) {
@@ -327,10 +336,12 @@ public class Game extends State {
 				}
 			}
 			
+			//UPDATES THE PREVIOUS CHECKPOINT AFTER DRAWING ALL PATH TILES FROM ONE CHECKPOINT TO THE OTHER
 			previousCheckpointX = checkpointX;
 			previousCheckpointY = checkpointY;
 		}
 		
+		//DRAWS TURNING PATH TILES
 		previousCheckpointX = map.getCheckpointX(0);
 		previousCheckpointY = map.getCheckpointY(0);
 		for(int n = 1; n < map.getNumberOfCheckpoints(); n++) {
@@ -408,16 +419,10 @@ public class Game extends State {
 				g.fillRect(0, 0, Game.TILE_SIZE * 14, TowerDefence.HEIGHT);
 			}
 		}
-		
-		//RENDER OUTLINE OF EACH PLAYER'S SIDE OF THE MAP
-		/*g.setColor(Color.RED);
-		g.drawRect(Game.TILE_SIZE * 14, 0, TowerDefence.WIDTH - (Game.TILE_SIZE * (14 + 5)), TowerDefence.HEIGHT);
-		g.setColor(Color.BLUE);
-		g.drawRect(0, 0, Game.TILE_SIZE * 14, TowerDefence.HEIGHT);*/
+
 		
 		/////UI/////
 		//RENDER CHAT
-		
 		g.setColor(Color.WHITE);
 		g.setFont(font);
 		for(intCount = 0; intCount < strOldMessage.size(); intCount++) {
@@ -428,6 +433,7 @@ public class Game extends State {
 					(18  * Game.TILE_SIZE) - ((intCount + 2) * Game.TILE_SIZE / 2));
 		}
 		
+		//DRAWS TOWER RANGE WHEN TOWER IS SELECTED
 		if(selectedTower != null) {
 			g.setColor(new Color(0.8f, 0f, 1f, 0.4f));
 			g.fillOval(selectedTower.intxLocation - selectedTower.intRange,
@@ -503,6 +509,7 @@ public class Game extends State {
 						(int) (28.5 * Game.TILE_SIZE), (int) (13.5 * Game.TILE_SIZE));
 			}
 			
+			//DRAWS EMPTY UPGRADE BAR
 			g.setColor(Color.WHITE);
 			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (8.5 * Game.TILE_SIZE),
 					4 * Game.TILE_SIZE, (int) (0.5 * Game.TILE_SIZE), (int) (0.25 * Game.TILE_SIZE),
@@ -514,6 +521,7 @@ public class Game extends State {
 					4 * Game.TILE_SIZE, (int) (0.5 * Game.TILE_SIZE), (int) (0.25 * Game.TILE_SIZE),
 					(int) (0.25 * Game.TILE_SIZE));
 			
+			//DRAWS GREEN BAR TO FILL EMPTY UPGRADE BAR
 			g.setColor(Color.GREEN);
 			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (8.5 * Game.TILE_SIZE),
 					(int) (selectedTower.speedUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
@@ -525,12 +533,13 @@ public class Game extends State {
 					(int) (selectedTower.rangeUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
 					Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
 			
+			//DRAWS RED SELL BUTTON
 			g.setColor(Color.RED);
 			g.fillRoundRect((int)28 * Game.TILE_SIZE, 15 * Game.TILE_SIZE, Game.TILE_SIZE,
 					Game.TILE_SIZE,Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
 			g.drawString("$" + selectedTower.getSellPrice(), 29*Game.TILE_SIZE, 16 * Game.TILE_SIZE);
 			
-			//Upgrade Button
+			//DRAWS UPGRADE BUTTON IF POSSIBLE AND A "X" IF UPGRADE ARE MAXED
 			if(selectedTower.speedUpgrades < 5){
 				g.drawImage(plus, (int) (30.5 * Game.TILE_SIZE),(int)9.5 * Game.TILE_SIZE, null);
 			}else{
@@ -559,6 +568,8 @@ public class Game extends State {
 		}
 	}
 
+	//CHECKS IF SERVER IS PLACING ON LEFT SIDE AND IF CLIENT IS PLACING ON RIGHT SIDE
+	//IF NOT, DOES NOT PLACE
 	public void placeTower(int placeTower, int towerX, int towerY, boolean fromServer) {		
 		if(fromServer) {
 			if(towerX >= Game.TILE_SIZE * 14) {
@@ -594,6 +605,7 @@ public class Game extends State {
 			}
 		}
 		
+		//CHECKS IF THERE ARE SUFFICIENT FUNDS IN BALANCE TO PURCHASE TOWER
 		String id = Utils.genId();
 		if(Connections.isServer) {
 			int towerPrice = Integer.parseInt(Tower.towerFiles[placeTower].get("price"));
@@ -602,12 +614,16 @@ public class Game extends State {
 				towers.add(tower);
 			
 				updateBalance(-towerPrice);
+			}else {
+				return;
 			}
 		}
 			
+		//SENDS MESSAGE TO PLACE A TOWER SO THAT MAPS FROM SERVER AND CLIENT ARE UPDATED
 		Connections.sendMessage(Connections.PLACE_TOWER, placeTower, towerX, towerY, id);
 	}
 	
+	//
 	private void updateBalance(int money) {
 		this.intBalance += money;
 		Connections.sendMessage(Connections.STAT_UPDATE, this.intBalance, this.intHealth);

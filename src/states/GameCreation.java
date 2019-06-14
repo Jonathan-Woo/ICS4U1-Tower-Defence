@@ -20,7 +20,7 @@ public class GameCreation extends State implements ActionListener {
 	
 	public static String selectedMap;
 	
-	JTextField ipAddressField, mapSelectionField;
+	JTextField ipAddressField;
 	JButton createGameBtn, connectToGameBtn, backBtn;
 	JComboBox mapSelection;
 	BufferedImage gameCreationImg;
@@ -95,8 +95,8 @@ public class GameCreation extends State implements ActionListener {
 		backBtn.setBounds((TowerDefence.WIDTH / 2) - 75, (TowerDefence.HEIGHT / 2)  + 50, 150, 30);
 		backBtn.addActionListener(this);
 		
-		mapSelectionField = new JTextField("Choose Map");
-		mapSelectionField.setBounds((TowerDefence.WIDTH / 2) - 150, (TowerDefence.HEIGHT / 2) - 220, 300, 30);
+		JLabel mapSelectionLabel = new JLabel("Choose Map:");
+		mapSelectionLabel.setBounds((TowerDefence.WIDTH / 2) - 150, (TowerDefence.HEIGHT / 2) - 220, 300, 50);
 		
 		mapSelection = new JComboBox<>(Utils.findMaps());
 		mapSelection.setBounds((TowerDefence.WIDTH / 2) - 150, (TowerDefence.HEIGHT / 2) - 170, 300, 30);
@@ -107,6 +107,7 @@ public class GameCreation extends State implements ActionListener {
 		towerDefence.add(connectToGameBtn);
 		towerDefence.add(backBtn);
 		towerDefence.add(mapSelection);
+		towerDefence.add(mapSelectionLabel);
 		
 		gameCreationImg = Utils.loadImage("Main Menu/" + "Settings.png");
 	}
