@@ -127,24 +127,30 @@ public abstract class Tower {
 		}
 	}
 	
-	//Seatching for closest enemy
+	//Searching for closest enemy
 	private void findEnemy(ArrayList<Enemy> enemies) {
 		Enemy currentEnemy = null;
 		int bestXDistToTower = this.intRange;
 		int bestYDistToTower = this.intRange;
 		
+		//Check enemy distance from tower
 		for(int i = 0; i < enemies.size(); i++) {
 			Enemy enemy = enemies.get(i);
 			int xDistToTower = Math.abs(enemy.intxLocation - this.intxLocation) - (Game.TILE_SIZE / 2);
 			int yDistToTower = Math.abs(enemy.intyLocation - this.intyLocation) - (Game.TILE_SIZE / 2);
 			
+			//Check if enemy is in range
 			if(xDistToTower <= this.intRange && yDistToTower <= this.intRange) {
+				//Check if enemy is closer than other enemy
 				if(currentEnemy != null) {
+					//Check if enemy is closer that current target
 					if(xDistToTower < bestXDistToTower && yDistToTower < bestYDistToTower) {
+						//Set enemy as target
 						currentEnemy = enemy;
 						bestXDistToTower = xDistToTower;
 						bestYDistToTower = yDistToTower;
 					}
+				//Set enemy as target
 				}else {
 					currentEnemy = enemy;
 					bestXDistToTower = xDistToTower;
