@@ -54,7 +54,10 @@ public abstract class Enemy {
 			checkpointY = game.map.getCheckpointY(currentCheckpoint);
 		}
 		
-		if(intxLocation == checkpointX && intyLocation == checkpointY) {
+		if(Math.abs(intxLocation - checkpointX) <= this.intSpeed &&
+				Math.abs(intyLocation - checkpointY) <= this.intSpeed) {
+			this.intxLocation = checkpointX;
+			this.intyLocation = checkpointY;
 			//WE HAVE REACHED MAP CHECKPOINT
 			if(game.map.getNumberOfCheckpoints() > currentCheckpoint + 1) {
 				//GET NEXT CHECKPOINT
