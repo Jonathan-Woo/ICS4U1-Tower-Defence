@@ -10,6 +10,9 @@ import states.GameCreation;
 import states.Settings;
 import towers.Tower;
 
+//THIS CLASS IS USED TO CONNECT AND DISCONNECT FROM ANOTHER COMPUTER,
+//AND RECEIVE ALL NETWORKING MESSAGES AND PERFORM ACTIONS BASED ON THEM
+
 public class Connections implements ActionListener{
 	
 	//properties
@@ -24,6 +27,7 @@ public class Connections implements ActionListener{
 	//methods
 	public synchronized void actionPerformed(ActionEvent e) {
 		if(e.getSource() == ssm) {
+			//GET INCOMING MESSAGE TYPE, AND MESSAGE PARTS
 			String strText = ssm.readText();
 			String strMessageParts[] = strText.split(",");
 			int intMessageType = Integer.parseInt(strMessageParts[0]);
@@ -31,23 +35,28 @@ public class Connections implements ActionListener{
 			if(intMessageType == CONNECT) {
 				if(!blnConnected) {
 					if(isServer) {
+						//TELL CLIENT TO START GAME WITH SELECTED MAP
 						sendMessage(Connections.CONNECT, GameCreation.selectedMap);
 					}else {
 						GameCreation.selectedMap = strMessageParts[1];
 					}
 					blnConnected = true;
+					//GO TO GAME
 					game = (Game) towerDefence.changeState(TowerDefence.GAME, GameCreation.selectedMap);
 				}
 			}else if(intMessageType == DISCONNECT) {
+				//DISCONNECT AND GO TO GAME OVER SCREEN
 				towerDefence.changeState(TowerDefence.GAME_OVER, game.waveNumber);
 				game = null;
 			}else if(intMessageType == CHAT_MESSAGE) {
+				//SEND CHAT MESSAGE
 				if(Connections.isServer) {
 					Game.strMessageReceived = "Client: " + strMessageParts[1];
 				}else {
 					Game.strMessageReceived = "Server: " + strMessageParts[1];
 				}
 			}else if(intMessageType == Connections.PLACE_TOWER) {
+				//PLACE NEW TOWER
 				int placeTower = Integer.parseInt(strMessageParts[1]);
 				int towerX = Integer.parseInt(strMessageParts[2]);
 				int towerY = Integer.parseInt(strMessageParts[3]);
@@ -57,22 +66,26 @@ public class Connections implements ActionListener{
 					game.towers.add(Tower.newTower(placeTower, towerX, towerY, strMessageParts[4]));
 				}
 			}else if(intMessageType == Connections.STAT_UPDATE) {
+				//UPDATE HEALTH AND MONEY
 				if(!isServer) {
 					game.intBalance = Integer.parseInt(strMessageParts[1]);
 					game.intHealth = Integer.parseInt(strMessageParts[2]);
 					game.checkIfGameOver();
 				}
 			}else if(intMessageType == Connections.SPAWN_ENEMY) {
+				//SPAWN ENEMY
 				if(!isServer) {
 					game.enemies.add(Enemy.newEnemy(Integer.parseInt(strMessageParts[1]), strMessageParts[2]));
 				}
 			}else if(intMessageType == Connections.UPDATE_TIMER) {
+				//UPDATE WAVE NUMBER AND ROUND TIMER
 				if(!isServer) {
 					game.roundTime = Integer.parseInt(strMessageParts[1]);
 					game.waveNumber = Integer.parseInt(strMessageParts[2]);
 					game.enemies.clear();
 				}
 			}else if(intMessageType == Connections.UPDATE_ENEMY) {
+				//SYNCHRONIZE ENEMY CHECKPOINT AND LOCATION WHEN IT REACHED TARGET CHECKPOINT
 				if(!isServer) {
 					for(Enemy enemy : game.enemies) {
 						if(enemy.id.equals(strMessageParts[1])) {
@@ -85,6 +98,7 @@ public class Connections implements ActionListener{
 					}
 				}
 			}else if(intMessageType == Connections.REMOVE_ENEMY) {
+				//REMOVE ENEMY WHEN KILLED
 				if(!isServer) {
 					for(Enemy enemy : game.enemies) {
 						if(enemy.id.equals(strMessageParts[1])) {
@@ -94,6 +108,7 @@ public class Connections implements ActionListener{
 					}
 				}
 			}else if(intMessageType == Connections.UPDATE_TOWER) {
+				//UPDATE TOWER STATS WHEN UPGRADED
 				if(!isServer) {
 					for(Tower tower : game.towers) {
 						if(tower.id.equals(strMessageParts[1])) {
@@ -119,6 +134,7 @@ public class Connections implements ActionListener{
 					}
 				}
 			}else if(intMessageType == Connections.REMOVE_TOWER) {
+				//REMOVE TOWER WHEN SOLD
 				if(isServer) {
 					Connections.sendMessage(Connections.REMOVE_TOWER, strMessageParts[1]);
 				}
@@ -126,7 +142,7 @@ public class Connections implements ActionListener{
 				for(Tower tower : game.towers) {
 					if(tower.id.equals(strMessageParts[1])) {
 						Game.removeTowers.add(tower);
-						if(game.selectedTower.id.equals(strMessageParts[1])) {
+						if(game.selectedTower != null && game.selectedTower.id.equals(strMessageParts[1])) {
 							game.selectedTower = null;
 						}
 						return;
@@ -136,6 +152,8 @@ public class Connections implements ActionListener{
 		}
 	}
 	
+	//SEND A MESSAGE TO THE OTHER SIDE WITH THE SPECIFIED MESSAGE TYPE
+	//AND AN ARRAY OF DESIRED OBJECTS (USUALLY STRINGS OR INTS) ATTACHED
 	public static void sendMessage(int intType, Object... strMessages) {
 		if(ssm != null) {
 			String strFinalMsg = "" + intType;
@@ -147,6 +165,7 @@ public class Connections implements ActionListener{
 		}
 	}
 	
+	//DISCONNECT FROM THE OTHER SIDE
 	public static void closeConnection() {
 		if(ssm != null) {
 			if(blnConnected) {
@@ -161,6 +180,7 @@ public class Connections implements ActionListener{
 	}
 	
 	//constructor
+	//SERVER CONSTRUCTOR
 	public Connections(TowerDefence towerDefence) {
 		this.towerDefence = towerDefence;		
 		Connections.isServer = true;
@@ -168,6 +188,7 @@ public class Connections implements ActionListener{
 		ssm.connect();
 	}
 	
+	//CLIENT CONSTRUCTOR
 	public Connections(String ipAddress, TowerDefence towerDefence) {
 		this.towerDefence = towerDefence;
 		Connections.isServer = false;

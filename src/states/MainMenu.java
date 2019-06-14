@@ -10,6 +10,8 @@ import javax.swing.*;
 import main.TowerDefence;
 import main.Utils;
 
+//MAIN MENU SCREEN
+
 public class MainMenu extends State implements ActionListener{
 	
 	//properties
@@ -32,10 +34,13 @@ public class MainMenu extends State implements ActionListener{
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == playGameButton) {
+			//GO TO GAME CREATION SCREEN
 			towerDefence.changeState(TowerDefence.GAME_CREATION);
 		}else if(e.getSource() == helpButton) {
+			//GO TO HELP SCREEN
 			towerDefence.changeState(TowerDefence.HELP);
 		}else if(e.getSource() == settingsButton) {
+			//GO TO SETTINGS SCREEN
 			towerDefence.changeState(TowerDefence.SETTINGS);
 		}
 	}

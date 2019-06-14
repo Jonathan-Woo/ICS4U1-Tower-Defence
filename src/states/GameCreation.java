@@ -16,6 +16,8 @@ import main.TowerDefence;
 import main.Utils;
 import networking.Connections;
 
+//MAP SELECTION, GAME CREATION, AND GAME CONNECTION SCREEN
+
 public class GameCreation extends State implements ActionListener {
 	
 	public static String selectedMap;
@@ -67,6 +69,7 @@ public class GameCreation extends State implements ActionListener {
 			//GO BACK TO MAIN MENU
 			this.towerDefence.changeState(TowerDefence.MAIN_MENU);
 		}
+		//DISABLE JCOMPONENTS
 		selectedMap = (String) mapSelection.getSelectedItem();
 		mapSelection.setEnabled(false);
 		createGameBtn.setEnabled(false);
@@ -74,6 +77,7 @@ public class GameCreation extends State implements ActionListener {
 		backBtn.setEnabled(false);
 	}
 	
+	//CONSTRUCTOR
 	public GameCreation(TowerDefence towerDefence) {
 		super(towerDefence);
 		

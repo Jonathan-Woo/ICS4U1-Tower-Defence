@@ -2,6 +2,8 @@ package towers;
 
 import enemies.Enemy;
 
+//TOWER: SNIPE TYPE
+
 public class SnipeTower extends Tower{
 
 	public SnipeTower(int intxLocation, int intyLocation, String id) {

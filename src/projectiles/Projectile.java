@@ -9,6 +9,8 @@ import enemies.Enemy;
 import states.Game;
 import towers.Tower;
 
+//PROJECTILE THAT GETS SPAWNED BY EACH TOWER AND MOVES TOWARDS IT'S SPECIFIED ENEMY TARGET.
+
 public class Projectile {
 	//properties
 	private int intDamage;
@@ -31,28 +33,30 @@ public class Projectile {
 			currentEnemy.dealDamage(intDamage);
 			tower.effectOnHit(currentEnemy);
 		}else{
-			//calculates the distance from the enemy
-			int intPythagA;
-			int intPythagB;
-			double dblPythagC;
-			intPythagA = (currentEnemy.intxLocation + (Game.TILE_SIZE / 2)) - this.intxLocation;
-			intPythagB = (currentEnemy.intyLocation + (Game.TILE_SIZE / 2)) - this.intyLocation;
-			if(Math.abs(intPythagA) <= 5) {
-				intPythagA = 5;
+			//CALCULATES HOW MUCH WE NEED TO MOVE IN THE Y DIRECTION BASED ON
+			//HOW MUCH WE MOVE IN THE X DIRECTION
+			int intDeltaY;
+			int intDeltaX;
+			double dblSlope;
+			intDeltaX = (currentEnemy.intxLocation + (Game.TILE_SIZE / 2)) - this.intxLocation;
+			intDeltaY = (currentEnemy.intyLocation + (Game.TILE_SIZE / 2)) - this.intyLocation;
+			if(Math.abs(intDeltaX) <= 5) {
+				intDeltaX = 5;
 			}
 			
-			dblPythagC = (double) ((double) intPythagB / (double) Math.abs(intPythagA));
+			dblSlope = (double) ((double) intDeltaY / (double) Math.abs(intDeltaX));
 			
-			if(intPythagA > 0) {
+			if(intDeltaX > 0) {
 				intxLocation += intProjectileSpeed;
-			}else if(intPythagA < 0) {
+			}else if(intDeltaX < 0) {
 				intxLocation -= intProjectileSpeed;
 			}
-			intyLocation += (int) (dblPythagC * intProjectileSpeed);
+			intyLocation += (int) (dblSlope * intProjectileSpeed);
 		}
 	}
 	
 	public void render(Graphics g){
+		//DRAW CIRCLE OF SPECIFIED COLOR AND RADIUS
 		g.setColor(color);
 		g.fillOval(intxLocation - (intRadius / 2), intyLocation - (intRadius / 2), intRadius, intRadius);
 	}

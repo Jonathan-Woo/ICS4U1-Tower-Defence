@@ -12,8 +12,12 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+//VARIOUS STATIC METHODS THAT CAN BE USED BY ANY CLASS TO DO A VARIETY
+//OF FUNCTIONS SUCH AS LOAD IMAGES OR DATA FILES
+
 public class Utils {
 
+	//LOAD AN IMAGE
 	public static BufferedImage loadImage(String fileName) {
 		try {
 			return ImageIO.read(new File("images/" + fileName));
@@ -23,18 +27,21 @@ public class Utils {
 		return null;
 	}
 	
+	//LOAD A TOWER'S PROPERTIES FROM A TOWER FILE
 	public static Map<String, String> loadTower(String towerFile){
 		//GET CORRECT TOWER FILE
 		File file = new File("data/towers/" + towerFile + ".csv");
 		return loadCSV(file);
 	}
 	
+	//LOAD AN ENEMY'S PROPERTIES FORM AN ENEMY FILE
 	public static Map<String, String> loadEnemy(String enemyFile){
 		//GET CORRECT ENEMY FILE
 		File file = new File("data/enemies/" + enemyFile + ".csv");
 		return loadCSV(file);
 	}
 	
+	//LOAD A CSV FILE INTO A MAP ARRAY OBJECT
 	public static Map<String, String> loadCSV(File file) {		
 		//CREATE MAP OBJECT WHERE WE WILL STORE OUR DATA
 		Map<String, String> data = new HashMap<String, String>();
@@ -69,6 +76,7 @@ public class Utils {
 		return data;
 	}
 	
+	//LOAD A GAME MAP FROM A MAP FILE
 	public static Integer[] loadMap(File file) {
 		ArrayList<Integer> data = new ArrayList<>();
 		
@@ -103,6 +111,7 @@ public class Utils {
 		return data.toArray(new Integer[] {});
 	}
 
+	//GENERATE A 10 CHARACTER STRING TO BE USED AS A TOWER OR ENEMY ID
 	public static String genId() {
 		String id = "";
 		for(int i = 0; i < 10; i++) {
@@ -111,6 +120,7 @@ public class Utils {
 		return id;
 	}
 	
+	//GET THE NAMES OF ALL THE MAP FILES IN THE /maps/ FOLDER
 	public static String[] findMaps() {
 		File mapDir = new File("data/maps/");
 		String[] maps = mapDir.list();

@@ -7,6 +7,8 @@ import javax.swing.Timer;
 
 import enemies.Enemy;
 
+//TOWER: ICE TYPE
+
 public class IceTower extends Tower{
 	
 	Timer timer;
@@ -17,6 +19,7 @@ public class IceTower extends Tower{
 
 	@Override
 	public void effectOnHit(Enemy enemy) {
+		//WHEN PROJECTILE HITS AN ENEMY FREEZE THEM FOR A FEW SECONDS
 		enemy.ICE_EFFECT = true;
 		final double prevSpeed = enemy.intSpeed;
 		enemy.intSpeed = 0;

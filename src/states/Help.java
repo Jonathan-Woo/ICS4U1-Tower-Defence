@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import main.TowerDefence;
 import main.Utils;
 
+//HELP SCREEN
+
 public class Help extends State implements ActionListener{
 	
 	BufferedImage helpImage;

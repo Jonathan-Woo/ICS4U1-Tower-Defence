@@ -26,6 +26,8 @@ import states.MainMenu;
 import states.Settings;
 import states.State;
 
+//MAIN CLASS WITH MAIN METHOD THAT RUNS THE MAIN GAME LOOP, UPDATES, AND RENDER THE CURRENT GAME STATE
+
 //MAKE THIS MAIN CLASS THE JFRAME SO WE DON'T
 //NEED A SEPARATE OBJECT FOR THAT
 public class TowerDefence extends JFrame implements ActionListener, WindowListener {
@@ -37,8 +39,9 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 	private State currentState;
 	private AnimationPanel pnl;
 	private Timer timer;
-	public static Font font;
+	public static Font font = new Font("Arial", Font.PLAIN, 36);
 	
+	///////MAIN METHOD HERE///////
 	public static void main(String[] args) {
 		new TowerDefence();
 	}
@@ -68,9 +71,6 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 		this.addKeyListener(inputListener);
 		this.addMouseListener(inputListener);
 		this.addMouseMotionListener(inputListener);
-		
-		//INIT FONT
-		font = new Font("Arial", Font.PLAIN, 36);
 		
 		//START TIMER
 		timer = new Timer(1000 / 60, this);
@@ -102,7 +102,9 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 		return currentState;
 	}
 	
+	//CHANGE GAME STATE, PASSING ON THE GIVEN ARGUMENTS TO THE NEW STATE
 	public State changeState(final int state, Object... args) {
+		//REMOVE ALL JCOMPONENTS FORM JPANEL BEFORE ADDING NEW ONES
 		resetPanel();
 		switch(state) {
 			case TowerDefence.MAIN_MENU:
@@ -146,6 +148,7 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 		
 		private TowerDefence towerDefence;
 		
+		//ANIMATION PANEL CONSTRUCTOR
 		public AnimationPanel(TowerDefence towerDefence) {
 			this.setPreferredSize(new Dimension(TowerDefence.WIDTH, TowerDefence.HEIGHT + towerDefence.getInsets().top));
 			this.setLayout(null);
@@ -171,42 +174,37 @@ public class TowerDefence extends JFrame implements ActionListener, WindowListen
 
 	@Override
 	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
+		//DISCONNECT FROM THE OTHER SIDE WHEN THE USER TRIES TO CLOSE THE GAME
 		Connections.closeConnection();
 	}
 
 	@Override
 	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 

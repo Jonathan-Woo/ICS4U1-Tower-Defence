@@ -3,6 +3,8 @@ package towers;
 import enemies.Enemy;
 import main.Utils;
 
+//TOWER: BASIC TYPE
+
 public class BasicTower extends Tower{
 
 	/**

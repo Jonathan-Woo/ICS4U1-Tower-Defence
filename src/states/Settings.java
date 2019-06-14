@@ -17,6 +17,8 @@ import javax.swing.JTextField;
 import main.TowerDefence;
 import main.Utils;
 
+//SETTINGS SCREEN
+
 public class Settings extends State implements ActionListener{
 	
 	public static int port = 3456;
@@ -35,6 +37,20 @@ public class Settings extends State implements ActionListener{
 		g.drawImage(settingsImg, 0,0,null);
 	}
 	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		//UPDATE PORT WHEN BACK BUTTON IS PRESSED
+		if(e.getSource().equals(back)) {
+			int port = Integer.parseInt(portField.getText());
+			if(port >= 0 && port <= 65255) {
+				Settings.port = port;
+				//GO TO MAIN MENU
+				towerDefence.changeState(TowerDefence.MAIN_MENU);
+			}
+		}
+	}
+	
+	//CONSTRUCTOR
 	public Settings(TowerDefence towerDefence) {
 		super(towerDefence);
 		
@@ -52,17 +68,6 @@ public class Settings extends State implements ActionListener{
 		towerDefence.add(back);
 		
 		settingsImg = Utils.loadImage("main menu/"+"Settings.png");
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(back)) {
-			int port = Integer.parseInt(portField.getText());
-			if(port >= 0 && port <= 65255) {
-				Settings.port = port;
-				towerDefence.changeState(TowerDefence.MAIN_MENU);
-			}
-		}
 	}
 
 }

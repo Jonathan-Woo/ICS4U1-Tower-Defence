@@ -12,6 +12,8 @@ import main.TowerDefence;
 import main.Utils;
 import networking.Connections;
 
+//GAME OVER SCREEN
+
 public class GameOver extends State implements ActionListener{
 	
 	BufferedImage gameOverImg;
@@ -35,13 +37,16 @@ public class GameOver extends State implements ActionListener{
 	public GameOver(TowerDefence towerDefence, int intWave) {
 		super(towerDefence);
 		
+		//DISCONNECT FROM THE OTHER SIDE
 		Connections.closeConnection();
 		
 		mainMenuButton = new JButton("Main Menu");
 		mainMenuButton.setBounds(TowerDefence.WIDTH/2 - 150, 13 * Game.TILE_SIZE, 300, 50);
 		mainMenuButton.addActionListener(this);
-		this.intWave = intWave;
+		
 		towerDefence.add(mainMenuButton);
+
+		this.intWave = intWave;
 		gameOverImg = Utils.loadImage("game over/"+"GameOver.png");
 	}
 

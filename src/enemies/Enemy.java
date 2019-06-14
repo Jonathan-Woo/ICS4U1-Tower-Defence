@@ -12,6 +12,8 @@ import networking.Connections;
 import states.Game;
 import towers.Tower;
 
+//BLUEPRINT FOR ALL ENEMY CLASSES
+
 public abstract class Enemy {
 	//properties
 	public static final int BASIC = 0, ARMORED = 1, QUICK = 2, SUMMONER = 3, BOSS = 4;
@@ -27,15 +29,17 @@ public abstract class Enemy {
 	private BufferedImage enemyImage;
 	private int reward;
 	
-	private int checkpointX = -1, checkpointY = -1;
+	private int checkpointX, checkpointY;
 	public int currentCheckpoint = 0;
 	private double rotationAngle;
 	
 	public boolean FIRE_EFFECT = false, ICE_EFFECT = false;
 	
+	//REDUCES THE HEALTH OF THIS ENEMY BY A CERTAIN AMOUNT OF DAMAGE
 	public void dealDamage(int intDamage) {
 		this.intHealth -= intDamage;
 		if(this.intHealth <= 0) {
+			//TELL CLIENT TO REMOVE THE ENEMY IF THEY HAVEN'T ALREADY
 			if(Connections.isServer) {
 				Connections.sendMessage(Connections.REMOVE_ENEMY, this.id);
 			}
@@ -48,17 +52,13 @@ public abstract class Enemy {
 	}
 	
 	//methods
-	public void update(Game game) {		
-		if(checkpointX == -1 || checkpointY == -1) {
-			checkpointX = game.map.getCheckpointX(currentCheckpoint);
-			checkpointY = game.map.getCheckpointY(currentCheckpoint);
-		}
-		
+	public void update(Game game) {
+		//CHECK IF ENEMY HAS REACHED TARGET CHECKPOINT
 		if(Math.abs(intxLocation - checkpointX) <= this.intSpeed &&
 				Math.abs(intyLocation - checkpointY) <= this.intSpeed) {
 			this.intxLocation = checkpointX;
 			this.intyLocation = checkpointY;
-			//WE HAVE REACHED MAP CHECKPOINT
+			
 			if(game.map.getNumberOfCheckpoints() > currentCheckpoint + 1) {
 				//GET NEXT CHECKPOINT
 				if(Connections.isServer) {
@@ -96,15 +96,18 @@ public abstract class Enemy {
 	}
 	
 	public void render(Graphics g) {
+		//DRAW ENEMY IMAGE WITH CORRECT ROTATION
 		((Graphics2D) g).rotate(rotationAngle, intxLocation + (Game.TILE_SIZE / 2), intyLocation + (Game.TILE_SIZE / 2));
 		g.drawImage(enemyImage, intxLocation, intyLocation, null);
 		((Graphics2D) g).rotate(-rotationAngle, intxLocation + (Game.TILE_SIZE / 2), intyLocation + (Game.TILE_SIZE / 2));
 		
+		//DRAW FIRE EFFECT RECTANGLE
 		if(FIRE_EFFECT) {
 			g.setColor(Color.RED);
 			g.drawRect(intxLocation, intyLocation, Game.TILE_SIZE, Game.TILE_SIZE);
 		}
 		
+		//DRAW FIRE EFFECT ROTATED RECTANGLE
 		if(ICE_EFFECT) {
 			g.setColor(Color.CYAN);
 			((Graphics2D) g).rotate(Math.PI / 4, intxLocation + (Game.TILE_SIZE / 2), intyLocation + (Game.TILE_SIZE / 2));
@@ -113,6 +116,7 @@ public abstract class Enemy {
 		}
 	}
 	
+	//CREATE A NEW ENEMY BASED ON THE TYPE
 	public static Enemy newEnemy(final int type, String id) {
 		switch(type) {
 			case Enemy.BASIC:
@@ -134,6 +138,7 @@ public abstract class Enemy {
 		this.type = type;
 		this.id = id;
 		
+		//LOAD ENEMY DATA
 		Map<String, String> data = Utils.loadEnemy(enemyFile);
 		this.intDamage = Integer.parseInt(data.get("damage"));
 		this.intSpeed = Double.parseDouble(data.get("speed"));
@@ -141,8 +146,11 @@ public abstract class Enemy {
 		this.enemyImage = Utils.loadImage("enemies/" + data.get("image"));
 		this.reward = Integer.parseInt(data.get("reward"));
 		
-		this.intxLocation = GameMap.startX;
-		this.intyLocation = GameMap.startY;
+		//GET FIRST CHECKPOINT
+		this.intxLocation = GameMap.startX * Game.TILE_SIZE;
+		this.intyLocation = GameMap.startY * Game.TILE_SIZE;
+		this.checkpointX = GameMap.startX;
+		this.checkpointY = GameMap.startY;
 	}
 	
 }
