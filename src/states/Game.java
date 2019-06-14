@@ -479,7 +479,7 @@ public class Game extends State {
 			g.drawImage(Tower.towerImages[selectedTower.type], 28 * Game.TILE_SIZE, 6 * Game.TILE_SIZE, null);
 			g.setColor(Color.BLACK);
 			g.setFont(font);
-			g.drawString(selectedTower.strName, 29 * Game.TILE_SIZE, (int)6.5 * Game.TILE_SIZE);
+			g.drawString(selectedTower.strName, 29 * Game.TILE_SIZE, (int)7.5 * Game.TILE_SIZE);
 			
 			//Speed Upgrade
 			g.drawImage(speed, (int) (27.5 * Game.TILE_SIZE), 9 * Game.TILE_SIZE, null);
@@ -519,12 +519,6 @@ public class Game extends State {
 					Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
 			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (10 * Game.TILE_SIZE),
 					(int) (selectedTower.speedUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
-					Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
-			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (8.25 * Game.TILE_SIZE),
-					(int) (selectedTower.speedUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
-					Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
-			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (11.25 * Game.TILE_SIZE),
-					(int) (selectedTower.damageUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,
 					Game.TILE_SIZE / 4, Game.TILE_SIZE / 4);
 			g.fillRoundRect((int) (27.5 * Game.TILE_SIZE), (int) (12 * Game.TILE_SIZE),
 					(int) (selectedTower.rangeUpgrades * 0.8 * Game.TILE_SIZE), Game.TILE_SIZE / 2,

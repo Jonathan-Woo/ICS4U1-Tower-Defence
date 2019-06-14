@@ -36,7 +36,7 @@ public class Projectile {
 			int intPythagB;
 			double dblPythagC;
 			intPythagA = (currentEnemy.intxLocation + (Game.TILE_SIZE / 2)) - this.intxLocation;
-			intPythagB = (currentEnemy.intyLocation + (Game.TILE_SIZE/2)) - this.intyLocation;
+			intPythagB = (currentEnemy.intyLocation + (Game.TILE_SIZE / 2)) - this.intyLocation;
 			if(Math.abs(intPythagA) <= 5) {
 				intPythagA = 5;
 			}

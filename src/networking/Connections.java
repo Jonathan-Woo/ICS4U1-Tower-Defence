@@ -126,6 +126,9 @@ public class Connections implements ActionListener{
 				for(Tower tower : game.towers) {
 					if(tower.id.equals(strMessageParts[1])) {
 						Game.removeTowers.add(tower);
+						if(game.selectedTower.id.equals(strMessageParts[1])) {
+							game.selectedTower = null;
+						}
 						return;
 					}
 				}
