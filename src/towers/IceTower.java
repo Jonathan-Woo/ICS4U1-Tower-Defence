@@ -15,9 +15,10 @@ public class IceTower extends Tower{
 		super(intxLocation, intyLocation, Tower.ICE, id);
 	}
 
-	@Override
+	//Apply ice tower effect
 	public void effectOnHit(Enemy enemy) {
 		enemy.ICE_EFFECT = true;
+		//Slows enemy temporarily on hit
 		final double prevSpeed = enemy.intSpeed;
 		enemy.intSpeed = 0;
 		timer = new Timer(this.intAttackSpeed / 2, new ActionListener() {

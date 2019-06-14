@@ -8,9 +8,9 @@ public class SnipeTower extends Tower{
 		super(intxLocation, intyLocation, Tower.SNIPE, id);
 	}
 
-	@Override
+	//Apply snipe tower effect
 	public void effectOnHit(Enemy enemy) {
-		
+		//Does nothing on hit
 	}
 
 	

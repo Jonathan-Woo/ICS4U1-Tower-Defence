@@ -13,11 +13,13 @@ public class FireTower extends Tower{
 		super(intxLocation, intyLocation, Tower.FIRE, id);
 	}
 
-	@Override
+	//Overide update method
 	public void update(Game game){
 		super.update(game);
+		//Add fire effect
 		if(System.currentTimeMillis() - longFireTick >= 500) {
 			ArrayList<Enemy> rmEnemies = new ArrayList<Enemy>();
+			//Check for damage
 			for(Enemy enemy : enemies) {
 				if(enemy.intHealth <= 0) {
 					rmEnemies.add(enemy);
@@ -33,8 +35,9 @@ public class FireTower extends Tower{
 		}
 	}
 	
-	@Override
+	//Apply fire tower effect on enemy
 	public void effectOnHit(Enemy enemy) {
+		//Does damage over time
 		enemy.FIRE_EFFECT = true;
 		if(!enemies.contains(enemy)) {
 			enemies.add(enemy);
