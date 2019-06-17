@@ -147,8 +147,8 @@ public abstract class Enemy {
 		this.reward = Integer.parseInt(data.get("reward"));
 		
 		//GET FIRST CHECKPOINT
-		this.intxLocation = GameMap.startX * Game.TILE_SIZE;
-		this.intyLocation = GameMap.startY * Game.TILE_SIZE;
+		this.intxLocation = GameMap.startX;
+		this.intyLocation = GameMap.startY;
 		this.checkpointX = GameMap.startX;
 		this.checkpointY = GameMap.startY;
 	}

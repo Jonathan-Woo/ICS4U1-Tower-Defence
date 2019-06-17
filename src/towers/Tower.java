@@ -179,7 +179,7 @@ public abstract class Tower {
 	}
 	
 	//Upgrade tower
-	public void upgrade(final int upgrade) {
+	public boolean upgrade(final int upgrade) {
 		//Check for upgrade type
 		switch(upgrade) {
 			case Tower.UPGRADE_DAMAGE:
@@ -192,8 +192,8 @@ public abstract class Tower {
 					}
 					//Apply damage upgrade
 					this.sendUpdateMessage(Tower.UPGRADE_DAMAGE);
+					return true;
 				}
-				break;
 			case Tower.UPGRADE_RANGE:
 				//Check if there is room for range upgrades
 				if(this.rangeUpgrades < 5) {
@@ -204,8 +204,8 @@ public abstract class Tower {
 					}
 					//Apply range upgrade
 					this.sendUpdateMessage(Tower.UPGRADE_RANGE);
+					return true;
 				}
-				break;
 			case Tower.UPGRADE_SPEED:
 				if(this.speedUpgrades < 5) {
 					//Check if there is room for range upgrades
@@ -216,9 +216,10 @@ public abstract class Tower {
 					}
 					//Apply speed upgrade
 					this.sendUpdateMessage(Tower.UPGRADE_SPEED);
+					return true;
 				}
-				break;
 		}
+		return false;
 	}
 	
 	//Send update message to server

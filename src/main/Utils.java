@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -123,11 +124,14 @@ public class Utils {
 	//GET THE NAMES OF ALL THE MAP FILES IN THE /maps/ FOLDER
 	public static String[] findMaps() {
 		File mapDir = new File("data/maps/");
+		List<String> finalMapList = new ArrayList<>();
 		String[] maps = mapDir.list();
 		for(int i = 0; i < maps.length; i++) {
-			maps[i] = maps[i].replace(".csv", "");
+			if(maps[i].contains(".csv")) {
+				finalMapList.add(maps[i].replace(".csv", ""));
+			}
 		}
-		return maps;
+		return finalMapList.toArray(new String[] {});
 	}
 	
 }

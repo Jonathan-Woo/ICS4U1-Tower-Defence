@@ -27,6 +27,8 @@ import projectiles.Projectile;
 import towers.BasicTower;
 import towers.Tower;
 
+//MAIN GAME STATE
+
 public class Game extends State {
 	
 	public static final int TILE_SIZE = 40;
@@ -142,21 +144,30 @@ public class Game extends State {
 					//Check which upgrade is being applied
 					if(InputListener.mouseY >= Game.TILE_SIZE * 9 && InputListener.mouseY <= Game.TILE_SIZE * 10){
 						//Check if there is room for improvement and enough money
-						if(intBalance >= selectedTower.getUpgradePrice(Tower.UPGRADE_SPEED)){
+						int price = selectedTower.getUpgradePrice(Tower.UPGRADE_SPEED);
+						if(intBalance >= price){
 							//Speed Upgrade for selected tower
-							selectedTower.upgrade(Tower.UPGRADE_SPEED);
+							if(selectedTower.upgrade(Tower.UPGRADE_SPEED)) {
+								intBalance -= price;
+							}
 						}
 					}else if(InputListener.mouseY >= Game.TILE_SIZE * 11 && InputListener.mouseY <= Game.TILE_SIZE * 12){
 						//Check if there is room for improvement and enough money
-						if(intBalance >= selectedTower.getUpgradePrice(Tower.UPGRADE_DAMAGE)){
+						int price = selectedTower.getUpgradePrice(Tower.UPGRADE_DAMAGE);
+						if(intBalance >= price){
 							//Damage Upgrade for selected tower
-							selectedTower.upgrade(Tower.UPGRADE_DAMAGE);
+							if(selectedTower.upgrade(Tower.UPGRADE_DAMAGE)) {
+								intBalance -= price;
+							}
 						}
 					}else if(InputListener.mouseY >= Game.TILE_SIZE * 13 && InputListener.mouseY <= Game.TILE_SIZE * 15){
 						//Check if there is room for improvement and enough money
-						if(intBalance >= selectedTower.getUpgradePrice(Tower.UPGRADE_RANGE)){
+						int price = selectedTower.getUpgradePrice(Tower.UPGRADE_RANGE);
+						if(intBalance >= price){
 							//Range Upgrade for selected tower
-							selectedTower.upgrade(Tower.UPGRADE_RANGE);
+							if(selectedTower.upgrade(Tower.UPGRADE_RANGE)) {
+								intBalance -= price;
+							}
 						}
 					}
 				}
@@ -218,6 +229,8 @@ public class Game extends State {
 					roundTimer.start();
 				}
 			}else{
+				enemies.forEach(System.out::println);
+				
 				if(enemyWave == null) {						
 					enemyWave = new int[] {
 							waveNumber,
