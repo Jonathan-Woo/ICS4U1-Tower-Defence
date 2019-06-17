@@ -228,9 +228,7 @@ public class Game extends State {
 					});
 					roundTimer.start();
 				}
-			}else{
-				enemies.forEach(System.out::println);
-				
+			}else{				
 				if(enemyWave == null) {						
 					enemyWave = new int[] {
 							waveNumber,
